@@ -306,7 +306,7 @@ if fs:
 
     # the nine items of the brief for each core feature and for the Mixer; the eight explanations of the Mixer
     heads3 = set(re.findall(HEAD, fs, flags=re.M))
-    need = [f"{s}.{k}" for s in (2, 3, 4, 5) for k in range(1, 10)] + [f"3.2.{k}" for k in range(1, 9)] + ["3.10"]
+    need = [f"{s}.{k}" for s in (2, 3, 4, 5, 12) for k in range(1, 10)] + [f"3.2.{k}" for k in range(1, 9)] + ["3.10"]
     lack = [n for n in need if n not in heads3]
     print("feature_specifications.md: sections for the items of the brief that are missing:", lack or "none")
     ok &= not lack
@@ -445,19 +445,23 @@ if rm and fs:
         problems.append(f"manual tests that must pass at no gate: {never}")
     ok &= report("manual tests at the gates of their criteria", problems)
 
-    # --- the checks V-01 to V-07 are tasks of the first phase and have a planned answer
+    # --- each check V is a task of its home phase and has a planned answer.
+    # V-01 to V-07 run before the MVP, in PH-00. V-08 runs in the first phase of version 1.1 (D-112).
     problems = []
-    first = " ".join(" ".join(c) for t, c in task_cells.items() if task_phase[t] == "PH-00")
-    later = " ".join(" ".join(c[:2]) for t, c in task_cells.items() if task_phase[t] != "PH-00")
+    v11 = sorted(p for p, c in ph_rows.items() if len(c) == 5 and c[3] == "1.1")
+    V_HOME = {"V-08": v11[0] if v11 else "?"}
     answer_rows = set(re.findall(r"^\| (V-\d{2}) \|", rm, flags=re.M))
     for v in sorted(v_def):
-        if not re.search(r"Check " + v + r"\b", first):
-            problems.append(f"{v} is no task of PH-00")
+        home = V_HOME.get(v, "PH-00")
+        inside = " ".join(" ".join(c) for t, c in task_cells.items() if task_phase[t] == home)
+        outside = " ".join(" ".join(c[:2]) for t, c in task_cells.items() if task_phase[t] != home)
+        if not re.search(r"Check " + v + r"\b", inside):
+            problems.append(f"{v} is no task of {home}")
+        if re.search(r"Check " + v + r"\b", outside):
+            problems.append(f"{v} is planned as a task outside {home}")
         if v not in answer_rows:
             problems.append(f"{v} has no row with a planned answer")
-    if re.search(r"Check V-\d{2}", later):
-        problems.append("a check is planned as a task after PH-00")
-    ok &= report("checks V-01 to V-07 as tasks of the first phase", problems)
+    ok &= report(f"checks V as tasks of their home phase (V-08 in {V_HOME['V-08']}, all others in PH-00)", problems)
 
     # --- requirements that feature_specifications.md leaves to this document
     left = set()
@@ -628,6 +632,70 @@ if guide and rm and fs:
     print(f"guide: sentences of eight or more words: {len(units)}; also found in another document: {copied or 'none'}")
     ok &= not copied
 
+# ---------------------------------------------------------------- version 1.1: the Decomposer (change 7.0)
+if rm and fs and guide:
+    problems = []
+    # requirements with the priority V1.1
+    v11_req = [cells_of(l)[0] for l in req.splitlines() if re.match(r"\| (?:FR|NFR)-[A-Z0-9]+-\d{2} ", l) and cells_of(l)[-1] == "V1.1"]
+    if not v11_req:
+        problems.append("no requirement has the priority V1.1")
+    alien = [i for i in v11_req if not i.startswith("FR-DEC-")]
+    if alien:
+        problems.append(f"requirements with the priority V1.1 outside the group FR-DEC: {alien}")
+    dec_pri = {cells_of(l)[0]: cells_of(l)[-1] for l in req.splitlines() if l.startswith("| FR-DEC-")}
+    odd = sorted(i for i, pr in dec_pri.items() if pr not in ("V1.1", "P2"))
+    if odd:
+        problems.append(f"requirements of the group FR-DEC with another priority than V1.1 or P2: {odd}")
+    # criteria of the group AC-DEC and phases of version 1.1
+    ph11 = {p for p, c in ph_rows.items() if len(c) == 5 and c[3] == "1.1"}
+    ph10 = {p for p, c in ph_rows.items() if len(c) == 5 and c[3] == "1.0"}
+    if not ph11 or (ph10 and min(ph11) <= max(ph10)):
+        problems.append("the phases of version 1.1 are missing or do not follow version 1.0")
+    dec_acs = [a for a in ac_def if a.startswith("AC-DEC-")]
+    early = sorted(a for a in dec_acs if any(task_phase[t] not in ph11 for t in owner.get(a, [])))
+    if early:
+        problems.append(f"criteria of the Decomposer outside version 1.1: {early}")
+    stray11 = sorted(a for a, ts in owner.items() if not a.startswith("AC-DEC-") and any(task_phase[t] in ph11 for t in ts))
+    if stray11:
+        problems.append(f"other criteria inside version 1.1: {stray11}")
+    by_dec = set()
+    for c in ac_rows:
+        if c[0].startswith("AC-DEC-") and len(c) == 4:
+            by_dec |= expand(c[3])
+    bare = sorted(i for i in v11_req if i not in by_dec)
+    if bare:
+        problems.append(f"requirements of version 1.1 without a criterion of the group AC-DEC: {bare}")
+    # decisions of the change
+    d7 = {f"D-{n:03d}" for n in range(103, 113)}
+    cited = {
+        "D-103": ("development_roadmap.md", "opus_implementation_guide.md"),
+        "D-104": tuple(n for n in NAMES if n != "project_decisions.md"),
+        "D-105": ("requirements.md", "feature_specifications.md"),
+        "D-106": ("technology_stack.md", "architecture.md", "feature_specifications.md"),
+        "D-107": ("technology_stack.md", "feature_specifications.md"),
+        "D-108": ("technology_stack.md", "architecture.md", "feature_specifications.md"),
+        "D-109": ("architecture.md", "feature_specifications.md"),
+        "D-110": ("technology_stack.md", "feature_specifications.md"),
+        "D-111": ("technology_stack.md",),
+        "D-112": ("technology_stack.md", "development_roadmap.md"),
+    }
+    if d7 - set(dec_def):
+        problems.append(f"decisions missing in the log: {sorted(d7 - set(dec_def))}")
+    for d, where in sorted(cited.items()):
+        lost = [n for n in where if d not in expand(docs.get(n, ""))]
+        if lost:
+            problems.append(f"{d} is not cited in {lost}")
+    # the second screen in the UI specification, the result format, the record of the change
+    if not re.search(r"^## 19\. Decomposer", ui, flags=re.M) or "FR-DEC-01" not in expand(ui):
+        problems.append("ui_ux_specification.md has no section for the Decomposer")
+    if not re.search(r"^### 6\.11 Result of a Decomposition job", fs, flags=re.M):
+        problems.append("feature_specifications.md has no format of a result")
+    change_rows = re.findall(r"^\| Change (\d+\.\d+): [^|]+\|[^|]+\| ([^|]+) \|$", dec, flags=re.M)
+    if not any(v == "7.0" and state.strip().startswith("Done") for v, state in change_rows):
+        problems.append("project_decisions.md has no finished row for the change 7.0")
+    ok &= report(f"version 1.1: {len(v11_req)} requirements with the priority V1.1, {len(dec_acs)} criteria of the Decomposer, "
+                 f"{len(ph11)} phases, decisions D-103 to D-112", problems)
+
 # ---------------------------------------------------------------- stages and versions
 stage_rows = re.findall(r"^\| (\d)\. [^|]+\|[^|]+\| ([^|]+) \|$", dec, flags=re.M)
 print("stages:", "; ".join(f"{n}: {state.strip()[:30]}" for n, state in stage_rows))
@@ -656,7 +724,7 @@ if rm and fs:
 # ---------------------------------------------------------------- counts
 groups = collections.Counter(re.match(r"(.*)-\d+$", i).group(1) for i in req_def + dec_def)
 print("counts:", dict(sorted(groups.items())))
-pri = collections.Counter(re.findall(r"\|\s*(P0|P1|P2)\s*\|\s*$", req, flags=re.M))
+pri = collections.Counter(re.findall(r"\|\s*(P0|P1|V1\.1|P2)\s*\|\s*$", req, flags=re.M))
 print("functional requirements by priority:", dict(pri))
 print("documents (name, version, lines):")
 for n in NAMES:

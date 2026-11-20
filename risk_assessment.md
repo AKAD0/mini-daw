@@ -1,7 +1,8 @@
 # risk_assessment.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 5 of 6 (roadmap) · **Version:** 1.0 · **Date:** 2026-11-20
+**Stage:** 5 of 6 (roadmap) · **Version:** 2.0 · **Date:** 2026-11-20
+**Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: RISK-23 and RISK-24 (Sections 4.12 and 4.13), the row V-08 in Section 5. Changed parts: the conventions 3 and 4, RISK-18 (cause 5, reviews), RISK-21 (cause 1, mitigation 4), Section 6. The phases PH-16 to PH-18 watch ten of the earlier risks too.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `development_roadmap.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-`, `V-`, `MT-`, `PH-` and `GATE-` point to them.
 
 ---
@@ -12,8 +13,8 @@ Conventions:
 
 1. Capitalized names are terms of `requirements.md` Section 2 and of `architecture.md` Section 1.3.
 2. A risk has an ID of the form `RISK-<number>`.
-3. RISK-01 to RISK-11 are the risks that the brief names, in the order of the brief. RISK-12 to RISK-22 come from the work of Stages 1 to 5.
-4. Every rating is a judgment before the checks V-01 to V-07 (prov.). This document claims no result of a check.
+3. RISK-01 to RISK-11 are the risks that the brief names, in the order of the brief. RISK-12 to RISK-22 come from the work of Stages 1 to 5. RISK-23 and RISK-24 come with the Decomposer of version 1.1 (D-104).
+4. Every rating is a judgment before the checks V-01 to V-08 (prov.). This document claims no result of a check.
 5. Each risk names what the design already does and what the plan does. Both together are its mitigation strategy.
 6. The decision D-097 of `project_decisions.md` records the method.
 
@@ -94,6 +95,8 @@ The score of a risk is its likelihood times its weight. It runs from 1 to 9.
 | RISK-20 | Small screen and touch | Medium | Medium | 4 | V-01, MT-14 |
 | RISK-21 | Size of the plan | High | Medium | 6 | MT-19 |
 | RISK-22 | Unknown facts of the phone and of its system | Medium | Medium | 4 | V-01, V-03, MT-10 |
+| RISK-23 | Quality of a decomposition into Notes | High | Medium | 6 | V-08, MT-21 |
+| RISK-24 | Size and time of a Decomposition job | Medium | Medium | 4 | V-08, MT-21 |
 
 The two largest risks are RISK-07 and RISK-08. Both belong to the two features that turn sound into something else. Both get a check in the first phase, before any other work depends on them.
 
@@ -452,7 +455,7 @@ Answers if it happens:
 1. The three answers of V-06 apply, in their order (`development_roadmap.md` Section 7.3).
 2. Version 1.0 ships the quick mode only, and the free description follows later.
 
-Watched by: V-06, MT-16. Phases: PH-00, PH-10.
+Watched by: V-06, MT-16. Phases: PH-00, PH-10, PH-16.
 
 ### 3.9 RISK-09: Claude API limitations and costs
 
@@ -500,7 +503,7 @@ Answers if it happens:
 2. The model is pinned, or the tier changes.
 3. The budget per job changes in the settings.
 
-Watched by: V-06, MT-16. Phases: PH-00, PH-10.
+Watched by: V-06, MT-16. Phases: PH-00, PH-10, PH-16.
 
 ### 3.10 RISK-10: network dependency
 
@@ -538,7 +541,7 @@ Answers if it happens:
 1. The job waits and resumes by itself.
 2. The owner starts the job again. The new job is linked to the first.
 
-Watched by: MT-13, MT-16. Phases: PH-09, PH-10.
+Watched by: MT-13, MT-16. Phases: PH-09, PH-10, PH-18.
 
 ### 3.11 RISK-11: Android background execution restrictions
 
@@ -581,7 +584,7 @@ Answers if it happens:
 1. A later version adds a foreground service for playback and for export (`development_roadmap.md` Section 3.4).
 2. The Module shows the state of a job at once when the app opens, without a notification.
 
-Watched by: MT-11, MT-16. Phases: PH-07, PH-10, PH-11.
+Watched by: MT-11, MT-16. Phases: PH-07, PH-10, PH-11, PH-18.
 
 ---
 
@@ -695,7 +698,7 @@ Answers if it happens:
 1. The shell moves to Views.
 2. The owner accepts a measured value, and the target changes by a decision.
 
-Watched by: V-02, MT-01. Phases: PH-00, PH-03, PH-09.
+Watched by: V-02, MT-01. Phases: PH-00, PH-03, PH-09, PH-18.
 
 ### 4.4 RISK-15: workflow without a computer that has the Android build tools
 
@@ -818,7 +821,7 @@ Answers if it happens:
 1. The owner deletes the key in the Console and creates a new one.
 2. The password of the key for signing is replaced, and a new key is created. The owner then installs the app once more.
 
-Watched by: V-06, MT-16. Phases: PH-00, PH-10.
+Watched by: V-06, MT-16. Phases: PH-00, PH-10, PH-16, PH-17.
 
 ### 4.7 RISK-18: licences and terms
 
@@ -830,6 +833,7 @@ Causes:
 2. The public test sets allow limited use (A-19).
 3. A library with an unsuitable licence could enter by mistake (D-024).
 4. The owner is responsible for the rights to the audio that is sent to extraction (FR-AIX-16).
+5. Version 1.1 adds the model file for the beats. It comes from a third party too (`technology_stack.md` Section 9.7).
 
 Effects:
 
@@ -845,7 +849,7 @@ Mitigations in the design:
 Mitigations in the plan:
 
 1. A list of licences is checked on every change (NFR-LEG-01).
-2. Reviews at GATE-09, GATE-10 and GATE-15 (`development_roadmap.md` Section 2.7).
+2. Reviews at GATE-09, GATE-10, GATE-15 and GATE-18 (`development_roadmap.md` Section 2.7).
 3. The app is a personal tool in version 1 (D-002). The terms of the model files must be clear before it goes to other people.
 
 Early signs:
@@ -857,7 +861,7 @@ Answers if it happens:
 
 1. The stem model is replaced by one of the two older models with clear terms (`technology_stack.md` Section 9.4).
 
-Watched by: V-05, V-06. Phases: PH-00, PH-10, PH-15.
+Watched by: V-05, V-06. Phases: PH-00, PH-10, PH-15, PH-16.
 
 ### 4.8 RISK-19: loss of data
 
@@ -897,7 +901,7 @@ Answers if it happens:
 1. The fault blocks the gate. No other task comes first.
 2. The archive of a Project moves from PH-11 to the front of version 1.0.
 
-Watched by: MT-11, MT-19. Phases: PH-03, PH-05, PH-07, PH-09, PH-11.
+Watched by: MT-11, MT-19. Phases: PH-03, PH-05, PH-07, PH-09, PH-11, PH-17.
 
 ### 4.9 RISK-20: small screen and touch
 
@@ -934,7 +938,7 @@ Answers if it happens:
 
 1. The sizes of rows and the time of the hold change. They are constants.
 
-Watched by: V-01, MT-14. Phases: PH-00, PH-03, PH-04, PH-05, PH-06, PH-09, PH-13.
+Watched by: V-01, MT-14. Phases: PH-00, PH-03, PH-04, PH-05, PH-06, PH-09, PH-13, PH-18.
 
 ### 4.10 RISK-21: size of the plan
 
@@ -942,7 +946,7 @@ Rating: likelihood high, weight medium.
 
 Causes:
 
-1. The plan has 99 tasks. One implementer builds an engine, four editors, a Mixer and two features that analyse sound.
+1. The plan has 99 tasks up to version 1.0. Version 1.1 adds 16 tasks for a second tool. One implementer builds an engine, four editors, a Mixer and two features that analyse sound.
 2. Results of PH-00 can change later phases.
 
 Effects:
@@ -960,6 +964,7 @@ Mitigations in the plan:
 1. A usable build at the end of each phase from PH-03 on.
 2. The phases of version 1.0 do not depend on each other. The owner can change their order or drop one.
 3. A gate ends each phase. No task of version 1.0 starts before GATE-09.
+4. Version 1.1 starts after version 1.0. The owner can change this order (Q-18).
 
 Early signs:
 
@@ -971,7 +976,7 @@ Answers if it happens:
 1. The owner moves a phase of version 1.0 behind the release.
 2. A task of size L is split, and the split is recorded.
 
-Watched by: MT-19. Phases: PH-09, PH-13, PH-15.
+Watched by: MT-19. Phases: PH-09, PH-13, PH-15, PH-18.
 
 ### 4.11 RISK-22: unknown facts of the phone and of its system
 
@@ -1009,6 +1014,90 @@ Answers if it happens:
 
 Watched by: V-01, V-03, MT-10. Phases: PH-00, PH-03, PH-14.
 
+### 4.12 RISK-23: quality of a decomposition into Notes
+
+Rating: likelihood high, weight medium.
+
+Causes:
+
+1. The Notes depend on the stems and on the tempo. An error there reaches every Note.
+2. The Hit groups come from signal processing. Version 1.1 has no model for the drum kit (D-107).
+3. The conversion of the phone was made for a hummed voice. The stem of a bass is a new kind of input (D-108).
+4. A Project has one tempo. Real music can change its tempo (FR-TR-03).
+5. The measured quality uses rendered Projects. They are easier than real music.
+
+Effects:
+
+1. The new Project sounds unlike the recording when the Tracks with Notes play.
+2. The owner corrects many Notes by hand, or uses only the stems.
+
+Mitigations in the design:
+
+1. The stems are always part of the new Project. They play the recording as it is (FR-DEC-14).
+2. Each part with Notes keeps its stem on a muted Track. The owner compares both with one tap.
+3. The review lets the owner correct the tempo and the first bar without a new job (FR-DEC-12).
+4. Without a steady tempo, the Notes keep their exact times (FR-DEC-17).
+5. The requirements promise an approximation, and the review says so (FR-DEC-23).
+
+Mitigations in the plan:
+
+1. The host part of V-08 measures tempo, hits, Hit groups and Notes of the bass before any screen is built (NFR-QLT-06).
+2. MT-21 judges 5 ranges of real music at GATE-18 (NFR-QLT-07).
+3. Each uncertain part has a second method (`technology_stack.md` Section 14).
+
+Early signs:
+
+1. A rule of `feature_specifications.md` Section 12.8 fails in the first run.
+2. In V-08 the owner accepts fewer than 2 of 3 results.
+
+Answers if it happens:
+
+1. The four answers of V-08 apply, in their order (`development_roadmap.md` Section 7.4).
+2. Version 1.1 ships the Decomposer with tempo and stems, and the Notes follow later.
+
+Watched by: V-08, MT-21. Phases: PH-16, PH-17, PH-18.
+
+### 4.13 RISK-24: size and time of a Decomposition job
+
+Rating: likelihood medium, weight medium.
+
+Causes:
+
+1. A range can be 240 s long. Extraction was planned for 30 s (A-09).
+2. The speed of the CPU in the Sandbox is not known (A-15).
+3. The limit of time for one command of the agent is not known (A-25).
+4. A result holds four stems. Upload, download and storage grow with the length of the range.
+
+Effects:
+
+1. A job ends at its time limit without a result, and it still costs money.
+2. A download over a mobile network uses much data.
+3. The storage of the phone fills up.
+
+Mitigations in the design:
+
+1. The program works in bounded steps and keeps its state between two calls (D-106).
+2. The Session has a budget and a time limit of 20 min (NFR-COST-05).
+3. The stems arrive as FLAC files. The app shows the size before the download and checks the free storage (NFR-RES-08).
+4. The limit of the range is provisional. It can go down to 60 s (D-110).
+
+Mitigations in the plan:
+
+1. The Sandbox part of V-08 runs Sessions with 60 s and with 240 s. It records the time of each step.
+2. MT-21 measures the time of real jobs at GATE-18 (NFR-PERF-12).
+
+Early signs:
+
+1. In V-08 a step runs longer than 120 s.
+2. A Session with 240 s ends later than 15 min.
+
+Answers if it happens:
+
+1. The limit of the range goes down (`development_roadmap.md` Section 7.4).
+2. The steps of the program get shorter.
+
+Watched by: V-08, MT-21. Phases: PH-16, PH-17, PH-18.
+
 ---
 
 ## 5. What is unknown until the checks
@@ -1022,6 +1111,7 @@ Watched by: V-01, V-03, MT-10. Phases: PH-00, PH-03, PH-14.
 | V-05 | The better pitch candidate; the count of corrections | RISK-07, RISK-18 |
 | V-06 | Time, cost and quality of a Session | RISK-08, RISK-09, RISK-17, RISK-18 |
 | V-07 | The place of a Take | RISK-01 |
+| V-08 | Time, cost and quality of a decomposition | RISK-23, RISK-24 |
 
 ---
 
@@ -1030,9 +1120,11 @@ Watched by: V-01, V-03, MT-10. Phases: PH-00, PH-03, PH-14.
 | Topic | Decision |
 |---|---|
 | Method: levels, fields, reviews at every gate | D-097 |
+| Two risks of the Decomposer; the check V-08 in PH-16 | D-104, D-112 |
 
 Open points:
 
 1. Every rating is a judgment before the checks. TK-014 of `development_roadmap.md` rates the risks again with the results of PH-00.
 2. The limit of the memory for an app on this phone is not known (CON-02).
 3. The terms of the weights of the stem model are not confirmed for a release to other people (RISK-18).
+4. The ratings of RISK-23 and RISK-24 are judgments before the check V-08.

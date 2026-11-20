@@ -1,11 +1,12 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 1.4 · **Date:** 2026-11-20
+**Stage:** 2 of 6 (technical research) · **Version:** 2.0 · **Date:** 2026-11-20
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
 **Change in 1.4:** results of Stage 6. A library may add permissions to the manifest of the app (D-101). Changed part: Section 15 (item 9).
+**Change in 2.0:** the owner asked for the decomposition of a recording into a Project (D-104). The tools of the owner's note are examined (D-111). New parts: Sections 9.7 and 9.8, the check V-08 in Section 14, the sources R19 to R30. Changed parts: Section 1 (three rows), Section 9.4 (facts 4 and 6, fall-back models), Section 10 (one row), Section 13, Section 14 (answers), Section 15 (items 10 to 12).
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -16,8 +17,8 @@ Conventions:
 
 1. Each section answers one or more pending decisions (`AD-`) of `project_decisions.md`.
 2. Each section names the options, the choice, the reasons, the costs, and the check on the phone.
-3. The mark "test pending" means that a choice depends on a measurement. Section 14 lists these checks (`V-01` to `V-07`) with their pass rules.
-4. `[R1]` to `[R18]` point to the sources in Section 16. `[R16]` stands for the sources of `requirements.md`. A statement without a source is engineering knowledge. Section 15 lists what the implementer confirms when a library is added.
+3. The mark "test pending" means that a choice depends on a measurement. Section 14 lists these checks (`V-01` to `V-08`) with their pass rules.
+4. `[R1]` to `[R30]` point to the sources in Section 16. `[R16]` stands for the sources of `requirements.md`. A statement without a source is engineering knowledge. Section 15 lists what the implementer confirms when a library is added.
 5. This document fixes no version numbers. The first task of development records the newest stable versions in the version catalog of the build.
 
 ---
@@ -47,8 +48,10 @@ Conventions:
 | Calls to Claude | Direct HTTPS calls with OkHttp and kotlinx.serialization | Apache-2.0 | D-045 |
 | Toolkit in the Sandbox | Python, ONNX Runtime on a CPU, HTDemucs with 4 stems, NumPy, SciPy, ffmpeg | MIT and BSD; weights: confirm | D-046, test pending |
 | Orchestrator | Agent of Claude Managed Agents; small model tier first | service | D-047, test pending |
+| Decomposition in the Sandbox (version 1.1) | The Toolkit with one more program; Beat This! through ONNX Runtime for tempo and beats; own signal processing for the Hit groups | MIT; own code | D-106, D-107, test pending |
+| Notes of a decomposition (version 1.1) | The hits become Notes. The stem of the bass goes through the conversion of the phone, with a low register. | own code | D-108, test pending |
 | Storage of the API key | AES-GCM key from the Android Keystore | part of Android | D-048 |
-| Work in the background | Kotlin coroutines; WorkManager for the follow-up of Extraction jobs | Apache-2.0 | D-049 |
+| Work in the background | Kotlin coroutines; WorkManager for the follow-up of jobs of both kinds | Apache-2.0 | D-049 |
 | Tests | JUnit, Compose tests, Macrobenchmark; GoogleTest and sanitizers on a host; pytest | Apache-2.0, BSD | D-050 |
 | Diagnostics | On the phone only | — | D-051 |
 | MIDI files | Own writer | own code | D-052 |
@@ -393,7 +396,7 @@ ONNX Runtime supports memory pages of 16 KB on Android since a fix in 2025 [R13]
 
 ---
 
-## 9. Extraction (AD-23 to AD-28, AD-33)
+## 9. Extraction and decomposition (AD-23 to AD-28, AD-33)
 
 ### 9.1 Parts
 
@@ -462,15 +465,16 @@ Facts about the separation model:
 1. Demucs is under the MIT licence. Its documentation says nothing about the terms of the trained weights [R9].
 2. On a CPU, Demucs needs about 1.5 times the length of the audio [R9]. A range of 40 s would then take about one minute.
 3. The hybrid transformer models process pieces of at most 7.8 s [R9].
-4. A version of the model for ONNX Runtime exists. Its package is under the MIT licence and needs no PyTorch. Its page gives no licence for the model files [R10].
+4. A version of the model for ONNX Runtime exists. Its package is under the MIT licence and needs no PyTorch. The list of its files states the MIT licence for the ONNX files [R10], [R19]. The terms of the data behind the weights stay a point to confirm (Section 15).
 5. The author of Demucs no longer develops it actively [R9].
+6. Each ONNX file also exists with weights in 16-bit form. The file of the model with 4 stems then has 166 MB in place of 316 MB. It runs at the same speed [R19]. The smaller file is the candidate for the attached model file. The implementer decides this when the Toolkit is finished, with rule 2 of `feature_specifications.md` Section 5.8.
 
 Open points of the model:
 
 1. The terms of the weights must be clear before any release to other people (NFR-LEG-02). For a personal tool the risk is low.
 2. The ONNX file comes from a third party. The setup script therefore keeps an own copy of the file, and V-06 compares its output with the original model.
 
-Models that need a GPU stay out (D-032). Two lighter stem models remain as fall-back if HTDemucs is too slow: Spleeter and Open-Unmix (both MIT; confirm).
+Models that need a GPU stay out (D-032). Two lighter stem models remain as fall-back if HTDemucs is too slow: Spleeter and Open-Unmix (both MIT; confirm). If the stem of the vocals is too weak, an MDX-Net model of Ultimate Vocal Remover is the candidate. It is an ONNX file (licence: confirm) [R25].
 
 The Orchestrator cannot hear (CON-13). It decides from the numbers of "Describe". Whether the agent can also look at the spectrogram picture is not documented. V-06 tests it.
 
@@ -499,6 +503,73 @@ Steps:
 
 The pass rules are in Section 14.
 
+### 9.7 Decomposition of a recording (version 1.1; D-106 to D-108, D-111)
+
+The Decomposer of `requirements.md` Section 5.16 reuses the parts of Sections 9.1 to 9.5. This section adds the choices that are new.
+
+**Tools of the owner's note.** The owner looked at six tools [R30]. The table gives the verdict for each of them (D-111).
+
+| Tool | What it is | Verdict for this app |
+|---|---|---|
+| Demucs | An open stem model. Its code is under the MIT licence. ONNX files exist [R9], [R19]. | It already is the stem model of the Toolkit (D-046). The same file serves the Decomposer. |
+| Ultimate Vocal Remover | A desktop program around open models. The Python package audio-separator runs the same models. It needs PyTorch [R25]. | Not used. Its MDX-Net models are ONNX files. One of them is the candidate for the answer "another model" of V-06, if the stem of the vocals is too weak. |
+| LALAL.AI | A paid cloud service with an API and with own models. It offers up to 10 kinds of stem. Its price counts the length of the file times the number of kinds [R24]. | Not used. It is the first candidate for the answer "hosted model" of V-06 and of V-08. It would need a second secret on the phone. The audio would go to a third party. |
+| RipX DAW | A desktop program. It splits a recording into layers with single notes. It exports stems and MIDI files. Scripts in Python run inside the program [R26]. | Not usable inside the app. The pages that were read name no service that an Android app can call. The program shows the goal of the Decomposer: Notes for each instrument. |
+| SpectraLayers | A desktop program for work on the spectrum. Version 12 splits a drum kit into six parts [R27]. | Not usable inside the app, for the same reason. |
+| iZotope RX | A desktop program with plug-ins. Its part "Music Rebalance" splits vocals, bass, percussion and other instruments [R27]. | Not usable inside the app, for the same reason. |
+
+**Choices for each part of the work.**
+
+| Part | Options | Choice | Reasons |
+|---|---|---|---|
+| Stems | HTDemucs with 4 stems; the model with 6 stems; the fine-tuned set of four models | HTDemucs with 4 stems (D-046) | One model file serves both features. The authors call the model with 6 stems experimental, and they name its piano stem as weak [R9]. The fine-tuned set needs four times the work for a small gain [R9]. |
+| Tempo, beats and first bar | Beat This! with its small model; own code that reads the tempo from the onsets | Beat This! through ONNX Runtime. Own code is the fall-back (D-107). | Code and weights are under the MIT licence. The small model is a file of about 10 MB. It finds the beats and the starts of the bars. The official package needs PyTorch, but ports with ONNX files exist [R20]. |
+| Hit groups | Own signal processing; a model that splits the drum kit; a model that transcribes drums; NMFD | Own signal processing: onsets, a few numbers for each hit, grouping with SciPy (D-107) | The weights of LarsNet forbid commercial use [R22]. The DrumSep models are PyTorch files from a community, and their licence is not confirmed [R22]. ADTOF forbids commercial use [R23]. NFR-LEG-02 excludes such files. NMFD splits a drum recording into its single sounds [R29]. It is the second method if the grouping fails V-08. |
+| Notes of the bass | The conversion of Section 8 on the phone, with a low register; Basic Pitch in the Sandbox | The conversion on the phone (D-108) | The code exists (FR-H2M-11). It needs no new model. It runs again without a Session. Basic Pitch has code and model files under Apache-2.0 [R21]. It stays the second method. |
+| Notes for chords and melodies | Basic Pitch | Not built | `requirements.md` Section 1.3 keeps the transcription of several voices out. |
+| The original Samples of the producer | A search in the Library by similarity | Not built (FR-DEC-24) | A finished recording does not hold the identity of its Samples [R30]. A search helps only when the Library holds the original Sample. |
+| A link with a range | The fragment `#t=start,end` of a link | The app reads it (FR-DEC-04) | A W3C Recommendation defines this form for times in seconds [R28]. |
+
+The low register: both pitch methods of Section 8.2 start at 47 Hz or higher. A bass can sound lower. The conversion therefore reads the stem of the bass at double speed. Every pitch then lies one octave higher. The code for Notes puts each Note back: one octave down, and at twice the time.
+
+**Facts for the Sandbox.**
+
+1. The Sandbox offers up to 8 GB of memory and up to 10 GB of disk [R11].
+2. The running time of a Session costs 0.08 USD per hour. Only the time in the status `running` counts [R12]. A Session of 15 min therefore costs 0.02 USD for its time. The tokens come on top.
+3. The stem model needs about 1.5 times the length of the audio on a CPU, by the words of its authors [R9]. A measurement of the ONNX files on a fast laptop reports 0.2 times [R19]. The stems of a range of 240 s then need between 1 min and 6 min.
+4. The pages that were read name no limit for the time of one command of the agent. The program of the Decomposer therefore works in steps. Each step does a bounded piece of the work and stores its state on the disk (D-106).
+
+**Delivery.** The setup of Section 9.3 gets a second version.
+
+| Item | Change in version 2 of the setup |
+|---|---|
+| Toolkit | One more program: `decompose` |
+| Model files | One more file: the model for the beats |
+| Agents | One more agent with a short system prompt. It starts the program and repeats it until the program reports its end. |
+| Environment | No change |
+
+`feature_specifications.md` Section 12 fixes the request, the system prompt, the steps of the program and the format of the result.
+
+### 9.8 The decomposition test (V-08)
+
+Purpose: confirm D-106, D-107, D-108 and D-110 before the Decomposer is built. The test belongs to version 1.1. It runs after extraction works (D-112).
+
+Host part, run by the implementer:
+
+1. The offline render of the engine renders the test Projects of `feature_specifications.md` Section 12.8.
+2. The program `decompose` runs on each render. The conversion runs on the stem of the bass of each render.
+3. A script compares tempo, hits and Notes with the content of the test Projects.
+
+Sandbox part, started by the owner:
+
+1. The setup script creates version 2 of the setup on the owner's account.
+2. A test script runs 7 Sessions. Five of them use ranges of 60 s: three from songs of the owner and two from renders. Two use ranges of 240 s.
+3. The script records for each Session: the time until the end, the time of each step, the number of commands, the tokens and the cost.
+4. One Session runs while the test script is disconnected.
+5. The owner listens to the stems and to the Samples of three results.
+
+The pass rules are in Section 14.
+
 ---
 
 ## 10. Work in the background (D-049)
@@ -507,7 +578,7 @@ The pass rules are in Section 14.
 |---|---|
 | Import, peaks, conversion of humming, export | Kotlin coroutines inside the app |
 | Reading and writing of audio for playback and recording | Threads of the engine |
-| Follow-up of an Extraction job outside the foreground | WorkManager |
+| Follow-up of an Extraction job or of a Decomposition job outside the foreground | WorkManager |
 | Playback in the background | Not in version 1 (D-020) |
 
 Version 1 uses no foreground service. During playback and during a Take, the screen stays on.
@@ -556,7 +627,11 @@ Facts behind D-073:
 | OpenSL ES | Outdated. Oboe uses AAudio on all supported versions [R2]. |
 | PyTorch in the Sandbox | Very large install. ONNX Runtime does the same job. |
 | CREPE and other large pitch networks | Slow on a CPU; less accurate than SwiftF0 in the benchmark [R5] |
-| Basic Pitch | Weak for one voice [R5], [R7] |
+| Basic Pitch for humming | Weak for one voice [R5], [R7]. Section 9.7 names its possible later use. |
+| LarsNet, ADTOF | Their licences forbid commercial use (NFR-LEG-02) [R22], [R23] |
+| RipX DAW, SpectraLayers, iZotope RX as parts of the app | Desktop programs. No interface for an Android app was found [R26], [R27]. |
+| LALAL.AI in version 1.1 | A second secret, and audio for a third party. It stays the candidate for a hosted model [R24]. |
+| audio-separator in the Sandbox | It needs PyTorch [R25] |
 | Models steered by text for separation | Need a GPU (D-032) |
 | Flutter, own renderer | Section 6.1 |
 | Hilt, Koin | Not needed for one activity; they add startup work |
@@ -579,8 +654,16 @@ The owner runs the checks on the phone with small test builds from the implement
 | V-05 | Humming | Both pitch candidates with the same Note code on vocadito and on 10 melodies of the owner | Section 8.2; the winner also meets NFR-QLT-02 and NFR-PERF-09 | D-044 |
 | V-06 | Sandbox | Section 9.6 | 9 of 10 Sessions finish within 420 s; cost at most 0.30 USD each; the disconnected Session finishes; stems match the original model; the owner accepts 2 of 3 results | D-028, D-046, D-047 |
 | V-07 | Latency of a Take | Offset from timestamps against offset from loopback calibration | Difference at most 10 ms | D-040 |
+| V-08 | Decomposition (version 1.1) | Section 9.8 | Host part: the rules of `feature_specifications.md` Section 12.8 hold. Sandbox part: 4 of 5 Sessions with 60 s finish within 6 min; both Sessions with 240 s finish within 15 min; no step runs longer than 120 s; cost at most 0.30 USD each; the disconnected Session finishes; the owner accepts 2 of 3 results | D-106, D-107, D-108, D-110 |
 
-If V-06 fails, the order of the answers is: change the model tier or the model, then add a hosted model as a tool, then move extraction after version 1.
+If V-06 fails, the order of the answers is: change the model tier or the model, then add a hosted model as a tool, then move extraction after version 1. LALAL.AI is the first candidate for the hosted model (Section 9.7).
+
+V-08 belongs to version 1.1. It runs after extraction works (D-112). If V-08 fails, the order of the answers is:
+
+1. A lower limit for the range, when only the long Sessions fail.
+2. The second method of the part that fails: own code for the tempo, NMFD for the Hit groups, Basic Pitch for the bass.
+3. A hosted model for the stems.
+4. A Decomposer without Notes. The new Project then holds the tempo and the stems.
 
 ---
 
@@ -595,6 +678,9 @@ If V-06 fails, the order of the answers is: change the model tier or the model, 
 7. Whether the read tool of the agent shows pictures to the model.
 8. The limits that the Claude Console offers for spending (NFR-COST-03).
 9. The permissions that each library adds to the manifest of the app. Each one enters the list of D-101.
+10. The origin and the licence of the ONNX file of Beat This!. The setup keeps an own copy, and a test compares it with the reference.
+11. The limit of time for one command of the agent.
+12. The licence of each further model that enters the Toolkit: a model of Ultimate Vocal Remover, or a model that splits the drum kit.
 
 ---
 
@@ -622,3 +708,15 @@ Read on 2026-11-20, unless marked otherwise.
 | R16 | Earlier sources of this project: `requirements.md` Section 10 |
 | R17 | GitHub Changelog, 2024-04-02, hardware accelerated Android virtualization on the hosted Linux runners with 2 vCPUs: https://github.blog/changelog/2024-04-02-github-actions-hardware-accelerated-android-virtualization-now-available/ |
 | R18 | Android Developers, debug Baseline Profiles (where and when a profile is compiled): https://developer.android.com/topic/performance/baselineprofiles/debug-baseline-profiles |
+| R19 | demucs-onnx, list of the model files with sizes, speed and licence: https://stemsplit.github.io/demucs-onnx/models/ |
+| R20 | Beat This!, a model for beats and for the starts of bars. Paper: https://arxiv.org/html/2407.21658v1. Package: https://pypi.org/project/beat-this/. A port with ONNX files: https://docs.rs/crate/beat-this/0.3.0. A conversion that names the licence of code and weights: https://huggingface.co/schism-audio/beat-this-coreml |
+| R21 | Basic Pitch, code and model files: https://github.com/spotify/basic-pitch |
+| R22 | Models that split a drum kit. LarsNet, paper: https://arxiv.org/abs/2312.09663. Plug-in LARS with the licence of the weights: https://github.com/EdoardoMor/LARS. DrumSep models, comparison: https://mvsep.com/algorithms/29. Package `mdxnet-infer`: https://pypi.org/project/mdxnet-infer/ |
+| R23 | ADTOF, a model that transcribes drums: https://github.com/MZehren/ADTOF |
+| R24 | LALAL.AI. API: https://www.lalal.ai/api/help/. Prices: https://www.lalal.ai/pricing/. Summary of the service: https://www.lalal.ai/llms.txt |
+| R25 | audio-separator, a Python package for the models of Ultimate Vocal Remover: https://github.com/nomadkaraoke/python-audio-separator and https://pypi.org/project/audio-separator/ |
+| R26 | RipX DAW: https://hitnmix.com/. Review: https://www.soundonsound.com/reviews/hitnmix-ripx-daw-pro |
+| R27 | SpectraLayers 12, news: https://www.soundonsound.com/news/steinberg-unveil-spectralayers-12. iZotope RX 12: https://www.native-instruments.com/products/izotope/rx-12-standard/ and https://www.pluginboutique.com/products/17211-RX-12-Standard |
+| R28 | W3C, Media Fragments URI 1.0 (basic), Recommendation of 2012-09-25: https://www.w3.org/TR/media-frags/ |
+| R29 | Dittmar and Müller, separation of drum recordings with NMFD: https://www.audiolabs-erlangen.de/resources/MIR/2016-IEEE-TASLP-DrumSeparation |
+| R30 | Note of the owner, "Decomposing a Track into Its Samples", file `track_decomposition_tools.md`, received on 2026-11-20 |

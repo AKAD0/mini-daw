@@ -1,9 +1,10 @@
 # feature_specifications.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 4 of 6 (feature specifications) · **Version:** 1.2 · **Date:** 2026-11-20
+**Stage:** 4 of 6 (feature specifications) · **Version:** 2.0 · **Date:** 2026-11-20
 **Change in 1.1:** results of Stage 5. Each criterion now belongs to one task of `development_roadmap.md`. Changed criteria: AC-TR-06, AC-TR-09, AC-MX-08, AC-MX-09, AC-FX-04, AC-FX-12, AC-AIX-03. New criterion: AC-TR-14. Changed parts: Section 9 (rules, MT-08), Section 10 (places of the checks).
 **Change in 1.2:** final check of Stage 6. Each criterion was compared with its requirements, and each task of `development_roadmap.md` with its criteria. New criteria: AC-APP-19 to AC-APP-21, AC-TR-15, AC-PL-17 to AC-PL-21, AC-PT-10, AC-PT-11, AC-LIB-10 to AC-LIB-12, AC-MX-21, AC-FX-17, AC-REC-15 to AC-REC-18, AC-H2M-16, AC-H2M-17. Changed criteria: AC-WS-10, AC-APP-01, AC-APP-05, AC-APP-16, AC-TR-08, AC-TR-12, AC-PL-09, AC-CR-10, AC-SM-01, AC-LIB-07, AC-MX-13, AC-MX-20, AC-FX-10, AC-FX-12, AC-REC-12, AC-H2M-08, AC-H2M-10, AC-H2M-12, AC-AIX-04 to AC-AIX-06, AC-AIX-13, AC-AIX-15, AC-AIX-16, AC-AIX-18, AC-FS-06. Changed manual tests: MT-01, MT-14. Changed parts: the conventions (rule for the mark "P1:", D-102), Sections 1.1, 2.2.1, 2.2.2, 2.2.6, 4.2.6 and 5.3, Section 10 (place of NFR-MNT-07), Section 11 (source F6).
+**Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: Section 12 with the criteria AC-DEC-01 to AC-DEC-33, Section 6.11, the manual test MT-21, the sources F7 to F9. Changed parts: the conventions 3, 9 and 12, Section 4.2.7 (low register), Section 5.2.8 (rule 5), Section 6.5 (version 2), Section 6.6 (schema 2), Section 9 (MT-13, MT-14), Section 10 (FR-AIX-18, FR-DEC-24).
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `ui_ux_specification.md`, `development_roadmap.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-` and `V-` point to them.
 
 ---
@@ -14,29 +15,30 @@ Conventions:
 
 1. Capitalized names are terms of `requirements.md` Section 2 and of `architecture.md` Section 1.3.
 2. "(prov.)" marks a provisional number. A check on the phone or the first tests can correct it.
-3. Priorities follow `requirements.md`: P0 is the MVP, P1 is version 1.0, P2 comes later. A part without a mark is P0.
+3. Priorities follow `requirements.md`: P0 is the MVP, P1 is version 1.0, P2 comes later. V1.1 is version 1.1. A part without a mark is P0.
 4. An acceptance criterion has an ID of the form `AC-<group>-<number>`. Each criterion names its check.
 5. A check is either a program or a manual test of the owner. A manual test has an ID of the form `MT-<number>`. Section 9 lists all manual tests.
 6. This document describes behaviour, formulas and formats. It contains no code of the application.
 7. The decisions D-081 to D-091 of `project_decisions.md` record the main choices of this document.
 8. P2 requirements have no specification in this document. Section 10 lists them.
-9. `[F1]` to `[F6]` are the sources of this document. Section 11 lists them. `[F5]` stands for the sources of the earlier documents.
+9. `[F1]` to `[F9]` are the sources of this document. Section 11 lists them. `[F5]` stands for the sources of the earlier documents.
 10. A criterion that starts with "P1:" covers a part of version 1.0. A criterion without this mark covers no part that is marked P1. Where such a criterion names a table, it means the rows without the mark (D-102).
 11. Sections 5, 8.2, 8.3 and 8.4 describe features of version 1.0 as a whole. Their criteria carry no mark.
+12. Section 12 describes the Decomposer of version 1.1 as a whole. Its criteria carry no mark. Each of them belongs to a phase of version 1.1.
 
-The brief asks for nine items for each core feature and for the Mixer (§4 D). Every one of these four parts has the same nine subsections.
+The brief asks for nine items for each core feature and for the Mixer (§4 D). Every one of these four parts has the same nine subsections. Feature 4 is a later request of the owner (D-104). Its section has the same nine subsections.
 
-| Item that the brief asks for (§4 D) | Feature 1: Playlist | Mixer | Feature 2: humming | Feature 3: extraction |
-|---|---|---|---|---|
-| 1. Functional description | 2.1 | 3.1 | 4.1 | 5.1 |
-| 2. Implementation approach | 2.2 | 3.2 | 4.2 | 5.2 |
-| 3. Libraries, frameworks and services | 2.3 | 3.3 | 4.3 | 5.3 |
-| 4. Data structures and interfaces | 2.4 | 3.4 | 4.4 | 5.4 |
-| 5. Processing pipeline | 2.5 | 3.5 | 4.5 | 5.5 |
-| 6. Expected limitations | 2.6 | 3.6 | 4.6 | 5.6 |
-| 7. Performance considerations | 2.7 | 3.7 | 4.7 | 5.7 |
-| 8. Testing strategy | 2.8 | 3.8 | 4.8 | 5.8 |
-| 9. Acceptance criteria | 2.9 | 3.9 | 4.9 | 5.9 |
+| Item that the brief asks for (§4 D) | Feature 1: Playlist | Mixer | Feature 2: humming | Feature 3: extraction | Feature 4: decomposition |
+|---|---|---|---|---|---|
+| 1. Functional description | 2.1 | 3.1 | 4.1 | 5.1 | 12.1 |
+| 2. Implementation approach | 2.2 | 3.2 | 4.2 | 5.2 | 12.2 |
+| 3. Libraries, frameworks and services | 2.3 | 3.3 | 4.3 | 5.3 | 12.3 |
+| 4. Data structures and interfaces | 2.4 | 3.4 | 4.4 | 5.4 | 12.4 |
+| 5. Processing pipeline | 2.5 | 3.5 | 4.5 | 5.5 | 12.5 |
+| 6. Expected limitations | 2.6 | 3.6 | 4.6 | 5.6 | 12.6 |
+| 7. Performance considerations | 2.7 | 3.7 | 4.7 | 5.7 | 12.7 |
+| 8. Testing strategy | 2.8 | 3.8 | 4.8 | 5.8 | 12.8 |
+| 9. Acceptance criteria | 2.9 | 3.9 | 4.9 | 5.9 | 12.9 |
 
 | Item that the brief asks for about the Mixer (§4 D) | Section |
 |---|---|
@@ -1151,6 +1153,7 @@ If the user cancels the conversion, no Edit happens either. The Take stays in th
 | Convert any Sample | The same steps run on a Sample of the Library (FR-H2M-11) |
 | Notes into the open Pattern | The Edit adds a new Part to the open Pattern instead of a new Pattern (FR-H2M-13) |
 | Root note of a Sample | The pitch runs over the Sample. If at least 60 % of the voiced frames lie within half a semitone of their median, the app proposes this pitch as Root note (FR-SM-02). |
+| Low register, from version 1.1 on | The conversion reads a Sample at double speed, so that low pitches come into the range of the pitch method. Section 12.2.6 holds the rules (FR-DEC-16). |
 
 ### 4.3 Libraries, frameworks and services
 
@@ -1498,6 +1501,7 @@ Rules:
 2. A new version of the Toolkit raises the number in the names. The app looks for the highest number that it knows.
 3. The script runs on any computer with Python, or as a manual task of the CI service (D-073).
 4. The terms of the model file must be clear before the app goes to other people (`technology_stack.md` Section 9.4).
+5. Version 1.1 needs version 2 of the setup. Section 12.2.8 names its items.
 
 #### 5.2.9 Limits and cost
 
@@ -1828,6 +1832,8 @@ Rule for a copy: a low-pass filter with 63 taps removes the upper half of the sp
 | Header | Mark `MDF0`. Version u16. Candidate u16: 1 is SwiftF0, 2 is pYIN. Step in microseconds u32. Count of frames u32. Hash of the Sample: 32 bytes. |
 | Frame | Frequency f32. Confidence f32. Loudness f32. |
 
+Version 1.1 raises the version of this file to 2. The header then ends with one more field: the register as u16, where 0 is normal and 1 is low (Section 12.2.6). A file of the version 1 is built again.
+
 ### 6.6 State of an Extraction job
 
 One JSON file per job in the folder of the job.
@@ -1848,6 +1854,12 @@ One JSON file per job in the folder of the job.
 | `error` | Cause and message of a failure |
 | `cleanupPending` | Yes while the Session or the upload still waits for its deletion |
 | `times` | The time of each change of state |
+
+Version 1.1 raises `schema` to 2 and adds three points:
+
+1. The field `kind` holds `extraction` or `decomposition`. A file with the schema 1 is an Extraction job.
+2. The `request` of a Decomposition job holds the source, the range and the two switches for Notes.
+3. A Decomposition job has no `question`, no `answer` and no `candidates`. It has the field `result`. This field holds the content of the file of Section 6.11, the paths of the audio files, the last settings of the review, and the IDs of the Projects that came from this result.
 
 ### 6.7 Report of a Session
 
@@ -1905,6 +1917,41 @@ The app declares these rules in its file of rules for the extraction of data. An
 | Rate and channels | 48 kHz. One or two channels. |
 | Hash | SHA-256 over the kind of the values, the number of channels and the data |
 | Name | The hash in hexadecimal characters, with the ending `.wav` |
+
+### 6.11 Result of a Decomposition job
+
+The program `decompose` of the Toolkit writes the JSON file `decomposition.json` and the audio files (Section 12.2.5).
+
+| Field | Type and limit | Meaning |
+|---|---|---|
+| `version` | number | Version of the result, now 1 |
+| `toolkit` | text | Version of the Toolkit |
+| `status` | text | `done` or `error` |
+| `message` | text, at most 200 characters | Only with the status `error` |
+| `length_s` | number | Length of the range in seconds |
+| `tempo.bpm` | number, 30 to 300 | The tempo. It is 120 when no tempo was found. |
+| `tempo.found`, `tempo.steady` | yes or no | The two marks of Section 12.2.5 |
+| `tempo.first_bar_s` | number, 0 to `length_s` | The time of the first bar |
+| `stems` | list of 4 | Entries of the next rows, in the order vocals, drums, bass, other |
+| `stems.name` | text | `vocals`, `drums`, `bass` or `other` |
+| `stems.file` | text | `vocals.flac`, `drums.flac`, `bass.flac` or `other.flac`. Empty for a stem without sound: its mean level lies below −60 dB (prov.). |
+| `stems.peak_db`, `stems.mean_db` | numbers | Measured by the program |
+| `groups` | list, at most 8 | The Hit groups |
+| `groups.name` | text, at most 40 characters | For example "Kick" |
+| `groups.file` | text | `hit_1.wav` to `hit_8.wav` |
+| `groups.length_s` | number, at most 1.5 | Length of the Sample |
+| `hits` | list, at most 8,000 | Each hit is three numbers: its time in seconds, the number of its Hit group, and its strength from 0 to 1 |
+| `marks` | list of codes | `tempo_not_found`, `tempo_not_steady`, `no_hits`, and `silent_` followed by the name of a stem. The phone ignores a code that it does not know. |
+| `models` | list | Name and version of each model |
+
+Audio files:
+
+| File | Format |
+|---|---|
+| Stem | FLAC, 16-bit, 44.1 kHz, two channels. Its length equals `length_s` within 10 ms. |
+| Sample of a Hit group | WAV, 32-bit floating point, 48 kHz, one or two channels |
+
+Limits on the phone: the file of the result is at most 1 MB. A stem is at most 60 MB. A Sample of a Hit group is at most 1 MB. All files together are at most 200 MB. The only text of a result that the phone shows is the name of a Hit group. It shows this name as plain text.
 
 ---
 
@@ -2198,22 +2245,23 @@ Rules:
 | MT-10 | Audio devices and audio focus | During playback: plug in and remove USB-C headphones, connect Bluetooth headphones, start music in another app, take a call. | The sound returns within 1 s. Playback pauses when headphones leave and when the focus is lost. No crash. | NFR-AUD-10, NFR-AUD-14 |
 | MT-11 | End of a Take | During a Take: press Home. During another Take: take a call. Then remove the permission in the settings and tap Record. | Both Takes are saved. The Recorder explains the permission. | FR-REC-05, FR-REC-07 |
 | MT-12 | Humming | In a quiet room, hum 10 melodies of about 10 Notes. Count the Notes that need a correction. The build shows the time of each conversion. | On average at most 2 corrections per melody. Each conversion at most 15 % of the length of the Take. | NFR-QLT-02, NFR-PERF-09 |
-| MT-13 | Flight mode | Switch flight mode on. Clear the data of the app. Open it. Record, hum, edit, mix. | Everything works. Only the Module Extraction shows "No network". | NFR-SEC-03, NFR-PERF-06 |
-| MT-14 | Interface on the phone | Hold the phone in both rotations. Reach all controls with the thumbs. Tap controls in every Module. Drag 20 times from each side edge inside an editor. | No control lies under the cutout. No drag leaves the app. Every touch gets its answer without a delay that the owner notices. The text is readable. | NFR-UX-02, NFR-UX-03, NFR-PERF-08, FR-WS-11 |
+| MT-13 | Flight mode | Switch flight mode on. Clear the data of the app. Open it. Record, hum, edit, mix. | Everything works. Only the Module Extraction and, from version 1.1 on, the Decomposer show "No network". | NFR-SEC-03, NFR-PERF-06 |
+| MT-14 | Interface on the phone | Hold the phone in both rotations. Reach all controls with the thumbs. Tap controls in every Module and, from version 1.1 on, in the Decomposer. Drag 20 times from each side edge inside an editor. | No control lies under the cutout. No drag leaves the app. Every touch gets its answer without a delay that the owner notices. The text is readable. | NFR-UX-02, NFR-UX-03, NFR-PERF-08, FR-WS-11 |
 | MT-15 | Factory set | Listen to every factory Sample. Play the default Sampler instrument over two octaves. | The owner accepts each sound, or names the ones to replace | D-074, FR-LIB-07 |
 | MT-16 | Extraction | Send 10 real requests. Judge each result. Close the app during one job. Compare the cost in the app with the Claude Console. Look at the Console again after a day without jobs. | At least 7 results are usable. Half of the jobs end within 180 s, 9 of 10 within 420 s. The closed job finishes and shows a notification. The costs agree. The day without jobs adds no cost. | NFR-QLT-04, NFR-PERF-10, FR-AIX-10, NFR-COST-04, NFR-COST-02 |
 | MT-17 | Memory and idle state | Start "Memory". The build measures an empty Project and the standard test Project. Then leave the app untouched for 60 s. | At most 150 MB with the empty Project. At most 300 MB with the standard test Project. The diagnostics view shows closed streams after 30 s. | NFR-RES-01, NFR-RES-04 |
 | MT-18 | Export | Export the song of the standard test Project as WAV and as M4A, and a Pattern as a MIDI file. The build shows the speed of the export. Save one file and share one file. Open each file in another app. | Each file opens. The song sounds like the playback. The export runs at least 4 times faster than real time. | FR-EXP-01 to FR-EXP-04, NFR-PERF-11 |
 | MT-19 | Long run with Edits | Start "Long run". The build plays the standard test Project for 30 min and applies random Edits. | No crash. The Project opens afterwards, and the build reports that its rules hold. | NFR-REL-06 |
 | MT-20 | Shortcuts of the launcher | Close the app. Hold its icon and tap "New idea: hum". Repeat 10 times, 5 times with each shortcut. The build records the time to the first captured frame. | A new Project exists each time. 9 of 10 captures run within 2,000 ms. | FR-REC-10, NFR-PERF-05 |
+| MT-21 | Decomposition | Decompose 5 ranges of real music that the owner may use. Four ranges are at most 60 s long. One is 240 s long. One source is a direct link with a range. Judge each new Project in the Studio. Close the app during one job. Compare the cost in the app with the Claude Console. | At least 3 of the 5 Projects are a usable start. Each job with a range of up to 60 s ends within 6 min. The job with 240 s ends within 15 min. The closed job finishes and shows a notification. The costs agree. | NFR-QLT-07, NFR-PERF-12, FR-DEC-11 |
 
-Tests MT-16, MT-18 and MT-20 belong to version 1.0. All other tests belong to the MVP.
+Tests MT-16, MT-18 and MT-20 belong to version 1.0. Test MT-21 belongs to version 1.1. All other tests belong to the MVP.
 
 ---
 
 ## 10. Requirements without an acceptance criterion in this document
 
-Every P0 requirement, every P1 requirement and every quality requirement of `requirements.md` appears in a criterion of this document. This table lists the exceptions. The script `checks/check_docs.py` verifies both statements.
+Every P0 requirement, every P1 requirement, every V1.1 requirement and every quality requirement of `requirements.md` appears in a criterion of this document. This table lists the exceptions. The script `checks/check_docs.py` verifies both statements.
 
 | Group | Requirements | Reason | Place of the check |
 |---|---|---|---|
@@ -2222,8 +2270,8 @@ Every P0 requirement, every P1 requirement and every quality requirement of `req
 | Measurements | NFR-MNT-06 | The screen "Measurements" of the test builds meets it. | Section 9, rules 1 to 4 |
 | Work of the implementer | NFR-MNT-07 | It is a rule for the work of the implementer. | `opus_implementation_guide.md` Section 4.1 |
 | Reviews | NFR-LEG-01, NFR-LEG-04, NFR-LEG-05 | They are reviews before a release. | `development_roadmap.md` Section 2.7 |
-| Withdrawn | FR-CR-07, NFR-SEC-08 | They are withdrawn. | — |
-| Later versions | FR-PL-15, FR-PT-10, FR-SM-11, FR-REC-11, FR-H2M-12, FR-AIX-18, FR-MX-12, FR-MX-18, FR-FX-11, FR-EXP-05, FR-CR-14 | They are P2. Version 1 does not build them. | — |
+| Withdrawn | FR-CR-07, NFR-SEC-08, FR-AIX-18 | They are withdrawn. | — |
+| Later versions | FR-PL-15, FR-PT-10, FR-SM-11, FR-REC-11, FR-H2M-12, FR-MX-12, FR-MX-18, FR-FX-11, FR-EXP-05, FR-CR-14, FR-DEC-24 | They are P2. Version 1 does not build them. | — |
 
 ---
 
@@ -2239,3 +2287,476 @@ All sources were read on 2026-11-20.
 | F4 | Claude Platform Docs, adding files to a Session (places of the files in the Sandbox): https://platform.claude.com/docs/en/managed-agents/files |
 | F5 | Earlier sources of this project: `architecture.md` Section 17, `technology_stack.md` Section 16, `requirements.md` Section 10 |
 | F6 | Android Developers, reference of the package `androidx.work` with the permissions that WorkManager uses: https://developer.android.com/reference/androidx/work/package-summary |
+| F7 | W3C, Media Fragments URI 1.0 (basic), with the form `#t=start,end` for a range of time: https://www.w3.org/TR/media-frags/ |
+| F8 | Beat This!, a model for beats and for the starts of bars. Paper: https://arxiv.org/html/2407.21658v1. Package: https://pypi.org/project/beat-this/. A port with ONNX files: https://docs.rs/crate/beat-this/0.3.0 |
+| F9 | Note of the owner, "Decomposing a Track into Its Samples", file `track_decomposition_tools.md`, received on 2026-11-20 |
+
+---
+
+## 12. Feature 4: decomposition of a recording into a Project (version 1.1)
+
+The owner asked for this feature on 2026-11-20 (D-104). The brief does not name it. This section has the same nine subsections as the features of the brief.
+
+### 12.1 Functional description
+
+| Function | Description | Requirements |
+|---|---|---|
+| Second screen | The Decomposer is a second main screen. The Mode switch swaps between it and the Studio. | FR-DEC-01, FR-DEC-02 |
+| Request | The user gives a source and a range, and chooses the parts that get Notes. | FR-DEC-03 to FR-DEC-07 |
+| Upload | The phone cuts the range and uploads only this cut. | FR-DEC-08 |
+| Analysis | One program of the Toolkit finds the tempo, splits the stems and sorts the hits of the drums. | FR-DEC-09, FR-DEC-10 |
+| Follow-up | The job continues when the app is closed. Both kinds of job share one queue. | FR-DEC-11 |
+| Review | The user plays the parts and corrects the tempo. | FR-DEC-12, FR-DEC-17 |
+| New Project | The Project builder creates a Project with Tracks, Clips, Sampler instruments and Patterns. | FR-DEC-13 to FR-DEC-18 |
+| Library | The stems and the Samples enter the group Decomposed. | FR-DEC-19 |
+| Use | One tap opens the new Project in the Studio. | FR-DEC-20 |
+| Failures, cost and notices | Clear messages, shared limits, and plain words about the limits of a result. | FR-DEC-21 to FR-DEC-23 |
+
+The interface is in `ui_ux_specification.md` Section 19.
+
+### 12.2 Implementation approach
+
+`architecture.md` Section 10.7 defines the parts and the flow. This section adds the content: files, texts, programs and rules (D-105 to D-110).
+
+#### 12.2.1 Source, range and cut
+
+| Topic | Rule |
+|---|---|
+| Kinds of source | The four kinds of Section 5.2.1 (FR-DEC-03) |
+| Link | The rules of Section 5.2.1 hold. A link to a streaming platform is refused with the same message (D-105). |
+| Range inside a link | The app reads a fragment of the form `#t=start,end` [F7]. A value is a number of seconds, or a time of the form `mm:ss` or `hh:mm:ss`. `#t=start` gives only the start. `#t=,end` gives only the end. The app downloads the link without its fragment. It ignores every other fragment. |
+| Length of a range | 5 s to 240 s (FR-DEC-05). The check V-08 can lower the upper limit (D-110). |
+| No start and no end | The range is the whole recording. A recording that is longer than 240 s needs a range. |
+| Only a start | The range ends with the recording, at most 240 s after the start. |
+| Margin | None. The file of the cut holds exactly the range (FR-DEC-08). |
+| File of the cut | WAV, 16-bit, at most two channels, at the rate of the source. Its name is `input.wav`. For 240 s it has at most about 46 MB. |
+
+#### 12.2.2 Session
+
+| Item | Value |
+|---|---|
+| Files of the Session | `input.wav`, the Toolkit `toolkit.pyz`, the model file `htdemucs.onnx`, the model file `beats.onnx` |
+| Places of the files and of the results | As in Section 5.2.2 [F4] |
+| Agent | The second agent of the setup (Section 12.2.8) |
+| Budget | 30 US cents (prov.). The setting of the user replaces it (FR-DEC-22). |
+| Model tier | The small tier |
+| Time limit | 20 min (NFR-COST-05) |
+| Expiry time of the upload | 24 h (NFR-SEC-04) |
+
+#### 12.2.3 First message
+
+The app builds the first message from this template. The message holds nothing else.
+
+```text
+REQUEST
+mode: decompose
+input: /mnt/session/uploads/input.wav
+hits: yes
+```
+
+Rules:
+
+1. The message holds no text of the user (FR-DEC-09).
+2. The line `hits: no` replaces `hits: yes` when the user wants no Notes for the drums.
+3. The Orchestrator asks no question.
+4. If the Session ends its turn without the file of the result, the Runner sends one more message with the single word `continue`. The program then goes on from its stored state.
+5. After a second stop without this file, the job fails with the cause "result not valid".
+
+#### 12.2.4 System prompt of the second agent
+
+The setup script stores this text in the second agent. The check V-08 runs it for the first time. The text can change after this check. Each change raises the version of the setup.
+
+```text
+You are the Orchestrator of a tool that splits a piece of music into its parts.
+You work inside a Linux sandbox. You cannot hear audio.
+
+YOUR TASK
+1. Read the request in the first message.
+2. Run the program "decompose" again and again until it prints "done": true.
+3. Then stop. Write nothing else.
+
+RULES
+- Use only the program below. Install nothing. Do not use the network.
+- Never write or change a file yourself. The program writes all files.
+- Use at most 40 commands.
+- If the program prints "ok": false, run it once more. If it prints "ok": false again, stop.
+- Ask no question.
+- If a later message says "continue", go on with step 2 of your task.
+
+PROGRAM
+python /mnt/session/uploads/toolkit.pyz decompose --in FILE --hits yes
+python /mnt/session/uploads/toolkit.pyz decompose --in FILE --hits no
+The program prints one line of JSON, for example:
+{"ok": true, "done": false, "step": "stems", "progress": 0.4}
+Each call does the next piece of the work. The program remembers where it stopped.
+```
+
+#### 12.2.5 Program `decompose` of the Toolkit
+
+The Toolkit of version 2 adds one program to the seven of Section 5.2.5: `decompose`. The program works in steps. One call does one step, or one part of the step `stems`.
+
+| Step | Work | Method |
+|---|---|---|
+| `prepare` | Converts the input to 44.1 kHz, two channels, floating point. Measures length and level. | The code of `convert` |
+| `beats` | Finds the beats and the beats that start a bar. Computes the tempo. | Beat This! through ONNX Runtime [F8]; the rules below |
+| `stems` | Runs the stem model in pieces of 7.8 s with an overlap of a quarter. After 45 s of work (prov.) it finishes its piece and stops. The next call continues. | The code of `separate` |
+| `hits` | Finds the hits of the stem of the drums. Sorts them into Hit groups. Picks one Sample for each Hit group. | The rules below |
+| `write` | Writes each stem as a FLAC file and each Sample as a WAV file. Writes the file of the result, `decomposition.json`. | ffmpeg; the code of `finish` |
+
+Rules:
+
+1. Every call prints exactly one line of JSON with the fields `ok`, `done`, `step` and `progress`. An error adds the field `error`.
+2. The state of the work lies in the folder `/tmp/work/decompose`. A call reads it and continues there.
+3. A step that fails twice ends the work. The file of the result then has the status `error`.
+4. The steps `beats` and `hits` never fail a job. If one of them finds nothing, the result says so, and the other parts stay (FR-DEC-21).
+5. With `--hits no` the program skips the step `hits`.
+6. The same input gives the same file of the result and the same audio files.
+7. The option `--all` runs every step in one call. The tests on a host use it.
+8. No call uses the network.
+
+Rules of the step `beats`:
+
+| Topic | Rule |
+|---|---|
+| Input of the model | The mix of both channels, in the form that the model expects [F8] |
+| Tempo | A straight line through the times of the beats, fitted with least squares. Its slope gives the tempo. |
+| Whole tempo | If a whole number of BPM fits as well, this number is the tempo. It fits when no beat lies more than 20 ms (prov.) from its own line. |
+| Steady tempo | The tempo counts as steady when no beat lies more than 40 ms (prov.) from the line. |
+| First bar | The time of the first beat that starts a bar. A bar has four beats (FR-TR-04). If the model marks no such beat, the first beat counts. |
+| No tempo | With fewer than 8 beats, the result holds 120 BPM, the first bar at 0 s and the mark "not found". |
+| Fall-back method | Own code: the tempo comes from the regular distances between the onsets of the stem of the drums. It is built only if the model fails the check V-08 (D-107). |
+
+Rules of the step `hits`:
+
+| Topic | Rule (all numbers prov.) |
+|---|---|
+| Hits | The onsets of the stem of the drums, found with the method of `narrow` (Section 5.2.5). Two hits lie at least 30 ms apart. |
+| Too soft | A hit that is more than 40 dB softer than the loudest hit is dropped. |
+| Numbers of a hit | From its first 80 ms: the energy in 12 bands, the center of the spectrum, and the time until the level has fallen by 20 dB. |
+| Grouping | Hits with similar numbers form one Hit group. The grouping of SciPy builds the groups from the distances between the hits. |
+| Count | At most 8 Hit groups. If more appear, the smallest ones join their nearest group. |
+| Sample of a Hit group | Among the three hits nearest to the middle of the group, the one with the longest silence before the next hit. |
+| Cut of the Sample | It starts 5 ms before the onset. It ends at the next hit, or when the level stays below −50 dB for 50 ms, or after 1.5 s. It gets a fade of 2 ms at the start and of 10 ms at the end. |
+| Level | The Sample is scaled, so that its peak equals the peak of the loudest hit of its group. |
+| Strength of a hit | Its peak divided by the peak of the loudest hit of its group. It lies between 0 and 1. |
+| Name of a Hit group | "Kick" when most energy lies below 150 Hz. "Hat" when the center of the spectrum lies above 6 kHz. "Snare" for a broad spectrum between them. Otherwise "Perc". Equal names get numbers. |
+| Order | Kick, Snare, Hat, Perc. Inside one name: the group with more hits first. |
+
+#### 12.2.6 Notes of the bass
+
+The phone makes the Notes of the bass. It uses the conversion of Section 4.2.3 with one more setting, the low register (D-108).
+
+| Topic | Rule |
+|---|---|
+| Low register | Step 1 of the conversion reduces the audio to 32 kHz and passes it on as audio of 16 kHz. Every pitch then lies one octave higher. Steps 2 and 3 run unchanged. |
+| Back to the true values | Each Note gets twice its start and twice its length. Its pitch falls by 12 semitones. |
+| Range of pitch | 23.5 to 1,047 Hz with SwiftF0. 30 to 1,047 Hz with the own pYIN (Section 4.2.4). |
+| Input | The stem of the bass, as a Sample of the Library |
+| Cache | The curve of the pitch is stored as in Section 6.5. Its header names the register. |
+| Sample of the bass | The longest Note whose pitch stays within 30 cents (prov.) on the curve of the pitch. The flow cuts it out of the stem: at most 2 s, with fades of 5 ms. |
+| Root note | The pitch of this Note |
+| Level | The Sample is scaled, so that its level equals the level of the loudest Note. |
+| No Note | The new Project gets no Notes for the bass. The Track of the stem of the bass stays on. The review says so (FR-DEC-21). |
+| Without the low register | The conversion works as before. The setting is off for humming. |
+
+#### 12.2.7 From a result to a Project
+
+The Project builder gets four inputs:
+
+1. The result.
+2. The hashes of the imported files.
+3. The Notes of the bass.
+4. The settings of the review (Section 12.2.9).
+
+It applies Edits to an empty Project (`architecture.md` Section 10.7).
+
+Time:
+
+| Value | Rule |
+|---|---|
+| `t0` | The time of the first bar in the result, plus the shift of the review. One beat of shift is 60 s divided by the tempo. A value between −10 ms and 10 ms (prov.) counts as 0. |
+| `tick0` | The smallest multiple of 3,840 Ticks that is not smaller than `t0` in Ticks. It is at least 0. |
+| Tick of a time `t` | `tick0 + (t − t0) × tempo / 60 × 960`, rounded to a whole Tick |
+| Start of the Audio clip of a stem | The Tick of the time 0 |
+
+The first bar of the recording therefore starts at a bar line of the Project. Audio before the first bar lies in the bars before it.
+
+Tracks, from top to bottom:
+
+| Track | Content | State |
+|---|---|---|
+| "Drums" | The Pattern clips with the Notes of the drums | On. It exists only with Notes for the drums. |
+| "Bass" | The Pattern clips with the Notes of the bass | On. It exists only with Notes for the bass. |
+| "Drums (stem)" | One Audio clip with the stem of the drums | Muted when the Track "Drums" exists (FR-DEC-15) |
+| "Bass (stem)" | One Audio clip with the stem of the bass | Muted when the Track "Bass" exists (FR-DEC-16) |
+| "Vocals" | One Audio clip with the stem of the vocals | On |
+| "Other" | One Audio clip with the stem of the other instruments | On |
+
+Rules for Tracks and Mixer:
+
+1. A stem without sound gets no Track (FR-DEC-14).
+2. Each Track gets its own Mixer channel with the name and the color of the Track (FR-MX-02). All faders stand at 0 dB.
+3. The tempo of the Project is the tempo of the review. The time signature is 4/4.
+
+Sampler instruments:
+
+| Sampler instrument | Sample | Root note | Play mode | Volume |
+|---|---|---|---|---|
+| One for each Hit group, with the name of the group | The Sample of the Hit group | 60 | One-shot | 0 dB |
+| "Bass" | The Sample of the bass (Section 12.2.6) | The pitch of its Note | Gate | 0 dB |
+
+Notes:
+
+| Topic | Rule |
+|---|---|
+| Note of a hit | Pitch 60. Start: the Tick of the hit. Length: 240 Ticks. |
+| Note of the bass | Pitch, start and length of the Note of the conversion, in Ticks. The length is at least 30 Ticks. |
+| Velocity | `127 × square root of the strength`, rounded, at least 1. For the bass, the strength is the level of the Note divided by the level of the loudest Note. |
+| Why this formula | The gain of a Note is `(velocity / 127) ^ 2` (Section 1.4). A Note then plays its Sample at the level that the hit had in the recording. |
+| Snap on | Each start moves to the nearest multiple of 240 Ticks. The end of a Note of the bass moves to the grid too. The Note stays at least 240 Ticks long. |
+| Snap off | Each Note keeps the Tick of its time. |
+| Two Notes at one place | If two Notes of one Sampler instrument get the same start and the same pitch, the louder one stays. |
+
+Patterns (FR-DEC-18):
+
+1. The song is cut into segments of 4 bars. The count starts at `tick0`, the first bar of the recording.
+2. The bars before `tick0` are cut into segments of 4 bars too, from Tick 0 on. The last of these segments can be shorter.
+3. A Note belongs to the segment in which it starts. A Note that would pass the end of its segment ends there. A Note that starts less than 30 Ticks before this end starts 30 Ticks before it.
+4. A segment whose four bars hold the same Notes becomes a Pattern of 1 bar. A segment whose two halves hold the same Notes becomes a Pattern of 2 bars. Every other full segment becomes a Pattern of 4 bars.
+5. A shorter segment gets the shortest Pattern of 1, 2 or 4 bars that holds it. Its Pattern clip is as long as the segment.
+6. Two segments share one Pattern when their Patterns have the same length and their Notes have the same Sampler instruments, pitches and starts. The velocities and the lengths are not compared. The Pattern keeps the Notes of its first segment.
+7. Each segment with Notes gets one Pattern clip on its Track. A segment without Notes gets none.
+8. Neighbouring Pattern clips of one Pattern join into one Pattern clip. It repeats its Pattern over its length (D-007).
+9. The drums and the bass have their own Patterns: "Drums 1", "Drums 2", and "Bass 1", "Bass 2".
+10. The last Pattern clip of a Track ends with the bar that holds its last Note.
+
+Further rules:
+
+1. The name of the new Project is the name of the source without its ending, followed by " (decomposed)". It is cut to 40 characters. A second Project from the same result gets a number.
+2. The new Project opens with the Pattern "Drums 1" in the Channel Rack. Without Notes for the drums, it opens like any Project.
+3. The new Project starts without steps of undo.
+4. With snap on, every Note of the drums starts on a Step at the Root note. Every row of the Channel Rack then shows step buttons (FR-CR-09).
+
+#### 12.2.8 Setup script, version 2
+
+The script of Section 5.2.8 creates version 2 of the setup. The rules of that section hold.
+
+| Item | Fixed name |
+|---|---|
+| Agent of extraction | `minidaw-extractor-v2` |
+| Agent of the Decomposer | `minidaw-decomposer-v2` |
+| Environment | `minidaw-env-v2` |
+| Toolkit | `minidaw-toolkit-v2.pyz` |
+| Model file for the stems | `minidaw-htdemucs-v2.onnx` |
+| Model file for the beats | `minidaw-beats-v2.onnx` |
+
+Rules:
+
+1. The app of version 1.1 looks for version 2. Without it, the Decomposer shows the state "setup missing".
+2. The agent of the Decomposer gets the system prompt of Section 12.2.4, the small model tier, and the tools shell, read and write.
+3. The model file for the beats comes from a third party. The project keeps an own copy. A test compares its output with the original model (Section 12.8).
+4. The terms of both model files must be clear before the app goes to other people (`technology_stack.md` Section 15).
+
+#### 12.2.9 Review, limits and cost
+
+Settings of the review:
+
+| Setting | Start value | Range |
+|---|---|---|
+| Tempo | The tempo of the result | 30 to 300 BPM, in steps of 0.001 BPM (Section 1.1) |
+| Halve, double | — | The result stays between 30 and 300 BPM |
+| First bar | The first bar of the result | A shift of −3 to +3 beats |
+| Snap | On when the tempo is steady. Otherwise off. | On or off (FR-DEC-17) |
+| Notes for the drums, Notes for the bass | As in the request | A part that the result does not hold cannot be switched on |
+
+A change of a setting costs nothing. The Project builder runs again on the phone (FR-DEC-20).
+
+Limits (prov.):
+
+| Setting | Default | Enforced by |
+|---|---|---|
+| Budget per job | 0.30 USD | The Session, through its budget |
+| Jobs per day, cost per month | The values of Section 5.2.9, counted over both kinds of job | The ledger on the phone |
+| Time of a Session | 20 min | The Runner |
+| Jobs at the same time | 1, over both kinds of job | The Runner |
+| Size of a result | 200 MB | The reader of the result |
+| Hit groups, hits | 8 and 8,000 | The reader of the result |
+
+### 12.3 Libraries, frameworks and services
+
+| Need | Choice | Source |
+|---|---|---|
+| Session, calls, follow-up, storage of the key | The choices of Section 5.3 | D-106 |
+| Stem model | HTDemucs with four stems, the same file as for extraction | D-046 |
+| Beats and bars | Beat This! with its small model as an ONNX file, run by ONNX Runtime on a CPU [F8] | D-107 |
+| Hit groups | NumPy and SciPy | D-107 |
+| Stems as files | FLAC, written by ffmpeg. The phone reads FLAC with the decoders of Android (Section 2.2.6). | D-106 |
+| Notes of the bass | The conversion of Section 4, with the low register | D-108 |
+| Project builder | Plain Kotlin in `:core` | D-109 |
+
+The app on the phone gets no new library. The Toolkit gets one more model file of about 10 MB (`technology_stack.md` Section 9.7).
+
+### 12.4 Data structures and interfaces
+
+| Item | Where it is defined |
+|---|---|
+| Request of the user | Source, range, the two switches for Notes |
+| State of a job | Section 6.6, with the kind `decomposition` |
+| First message | Section 12.2.3 |
+| Result | Section 6.11 |
+| Settings of the review | Section 12.2.9 |
+| Interfaces `DecompositionService`, `ProjectBuilder`, `HummingConverter` | `architecture.md` Section 12.1 |
+
+Causes of a failed job (FR-DEC-21): the causes of Section 5.4 hold, except "Nothing found". Three causes are new.
+
+| Cause | Message for the user |
+|---|---|
+| Range too short or too long | "Choose a range between 5 s and 4 min." |
+| Not enough free storage | "Not enough free storage for this result." |
+| Result not valid | "The result could not be read." |
+
+Notes of the review. They are no failures.
+
+| Case | Text |
+|---|---|
+| No tempo found | "No steady beat was found. The Project uses 120 BPM. Type the tempo if you know it." |
+| Tempo not steady | "The tempo of this recording changes. The Notes keep their exact times." |
+| No hits | "No drums were found." |
+| No Note of the bass | "No bass Notes were found." |
+| A stem without sound | "This part is silent and was left out." The text names the part. |
+| Limits of a result | "The Samples are cut from the recording. They are not the original Samples of the producer." (FR-DEC-23) |
+
+### 12.5 Processing pipeline
+
+On the phone, before the result:
+
+1. The Decomposer checks the request and the limits.
+2. The Runner fetches the source and cuts the range (Section 12.2.1).
+3. It uploads the cut and creates the Session with the four files and the budget.
+4. It sends the first message.
+5. It reads the status until the Session stops.
+6. It downloads the file of the result, checks the free storage, and downloads the audio files.
+7. It deletes the Session and the upload.
+
+In the Session:
+
+1. `prepare` converts the input.
+2. `beats` finds the tempo and the first bar.
+3. `stems` writes four stems, over one or more calls.
+4. `hits` builds the Hit groups.
+5. `write` writes the files of the result.
+
+On the phone, after the result:
+
+1. The user reviews the result and sets the tempo, the first bar and the snap.
+2. The flow imports the audio files into the group Decomposed.
+3. The conversion makes the Notes of the bass. The flow cuts and imports the Sample of the bass.
+4. The Project builder builds the new Project. `ProjectStore` saves it.
+5. The user opens the new Project in the Studio.
+
+### 12.6 Expected limitations
+
+1. The Decomposer does not recover the original Samples of the producer. A finished recording does not hold them [F9]. Each Sample of a result is cut from a stem.
+2. The stem model gives four stems. The stem "other" holds every instrument that is not a drum, a bass or a voice.
+3. Only the drums and the bass get Notes. The bass gets one voice. Chords and melodies stay Audio clips.
+4. The Hit groups come from signal processing. Two drums that always sound together form one group. A soft hit below a loud one can be missed. One group can mix two similar drums.
+5. A Project has one tempo (FR-TR-03). A recording with a changing tempo gets a grid that fits only roughly. Its Notes still sound at their times.
+6. The analysis assumes bars of four beats (FR-TR-04).
+7. The Sample of the bass comes from one Note. Other Notes play it faster or slower (FR-SM-01). A long high Note can therefore end early. The Project builder sets no loop. A Note of the bass that passes the end of its segment is cut there.
+8. A stem carries traces of the other instruments. The limits of Section 5.6 hold for the stems.
+9. A job takes minutes, costs money, and needs a network, an API key and version 2 of the setup.
+10. The numbers for time and quality are not measured yet. The check V-08 measures them before the Decomposer is built (D-112).
+11. A result of 240 s adds up to about 190 MB of audio to the Library. The user removes Samples in the Sample browser.
+12. The user is responsible for the rights to the source (FR-DEC-23).
+
+### 12.7 Performance considerations
+
+| Topic | Budget or rule |
+|---|---|
+| Time of a job | NFR-PERF-12: 6 min for a range of up to 60 s, and 15 min for 240 s |
+| Size of the upload | At most about 46 MB for 240 s |
+| Size of the download | About half of the WAV size for each stem. Not verified. |
+| Work of the stem model | About 6 min for 240 s at the published figure of Section 5.7. Not verified. |
+| One call of `decompose` | At most about 60 s (prov.). The step `stems` stops after 45 s of work. |
+| Commands of the Orchestrator | About 6 to 16 for one job. At most 40. |
+| Phone during a job | The app stays fully usable. Only the cut, the upload and the download use the phone. |
+| Creation of a Project | The import of four stems, the conversion of the stem of the bass and the build show their progress. The user can cancel. The conversion follows NFR-PERF-09. |
+| Playback of the new Project | Up to four long Audio clips play through Streamers, beside the Voices of the Notes. This stays inside the limits of `requirements.md` Section 8. |
+| Startup | The Decomposer adds no work to a launch (`architecture.md` Section 7). |
+
+### 12.8 Testing strategy
+
+| Layer | Tests |
+|---|---|
+| Decomposer | Rules of the fields for the range. Fragments of a link. Blocking states. The Mode switch keeps the state of both screens. |
+| Runner | A Decomposition job against the fake `ClaudeApi`, with a stop after every state. The shared queue. The time limit of 20 min. |
+| Reader of the result | Results that are too large, have a wrong version, name wrong files, hold too many Hit groups or hits, or hold times outside the range. Broken audio files. |
+| Project builder | Fixtures of results give the expected Projects. Random results never break a rule of a Project. |
+| Notes of the bass | The low register on test tones of 41.2 Hz and of 55 Hz. A rendered line of a bass. |
+| Toolkit | Each step of `decompose` on short test audio. A new call after a stop. The option `--all` against the single steps. |
+| Model for the beats | Its output against the original model: no beat differs by more than 20 ms on the renders of the test Projects (prov.) |
+| Measured quality | The list below (NFR-QLT-06) |
+| Setup script | Against a fake of the API: version 2, a second run |
+| Real service | The Sandbox part of the check V-08, started by the owner with the key |
+| Phone | Manual test MT-21 |
+
+Measured quality of the decomposition (NFR-QLT-06):
+
+| Topic | Rule |
+|---|---|
+| Test Projects | Six Projects in the folder of the fixtures. Each has drums from three or four Sampler instruments of the factory set, a line of a bass with one voice, and chords from one more Sampler instrument. Each is 16 bars long. |
+| Tempos | 84, 96, 110, 120, 128 and 140 BPM |
+| Special cases | One test Project has Notes off the grid. One has a kick and a hat that always sound together. |
+| Renders | The offline render of the engine writes each test Project as a WAV file. |
+| Run | `decompose --all` runs on each render. The conversion with the low register runs on the stem of the bass of each render. |
+| Rule 1, tempo | In 5 of 6 test Projects, the tempo differs from the true tempo by at most 1 % (prov.). Half the tempo and double the tempo count as wrong. |
+| Rule 2, first bar | In 4 of 6 test Projects, the first bar lies within 50 ms of the true start of a bar (prov.). |
+| Rule 3, hits | Over all test Projects, the F-measure of the hits is at least 0.80 (prov.), with a tolerance of 30 ms. |
+| Rule 4, Hit groups | For each drum of a test Project, the script takes the largest share of its hits that lies in one Hit group. The mean of these shares is at least 0.80 (prov.). |
+| Rule 5, bass | The F-measure of the Notes of the bass is at least 0.70 (prov.), with the measure of NFR-QLT-01. |
+| When it runs | On a host, as a manual run of the CI service, after each change of `decompose`, of a model file or of the low register. It is the host part of the check V-08. |
+
+Facts behind the rules:
+
+1. The test Projects use the Samples of the factory set, which belongs to the project (D-074). The true tempo and the true Notes are known exactly. No outside data set is needed.
+2. A rendered test Project is easier than real music. It has few instruments and no room sound. The thresholds therefore say nothing about real music.
+3. The manual test MT-21 judges real music (NFR-QLT-07).
+4. The first run records the real values. The thresholds are then set again from them.
+
+### 12.9 Acceptance criteria
+
+| ID | Criterion | Check | Requirement |
+|---|---|---|---|
+| AC-DEC-01 | The Mode switch swaps between the Studio and the Decomposer with one tap. After a swap and a swap back, each screen shows the state that it had: the Project, the layout, the scroll positions, the fields of a request and the shown job. A swap is no Edit. | Program | FR-DEC-01, FR-DEC-02 |
+| AC-DEC-02 | A swap to the Decomposer stops playback. During a Take the Mode switch is disabled. Every launch shows the Studio. The Back gesture on the bare Decomposer returns to the Studio. | Program | FR-DEC-02 |
+| AC-DEC-03 | A file, a shared file, a Sample and a direct link are accepted as the source. Any other link is refused with its message. | Program | FR-DEC-03, NFR-LEG-03 |
+| AC-DEC-04 | The fragments `#t=10,40`, `#t=1:05,2:10`, `#t=30` and `#t=,20` fill the fields of the range as Section 12.2.1 says. The app downloads the link without its fragment. | Program | FR-DEC-04 |
+| AC-DEC-05 | A range outside 5 s to 240 s is refused. Without a start and an end, the range is the whole recording. A recording above 240 s then needs a range. | Program | FR-DEC-05 |
+| AC-DEC-06 | For a source on the phone, "listen" plays exactly the chosen range. The two handles and the two fields always show the same range. | Program | FR-DEC-04, FR-DEC-06 |
+| AC-DEC-07 | The file of the cut holds exactly the range. The first message follows the template of Section 12.2.3 and holds no text of the user. Without Notes for the drums, the message says `hits: no`. Without Notes for the bass, no conversion runs. | Program | FR-DEC-07, FR-DEC-08, FR-DEC-09, NFR-SEC-03 |
+| AC-DEC-08 | The program `decompose` gives the expected file of the result on its test audio. Run in steps and run with `--all`, it writes the same files. After a stop inside a step, the next call continues. | Program | FR-DEC-09, FR-DEC-10 |
+| AC-DEC-09 | The step `stems` stops when 45 s have passed on the clock of the test. The next call continues with the next piece. | Program | FR-DEC-09 |
+| AC-DEC-10 | The step `hits` returns at most 8 Hit groups and at most 8,000 hits. Each Hit group has one Sample with the cut and the level of Section 12.2.5. The strength of each hit lies between 0 and 1. | Program | FR-DEC-10 |
+| AC-DEC-11 | The decomposition meets the rules 1 to 5 of Section 12.8. | Program | NFR-QLT-06 |
+| AC-DEC-12 | A run of the setup script creates version 2 with the six names of Section 12.2.8. A second run changes nothing. The output of the model file for the beats matches the original model within 20 ms. | Program | FR-DEC-10, FR-DEC-22 |
+| AC-DEC-13 | A Decomposition job passes the states of `architecture.md` Section 10.7. With a stop after any state and a restart, the Runner never creates a second Session and reaches the right end. A result that asks a question fails the job. If the Session stops without the file of the result, the Runner sends `continue` once. A second such stop fails the job. | Program | FR-DEC-11, NFR-REL-05 |
+| AC-DEC-14 | Jobs of both kinds wait in one queue, and one job runs at a time. A job reaches the state Review while the app is not visible, and a notification appears. The user can cancel a job in every state before Review. | Program | FR-DEC-11 |
+| AC-DEC-15 | The call that creates the Session carries the budget of the settings. The Runner interrupts the Session of a Decomposition job after 20 min. The limits per day and per month count jobs of both kinds. The ledger holds the cost of each job. After the end of a job, the account holds no Session and no upload of it. | Program | NFR-COST-05, FR-DEC-22, NFR-SEC-04 |
+| AC-DEC-16 | No hostile result and no broken audio file crashes the app. Each is refused with the cause "result not valid": a wrong version, a file with an unexpected name, more than 8 Hit groups, more than 8,000 hits, a time outside the range, a result above 200 MB. | Program | NFR-SEC-06, FR-DEC-21 |
+| AC-DEC-17 | The app downloads the file of the result first. It refuses the download of the audio files when less than 500 MB would stay free. It then shows the message of Section 12.4. | Program | NFR-RES-08 |
+| AC-DEC-18 | For each fixture of a result, the Project builder gives the expected Project: the tempo, the Tracks in the order of Section 12.2.7, one Audio clip for each stem at its Tick, and Mixer channels with the names of the Tracks. A stem without sound gets no Track. No other Project changes. | Program | FR-DEC-13, FR-DEC-14 |
+| AC-DEC-19 | With Notes for the drums, each Hit group is a Sampler instrument in the play mode one-shot. Each hit is a Note with the velocity of Section 12.2.7. The Track of the stem of the drums is muted. Without Notes for the drums, the Project holds no such Sampler instrument. | Program | FR-DEC-15 |
+| AC-DEC-20 | With a steady tempo and snap on, every Note starts on a Step. With snap off, or with a tempo that is not steady, every Note lies within one Tick of the time of its hit. | Program | FR-DEC-17 |
+| AC-DEC-21 | Each Pattern is 1, 2 or 4 bars long. Segments with the same Notes share one Pattern. Neighbouring Pattern clips of one Pattern are joined. A beat of one bar that repeats 16 times gives one Pattern of one bar and one Pattern clip of 16 bars. | Program | FR-DEC-18 |
+| AC-DEC-22 | A new tempo, a halving, a doubling and a shift of the first bar give the Ticks of the formulas of Section 12.2.7. The first bar of the recording starts at a bar line of the Project. | Program | FR-DEC-12, FR-DEC-14 |
+| AC-DEC-23 | With random results inside the limits, the Project builder never breaks a rule or a limit of a Project, and the new Project opens. | Program | FR-DEC-13 |
+| AC-DEC-24 | With the low register, a test tone of 41.2 Hz gives a Note with the pitch 28. Its start and its length lie within 50 ms of the tone. Without the low register, the conversion gives the same Notes as before. | Program | FR-DEC-16 |
+| AC-DEC-25 | With Notes for the bass, the Project has the Sampler instrument "Bass" in the play mode gate. Its Sample and its Root note follow Section 12.2.6. The Track of the stem of the bass is muted. If the conversion finds no Note, the Project has no Track "Bass", and the review says so. | Program | FR-DEC-16, FR-DEC-21 |
+| AC-DEC-26 | "Create Project" imports each file of the result once into the group Decomposed, with source, range, date and models. A second creation from the same result adds no file and gives a second Project. A stop during the creation leaves no half Project. | Program | FR-DEC-13, FR-DEC-19, FR-DEC-20 |
+| AC-DEC-27 | After "Create Project", "Open in Studio" shows the new Project in the Studio. Its Clips, Notes, Sampler instruments and Mixer channels can be edited, and undo works. | Program | FR-DEC-20 |
+| AC-DEC-28 | Without a key, without version 2 of the setup or without a network, the Decomposer shows its blocking state and sends nothing. The notice about the rights appears before the first job of either kind, and never again after "I understand". | Program | FR-DEC-22, FR-DEC-23 |
+| AC-DEC-29 | The review plays each stem, the Sample of each Hit group and, for a source on the phone, the range. It shows the tempo with its controls, the notes of Section 12.4 that apply, and the sentence about the limits of a result. | Program | FR-DEC-12, FR-DEC-21, FR-DEC-23 |
+| AC-DEC-30 | Every cause of a failure shows its message. A retry starts a new job with the same input. The Decomposer shows what is left of the limits. It shows the size of a result before the download. | Program | FR-DEC-21, FR-DEC-22 |
+| AC-DEC-31 | A file that another app shares can start a Decomposition job. A tap on the notification of a Decomposition job opens the Decomposer with this job. | Program | FR-DEC-03, FR-DEC-11 |
+| AC-DEC-32 | Of 5 ranges of real music, at least 3 new Projects are a usable start. Each job with a range of up to 60 s ends within 6 min. The job with 240 s ends within 15 min. The job that runs while the app is closed finishes and shows a notification. The cost in the app agrees with the Claude Console. | MT-21 | NFR-QLT-07, NFR-PERF-12 |
+| AC-DEC-33 | With the build of version 1.1, the startup, the flight mode and the interface pass their manual tests again. In the Decomposer no control lies under the cutout. | MT-01, MT-13, MT-14 | FR-DEC-01, NFR-PERF-01, NFR-UX-02 |

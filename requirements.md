@@ -1,7 +1,7 @@
 # requirements.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 1 of 6 (project analysis) · **Version:** 1.9 · **Date:** 2026-11-20
+**Stage:** 1 of 6 (project analysis) · **Version:** 2.0 · **Date:** 2026-11-20
 **Change in 1.1:** the owner decided against a server of the project. Extraction now runs in a Session on the owner's Claude API account (D-027 to D-030, D-032). Humming to MIDI is fixed as work for the CPU of the phone (D-031). Changed parts: Section 1.2, Section 2, CON-13, CON-15, CON-18 to CON-23, T-08, T-10, T-18, U-16, G-11, FR-H2M-02, Section 5.9, FR-SET-04, NFR-PERF-10, NFR-REL-05, Section 6.6, Section 6.8, NFR-QLT-03, Sections 7 and 8.
 **Change in 1.2:** results of Stage 2. Changed rows: FR-LIB-04, NFR-AUD-01, NFR-QLT-01.
 **Change in 1.3:** answers of the owner. A Pattern can hold several Sampler instruments (D-054). The Channel Rack is a Module (D-056, Section 5.15). Audio follows the device that Android uses (D-053). Changed parts: Sections 1.2, 1.3 and 2, T-04, U-08, G-09, FR-WS-05, FR-PT-01, FR-PT-06, FR-SM-10, FR-H2M-04, FR-H2M-13, FR-MX-03, FR-MX-19, FR-SET-05, Sections 5.15, 8 and 9.
@@ -11,6 +11,7 @@
 **Change in 1.7:** results of Stage 4. A tail of an effect may last up to 120 s at any values (D-084). `feature_specifications.md` names the test signals of the sampler and the test set of the extraction. Changed rows: NFR-SMP-02, NFR-AUD-07, NFR-QLT-03.
 **Change in 1.8:** results of Stage 5. The file of the key for signing may lie in the repository under a password (D-094). Changed row: NFR-SEC-01.
 **Change in 1.9:** results of Stage 6. The application ID is fixed (D-098). A library may add permissions without a dialog (D-101). Changed rows: G-17, NFR-SEC-05.
+**Change in 2.0:** the owner asked for a second tool, the Decomposer (D-104). It turns a range of a recording into a new Project. New parts: Section 1.4, seven terms in Section 2, Section 5.16 (FR-DEC-01 to FR-DEC-24), NFR-PERF-12, NFR-RES-08, NFR-COST-05, NFR-QLT-06, NFR-QLT-07, the priority V1.1, the limits of version 1.1 in Section 8. Changed rows: FR-WS-07, FR-LIB-01, FR-AIX-18 (withdrawn), NFR-SEC-03, NFR-LEG-03, the term Session, the meaning of P2, the row about links in Section 1.3. Changed parts: Sections 7 and 9.
 **Companion documents:** `project_decisions.md`. It holds every assumption (`A-`), decision (`D-`), pending architectural decision (`AD-`) and open question (`Q-`) that this document cites. `technology_stack.md` holds the choices of technology from Stage 2. `architecture.md` holds the structure from Stage 3. `feature_specifications.md` and `ui_ux_specification.md` hold the behaviour and the interface from Stage 4.
 
 ---
@@ -30,7 +31,8 @@ Conventions:
 |---|---|
 | P0 | In the MVP. The MVP is the first release that the owner can use every day. |
 | P1 | In version 1.0. Version 1.0 contains everything that the brief demands. |
-| P2 | After version 1.0. The architecture must leave room for it. |
+| V1.1 | In version 1.1. Version 1.1 adds the Decomposer (Section 5.16, D-104). |
+| P2 | Later. No version is planned for it yet. The architecture must leave room for it. |
 | OUT | Not planned. |
 
 P0 describes the content of the MVP release. It does not describe the first phase of development. Stage 5 orders the work into phases.
@@ -85,7 +87,22 @@ Parts that the brief implies but does not list (Section 4.3 explains each):
 | Playback while the app is in the background | P2 | D-020. |
 | Sends in the Mixer | P2 | Buses cover the need in version 1 (FR-MX-11). |
 | Separation models that need a GPU, for example models steered by text | P2 | The project has no server and no GPU (D-027, D-032). |
-| Links to streaming platforms as a source for extraction | open | Owner decision (D-015, Q-02). |
+| Links to streaming platforms as a source for extraction or for the Decomposer | open | D-015 keeps them out. The owner decides again with Q-17 (D-105). |
+
+### 1.4 What version 1.1 adds
+
+Version 1.1 adds one tool: the Decomposer (D-104).
+
+1. The app gets a second main screen beside the Studio. One control swaps between the two screens.
+2. The Decomposer takes a range of a recording. The source is an audio file or a direct link to an audio file.
+3. Its result is a new Project. The Project holds the stems as Audio clips. It holds Sampler instruments with Patterns for the drums and for the bass.
+4. The work runs in a Session on the owner's Claude API account, like extraction.
+
+What the Decomposer does not promise:
+
+1. It does not recover the original Samples of the producer. A finished recording does not hold them. The Samples of a result are cut from the stems.
+2. It writes Notes for the drums and for the bass only. Vocals and other instruments stay Audio clips.
+3. The Notes are an approximation. The owner corrects them with the tools of the Studio.
 
 ---
 
@@ -123,10 +140,17 @@ Parts that the brief implies but does not list (Section 4.3 explains each):
 | Tick | The smallest unit of musical time. A quarter note has 960 Ticks. |
 | Take | One recording from the microphone. |
 | Extraction job | One request to isolate a sound from a source recording. |
-| Session | One run of Claude on the owner's Claude API account, with its own Sandbox. One Extraction job is one Session. |
+| Session | One run of Claude on the owner's Claude API account, with its own Sandbox. One Extraction job is one Session. One Decomposition job is one Session too. |
 | Sandbox | The isolated Linux container of a Session. Claude runs programs in it. It has a CPU and no GPU. |
 | Toolkit | The scripts and model files that do the audio processing inside the Sandbox. |
 | Orchestrator | The part that turns the user's request into processing steps. In the brief this is Claude. |
+| Studio | The main screen with the Playlist and the Editing workspace, together with the Mixer. It is the DAW of this app. |
+| Decomposer | The second main screen (version 1.1). It turns a range of a recording into a new Project. |
+| Mode switch | The control that swaps between the Studio and the Decomposer. |
+| Decomposition job | One request to turn a range of a recording into a Project. |
+| Decomposition result | What a Decomposition job delivers: the tempo, the stems, the Hit groups and the list of the hits. |
+| Hit group | All hits of the stem of the drums that sound alike, for example all kicks. Each Hit group has one Sample. |
+| Project builder | The part of the app that turns a Decomposition result into a Project. |
 | Reference device | The owner's Samsung Galaxy A17. |
 | Burst | The number of audio frames that the device handles at once. |
 | Underrun | A gap in the audio output because audio arrived too late. The user hears a click or a dropout. |
@@ -296,7 +320,7 @@ This section lists what is conflicting, unclear or missing in the brief. Each ro
 | FR-WS-04 | The user can drag the border between the panels. Either panel can take the full width. | P0 |
 | FR-WS-05 | The Editing workspace shows one Module at a time. Modules of the MVP: Piano roll, Channel Rack, Sample browser, Recorder, Effect editor. Version 1.0 adds the Module Extraction. | P0 |
 | FR-WS-06 | A switch to another Module does not stop playback and does not change the Project. A hidden Module keeps its state. | P0 |
-| FR-WS-07 | A global bar is always visible. It holds: play and stop, record, Song mode or Pattern mode, tempo, metronome, undo, redo, panel swap, Mixer, Project menu. | P0 |
+| FR-WS-07 | A global bar is always visible. It holds: play and stop, record, Song mode or Pattern mode, tempo, metronome, undo, redo, panel swap, Mixer, Project menu. Version 1.1 adds the Mode switch (FR-DEC-01). | P0 |
 | FR-WS-08 | One tap on the Mixer control opens the Mixer over the workspace. One tap or the Back gesture closes it and restores the workspace exactly. Playback continues. | P0 |
 | FR-WS-09 | The panels follow each other. A double tap on a Pattern clip opens its Pattern in the Piano roll. A selected Track marks its Mixer channel. A tap on an Effect slot opens the Effect editor. | P0 |
 | FR-WS-10 | The next launch restores the layout: sides, border, active Module, zoom levels. | P0 |
@@ -374,7 +398,7 @@ This section lists what is conflicting, unclear or missing in the brief. Each ro
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-LIB-01 | The Library has groups: Factory, Recordings, Imported. Version 1.0 adds the group Extracted. | P0 |
+| FR-LIB-01 | The Library has groups: Factory, Recordings, Imported. Version 1.0 adds the group Extracted. Version 1.1 adds the group Decomposed (FR-DEC-19). | P0 |
 | FR-LIB-02 | The Sample browser lists Samples with name, group and length. Search by name, tags, favorites and a small waveform are P1. | P0 |
 | FR-LIB-03 | A tap plays a Sample as a preview. A second tap or another preview stops it. Preview works while the Project plays. | P0 |
 | FR-LIB-04 | The user imports audio files through the file picker of the system. Formats: WAV, MP3, AAC in M4A, FLAC, OGG Vorbis, Opus (D-037). | P0 |
@@ -457,7 +481,7 @@ Flow of one Extraction job:
 | FR-AIX-15 | The owner sets a budget per job, a limit of jobs per day and a limit of cost per month. The Module shows what is left. | P1 |
 | FR-AIX-16 | At the first use the Module shows a notice: the user is responsible for the rights to the source material. | P1 |
 | FR-AIX-17 | A quick mode sends a fixed request for one of the usual classes (vocals, drums, bass, other). It needs no free text and few tokens. | P1 |
-| FR-AIX-18 | Cutting a result into single hits; extraction of a whole recording into stems. | P2 |
+| FR-AIX-18 | Withdrawn in version 2.0. The Decomposer covers both parts: single hits and whole recordings (Section 5.16). | — |
 | FR-AIX-19 | The owner enters the API key of the Claude Console once in the settings. The Module explains this step when no key is stored (NFR-SEC-09). | P1 |
 | FR-AIX-20 | The owner prepares the Claude API account once: agent, environment and Toolkit. The project provides one command or one action in the app for this (AD-27). | P1 |
 
@@ -552,6 +576,48 @@ Flow of one Extraction job:
 | FR-CR-13 | A drag across step buttons switches several Steps in one move. | P1 |
 | FR-CR-14 | Velocity and pitch per Step; swing. | P2 |
 
+### 5.16 Decomposer (version 1.1)
+
+The owner asked for this tool on 2026-11-20 (D-104). It turns a range of a recording into a new Project.
+
+Flow of one Decomposition job:
+
+1. The user opens the Decomposer and gives a source and a range.
+2. The app cuts the range out of the recording and uploads it to the owner's Claude API account.
+3. The app starts a Session with a fixed request.
+4. The Orchestrator runs one program of the Toolkit in the Sandbox. The program finds the tempo, splits the range into stems and sorts the hits of the drums into Hit groups.
+5. The app downloads the Decomposition result. It deletes the Session and the uploaded audio.
+6. The user reviews the result and corrects the tempo when needed.
+7. The Project builder creates a new Project. The phone converts the stem of the bass into Notes on the way.
+8. The user opens the new Project in the Studio.
+
+| ID | Requirement | Priority |
+|---|---|---|
+| FR-DEC-01 | The app has two main screens: the Studio and the Decomposer. The Studio is the workspace of Section 5.1 with the Mixer. The Mode switch swaps the screen with one tap. | V1.1 |
+| FR-DEC-02 | Each screen keeps its state while the other one is shown. A swap changes no Project. A swap to the Decomposer stops playback. The Mode switch is disabled during a Take. | V1.1 |
+| FR-DEC-03 | Accepted sources: an audio file on the phone; an audio file that another app shares to this app; a Sample of the Library; a link that points directly to an audio file. The rules of FR-AIX-01 and D-015 hold (D-105). | V1.1 |
+| FR-DEC-04 | The user gives a start and an end: with two handles on a waveform, or as times in minutes and seconds. A link can carry both times in the form `#t=start,end`. The app then fills the two fields from the link. | V1.1 |
+| FR-DEC-05 | A range is between 5 s and 240 s long (prov.). Without a start and an end, the range is the whole recording, if its length allows this. | V1.1 |
+| FR-DEC-06 | For a source on the phone, the user can listen to the range before sending. | V1.1 |
+| FR-DEC-07 | The user chooses what the new Project gets besides the stems: Notes for the drums, and Notes for the bass. Both are switched on at the start. | V1.1 |
+| FR-DEC-08 | The app cuts the range out of the recording on the phone. It uploads only the range. | V1.1 |
+| FR-DEC-09 | The request is fixed. It holds no free text. The Orchestrator runs one program of the Toolkit until the program reports its end. It asks no question (D-106). | V1.1 |
+| FR-DEC-10 | A job delivers a Decomposition result. It holds the tempo with the place of the first bar. It holds up to four stems: vocals, drums, bass, other. It holds the Hit groups of the stem of the drums, each with one Sample. It holds the time and the strength of every hit. | V1.1 |
+| FR-DEC-11 | A Decomposition job follows the rules of FR-AIX-10: states, cancel, work while the app is closed, notification. Extraction jobs and Decomposition jobs share one queue. One job runs at a time. | V1.1 |
+| FR-DEC-12 | Review of a result: the user plays each stem and the Sample of each Hit group. For a source on the phone, the user also plays the range. The review shows the tempo. The user can type another tempo, halve it, double it, and move the first bar by single beats. | V1.1 |
+| FR-DEC-13 | "Create Project" builds a new Project from the result. It never changes another Project. The name of the new Project comes from the name of the source. | V1.1 |
+| FR-DEC-14 | The new Project has the tempo of the review and one Track for each stem. Each of these Tracks holds one Audio clip with the whole stem. Each has its own Mixer channel with the name of the stem. A stem without sound gets no Track. | V1.1 |
+| FR-DEC-15 | Notes for the drums: each Hit group becomes a Sampler instrument in the play mode one-shot. The hits become Notes in Patterns. Pattern clips on one more Track play them. The Track of the stem of the drums is then muted. | V1.1 |
+| FR-DEC-16 | Notes for the bass: the phone converts the stem of the bass with the conversion of FR-H2M-11. One clear Note of the stem becomes the Sample of a Sampler instrument with its Root note. Pattern clips on one more Track play the Notes. The Track of the stem of the bass is then muted (D-108). | V1.1 |
+| FR-DEC-17 | When the tempo of the range is steady, the Notes snap to the grid of 1/16. The user can switch this off in the review. When the tempo is not steady, the Notes keep their exact times, and the review says so. | V1.1 |
+| FR-DEC-18 | A Pattern of the new Project is 1, 2 or 4 bars long. Parts of the song with the same Notes share one Pattern (D-109). | V1.1 |
+| FR-DEC-19 | The stems and the Samples of a result enter the Library in the group Decomposed. Each one stores its source, its range, the date and the names of the models. | V1.1 |
+| FR-DEC-20 | After "Create Project", one tap opens the new Project in the Studio. Every part of it can be edited as in any other Project. The user can create a Project again from the same result with other settings. This needs no new Session. | V1.1 |
+| FR-DEC-21 | Every failure has a clear message, as in FR-AIX-14. A part that cannot be built does not fail the job. The new Project then holds the other parts, and the review names the missing part. | V1.1 |
+| FR-DEC-22 | The budget and the limits of FR-AIX-15 count both kinds of job. The Decomposer shows what is left. It shows the size of a result before the download. The API key and the setup of FR-AIX-19 and FR-AIX-20 serve both kinds of job. | V1.1 |
+| FR-DEC-23 | The notice of FR-AIX-16 also appears at the first use of the Decomposer. The review states the limits of a result. Its Samples are cut from the recording. They are not the original Samples of the producer. | V1.1 |
+| FR-DEC-24 | Six stems with guitar and piano; Notes for chords and melodies; a model that splits the drum kit; the nearest Sample of the Library for a Hit group; a result that is added to the open Project; time signatures other than 4/4. | P2 |
+
 ---
 
 ## 6. Non-functional requirements
@@ -593,6 +659,7 @@ This rule makes brief §3.2 testable (D-009).
 | NFR-PERF-09 | The conversion of a humming Take takes at most 15 % of the length of the Take, for example 4.5 s for 30 s (prov.). | Timed test on the phone. |
 | NFR-PERF-10 | An Extraction job with a range of up to 30 s returns within 180 s in the median and 420 s at the 90th percentile (prov.; the Sandbox has no GPU). The app stays fully usable during the job. | Log of job times. |
 | NFR-PERF-11 | An export renders at least 4 times faster than real time for the standard test Project (prov.). | Timed test on the phone. |
+| NFR-PERF-12 | A Decomposition job with a range of up to 60 s returns within 6 min. A job with a range of 240 s returns within 15 min. Both values hold for 9 of 10 jobs (prov.; the Sandbox has no GPU). The app stays fully usable during the job. | Log of job times. |
 
 ### 6.3 Audio
 
@@ -624,6 +691,7 @@ This rule makes brief §3.2 testable (D-009).
 | NFR-RES-05 | The download of the app is at most 50 MB (prov.), with factory Samples and with models that run on the phone. | Size of the build. |
 | NFR-RES-06 | The app warns when free storage falls below 500 MB (prov.). It ends a Take safely before storage runs out. | Automatic test with a small test volume. |
 | NFR-RES-07 | The standard test Project plays for 30 min without Underruns that come from heat. | Run on the phone. |
+| NFR-RES-08 | Before the download of a Decomposition result, the app compares its size with the free storage. It refuses the download when less than 500 MB (prov.) would stay free. | Automatic test with a small test volume. |
 
 ### 6.5 Reliability
 
@@ -642,7 +710,7 @@ This rule makes brief §3.2 testable (D-009).
 |---|---|---|
 | NFR-SEC-01 | The app package and the repository contain no secret that can be read: no API key, no cloud credential, no password (D-018). The file of the key for signing may lie in the repository, because a password protects it and the password does not lie there (D-094). | Automatic scan on every change. |
 | NFR-SEC-02 | All network traffic uses TLS. Traffic without encryption is switched off. | Network configuration; test. |
-| NFR-SEC-03 | Audio from the microphone leaves the phone only when the user sends it to an Extraction job on purpose. The conversion of humming never uses the network. | Code review; test in flight mode. |
+| NFR-SEC-03 | Audio from the microphone leaves the phone only when the user sends it to an Extraction job or to a Decomposition job on purpose. The conversion of humming never uses the network. | Code review; test in flight mode. |
 | NFR-SEC-04 | Uploaded audio expires on Anthropic's servers after 24 h (prov.). The app deletes the Session and its files right after the download, and at once when the user deletes a job. | Test against the Claude API. |
 | NFR-SEC-05 | Permissions: microphone, internet, notifications (optional). A library may add permissions that need no dialog. A list in the repository names each of them with its reason (D-101). The app asks for no general access to storage. Files come through the pickers of the system. | Review of the manifest. |
 | NFR-SEC-06 | The text of the user and the content of every audio file are untrusted input for the Orchestrator. The Sandbox reaches no host on the network except the package registries. The Sandbox holds no secret. The phone downloads only the link that the user gave, and it limits size and type. | Review; tests with hostile input. |
@@ -658,7 +726,7 @@ This section is engineering guidance. It is not legal advice.
 |---|---|---|
 | NFR-LEG-01 | Every library has a licence that allows distribution of a closed-source app (D-024). | List of licences, checked on every change. |
 | NFR-LEG-02 | Factory Samples and model files have licences that allow their use and redistribution in this app. A notice file lists them. | Review. |
-| NFR-LEG-03 | Extraction takes audio only from the sources of D-015. | Review; test with other links. |
+| NFR-LEG-03 | Extraction and the Decomposer take audio only from the sources of D-015. | Review; test with other links. |
 | NFR-LEG-04 | If the app goes to Google Play, it meets the rules of CON-11 and CON-12. | Checklist before release. |
 | NFR-LEG-05 | The use of the Claude API follows Anthropic's usage policies and its policy on supported regions (Q-12). | Review by the owner. |
 
@@ -670,8 +738,9 @@ This section is engineering guidance. It is not legal advice.
 | NFR-COST-02 | The extraction feature costs nothing while no job runs. | Bill of one idle week. |
 | NFR-COST-03 | A limit of jobs per day and a limit of cost per month protect the owner from surprise cost. The app enforces both. The owner also sets a spending limit in the Claude Console, if the Console offers one. | Test in the app; review of the Console settings. |
 | NFR-COST-04 | The app records the cost of each job from the usage that the API reports. The owner can see it. | Test against the Claude API. |
+| NFR-COST-05 | A Decomposition job follows NFR-COST-01 to NFR-COST-04. The app ends its Session after 20 min (prov.). | Test against the Claude API. |
 
-### 6.9 Quality of the two analysis features
+### 6.9 Quality of the analysis features
 
 | ID | Requirement | How it is verified |
 |---|---|---|
@@ -680,6 +749,8 @@ This section is engineering guidance. It is not legal advice.
 | NFR-QLT-03 | Extraction, measured: for the usual classes (vocals, drums, bass, other instruments), quality is measured on a public test set with reference stems. `feature_specifications.md` Section 5.8 names the test set and the thresholds (D-088). | Automatic evaluation of the Toolkit on a host computer. |
 | NFR-QLT-04 | Extraction, in practice: the owner chooses 10 real requests. At least 7 results are usable as a Sample in the owner's judgment (prov.). | Manual test by the owner. |
 | NFR-QLT-05 | For descriptions outside the usual classes, the app promises no quality. It shows what the Orchestrator did and lets the user refine the request. | Review of the UI. |
+| NFR-QLT-06 | Decomposition, measured: the project renders test Projects with a known tempo and known Notes. It decomposes the renders and compares. `feature_specifications.md` Section 12.8 names the test Projects, the measures and the thresholds (D-112). | Automatic evaluation on a host computer. |
+| NFR-QLT-07 | Decomposition, in practice: the owner decomposes 5 ranges of real music. At least 3 of the new Projects are a usable start in the owner's judgment (prov.). | Manual test by the owner. |
 
 ### 6.10 Maintainability and testing
 
@@ -719,6 +790,8 @@ This section is engineering guidance. It is not legal advice.
 | Download of a linked audio file | Phone | Yes |
 | Separation and post-processing | Sandbox of the Session | Yes |
 | Review of results and use in a Project | Phone | No, after the download |
+| Tempo, stems and Hit groups of a Decomposition job | Sandbox of the Session | Yes |
+| Notes of the bass, and the build of the new Project | Phone | No, after the download |
 
 Rule: the first launch and every function of the first five rows work in flight mode.
 
@@ -748,6 +821,19 @@ All values are provisional. Measurements on the phone can raise or lower them.
 
 **Standard test Project (version 1.0).** The same with doubled counts.
 
+**Limits that version 1.1 adds (prov.).**
+
+| Item | Version 1.1 |
+|---|---|
+| Range of a Decomposition job | 5 s to 240 s |
+| Time of the Session of a Decomposition job | 20 min |
+| Budget of one Decomposition job | 0.30 USD |
+| Hit groups in one Decomposition result | 8 |
+| Hits in one Decomposition result | 8,000 |
+| Size of one Decomposition result | 200 MB |
+
+A Project that the Project builder creates stays inside the limits of version 1.0.
+
 ---
 
 ## 9. From the brief to the requirements
@@ -763,6 +849,7 @@ All values are provisional. Measurements on the phone can raise or lower them.
 | §3.2 Sample-based only | Section 6.1; Section 5.5; FR-FX-04; FR-TR-09 |
 | §3.3 Mixer | Sections 5.10, 5.11; NFR-AUD-06, -12 |
 | §4 G Risks named by the brief | Sections 3.3, 4.1, 6; full treatment in `risk_assessment.md` (Stage 5) |
+| Request of the owner on 2026-11-20: decomposition of a track into a Project | Section 5.16; NFR-PERF-12; NFR-RES-08; NFR-COST-05; NFR-QLT-06, -07 |
 
 ---
 

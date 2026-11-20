@@ -1,7 +1,7 @@
 # project_decisions.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 6 of 6 (handoff) · **Version:** 6.0 · **Date:** 2026-11-20
+**Stage:** 6 of 6 (handoff) · **Version:** 7.0 · **Date:** 2026-11-20
 **Change in 1.1:** feedback from the owner. The project runs no server. D-016 and D-017 are replaced. New: D-027 to D-032, A-14, A-15, AD-33, Q-13. Q-03 is answered.
 **Change in 2.0:** answers of the owner to Q-01, Q-02, Q-04, Q-12 and Q-13. Decisions of Stage 2: D-033 to D-052. Results of Stage 2 in Section 4.7. Tasks for the owner in Section 5.1.
 **Change in 2.1:** answers of the owner to Q-05 and Q-08. D-005 is replaced. New: D-053 to D-056 and Q-14. Tasks O-1 to O-3 changed.
@@ -14,7 +14,8 @@
 **Change in 4.0:** Stage 4 is done. `feature_specifications.md` 1.0 and `ui_ux_specification.md` 1.1 are written. New: D-081 to D-091, A-19, Section 4.9. Continuation point for Stage 5.
 **Change in 5.0:** Stage 5 is done. `development_roadmap.md` 1.0 and `risk_assessment.md` 1.0 are written. New: D-092 to D-097, A-20, A-21, tasks O-7 to O-9, Section 4.10. Continuation point for Stage 6.
 **Change in 6.0:** Stage 6 is done. `opus_implementation_guide.md` 1.0 is written. All nine documents were checked once more. New: D-098 to D-102, A-22, Section 4.11, task O-10. Changed: D-075, Q-11. The continuation point now names the first task of development.
-**Companion documents:** `requirements.md` holds the requirements (`FR-`, `NFR-`), the constraints (`CON-`) and the analysis of the brief (`T-`, `U-`, `G-`). `technology_stack.md` holds the choices of technology with their reasons and the checks `V-01` to `V-07`. `architecture.md` holds the structure of the system and the details of D-057 to D-072. `ui_ux_specification.md` holds the layout and the behaviour of the interface. `feature_specifications.md` holds the behaviour of the features, the formats, the acceptance criteria (`AC-`) and the manual tests of the owner (`MT-`). `development_roadmap.md` holds the phases (`PH-`), the tasks (`TK-`) and the gates (`GATE-`). `risk_assessment.md` holds the risks (`RISK-`). `opus_implementation_guide.md` is the entry for the implementer.
+**Change in 7.0:** two requests of the owner after Stage 6. Version 1.1 adds the Decomposer: a second main screen that turns a range of a recording into a new Project. The implementer works on the computer of the owner. New: D-103 to D-112, A-23 to A-25, Q-16 to Q-18, the tasks O-11 to O-13, Section 4.12. Changed: A-11, O-6, the continuation point. All nine documents changed.
+**Companion documents:** `requirements.md` holds the requirements (`FR-`, `NFR-`), the constraints (`CON-`) and the analysis of the brief (`T-`, `U-`, `G-`). `technology_stack.md` holds the choices of technology with their reasons and the checks `V-01` to `V-08`. `architecture.md` holds the structure of the system and the details of D-057 to D-072. `ui_ux_specification.md` holds the layout and the behaviour of the interface. `feature_specifications.md` holds the behaviour of the features, the formats, the acceptance criteria (`AC-`) and the manual tests of the owner (`MT-`). `development_roadmap.md` holds the phases (`PH-`), the tasks (`TK-`) and the gates (`GATE-`). `risk_assessment.md` holds the risks (`RISK-`). `opus_implementation_guide.md` is the entry for the implementer.
 
 ---
 
@@ -51,7 +52,13 @@ The brief names six stages and nine documents. Two documents had no stage. This 
 
 The table names the version of each document at the end of its stage. The header of each document names its newest version.
 
-**Continuation point.** All six stages of the planning are done. The next step is development. It starts with the task TK-001 of `development_roadmap.md`.
+Changes after the six stages:
+
+| Change | Result | State |
+|---|---|---|
+| Change 7.0: version 1.1 with the Decomposer; work on the computer of the owner | Eight documents at version 2.0, this log at 7.0, `checks/check_docs.py` extended; decisions D-103 to D-112 recorded here | Done on 2026-11-20 |
+
+**Continuation point.** All six stages of the planning are done. The next step is development. It starts with the task TK-001 of `development_roadmap.md`. The change 7.0 added version 1.1 to the plan. It changes no task before TK-100.
 
 State of the work:
 
@@ -64,13 +71,13 @@ State of the work:
 
 How to continue:
 
-1. The owner creates the empty repository (task O-6).
+1. The owner creates the empty repository and a local copy of it on the computer (task O-6, D-103).
 2. The owner gives the nine documents and the script `checks/check_docs.py` to the implementer (task O-10).
 3. The implementer reads `opus_implementation_guide.md` first.
 4. The first session follows `opus_implementation_guide.md` Section 8.2.
 5. From then on, the implementer renews this continuation point after every task.
 
-The documents use the defaults of the two open questions: A-18 for Q-09 and A-17 for Q-10.
+The documents use the defaults of the five open questions: A-18 for Q-09, A-17 for Q-10, D-073 for Q-16, D-105 for Q-17 and D-104 for Q-18.
 
 ---
 
@@ -88,7 +95,7 @@ The documents use the defaults of the two open questions: A-18 for Q-09 and A-17
 | A-08 | A humming Take has one voice, lasts 3 to 60 s, and is recorded in a fairly quiet place. | Noisy places need a more robust method (AD-21). |
 | A-09 | A typical extraction asks for a short sound inside a range of at most 30 s. | Longer ranges raise cost and waiting time. |
 | A-10 | Projects are sketches within the limits of `requirements.md` Section 8. | Larger Projects need a larger budget for the engine. |
-| A-11 | The implementer (Claude Opus) can build the app and run tests on a host computer, or through the CI service of D-073. It cannot listen to audio and cannot operate the phone. | If it can do neither build nor test, the workflow of Stage 6 changes. |
+| A-11 | The implementer (Claude Opus) can build the app and run tests on a host computer, or through the CI service of D-073. Since D-103 this host is the computer of the owner (A-23). It cannot listen to audio and cannot operate the phone. | If it can do neither build nor test, the workflow of Stage 6 changes. |
 | A-12 | Anthropic's list of supported countries covers the owner's account for the Claude API. | Claude cannot be the Orchestrator as the brief says. The planner must be replaced (see note on D-017). |
 | A-13 | The factory Samples come from a small set with a licence that allows redistribution. | — |
 | A-14 | The owner has, or will create, an account in the Claude Console with an API key (Q-13). | Feature 3 has no way to call Claude from the app. |
@@ -100,12 +107,15 @@ The documents use the defaults of the two open questions: A-18 for Q-09 and A-17
 | A-20 | The owner can run the manual tests of a gate within a few days and can hand over the file of results. | A gate waits. The implementer goes on with tasks that need no result of the gate (D-096). |
 | A-21 | The minutes that the plan of the GitHub account grants to the CI service are enough for the runs of `development_roadmap.md` Section 2.3. | The run "Emulator" starts by hand only, or the owner changes the plan of the account. |
 | A-22 | The implementer can send changes to the repository of the owner. A new session of the implementer knows only what the repository holds. | The owner carries changes into the repository by hand. Each task then takes longer (RISK-15). |
+| A-23 | The computer of the owner has Git and Python. Other tools are not known: a JDK, the Android SDK, CMake, the GitHub CLI. The implementer uses what is present and installs nothing by itself (D-103). | Without Python, the script of the checks and the tests of the Toolkit run only in the CI service. Each result then waits for a run there (A-21). Without the GitHub CLI, the owner reports the result of each run (task O-13). |
+| A-24 | A typical decomposition takes a range of 15 s to 240 s of produced music, with a steady tempo and bars of four beats. | Other music gets a Project whose grid fits only roughly. The stems are not affected (FR-DEC-17). |
+| A-25 | The agent may run one command for at least 60 s. A file that a program wrote stays in the Sandbox between two commands of one Session. Not verified. | The steps of the program `decompose` get shorter, or the program does all its work in one call (D-106). |
 
 ---
 
 ## 3. Decisions
 
-D-001 to D-032 come from Stage 1. They resolve the conflicts, unclear statements and gaps that `requirements.md` Section 4 lists. D-033 to D-052 come from Stage 2. `technology_stack.md` holds their options and reasons in full. D-053 to D-056 come from answers of the owner. D-057 to D-072 come from Stage 3. `architecture.md` holds their details. D-073 to D-075 come from answers of the owner after Stage 3. D-076 to D-091 come from Stage 4. `ui_ux_specification.md` and `feature_specifications.md` hold their details. D-092 to D-097 come from Stage 5. `development_roadmap.md` and `risk_assessment.md` hold their details. D-098 to D-102 come from Stage 6. `opus_implementation_guide.md` holds the details of D-098 to D-100.
+D-001 to D-032 come from Stage 1. They resolve the conflicts, unclear statements and gaps that `requirements.md` Section 4 lists. D-033 to D-052 come from Stage 2. `technology_stack.md` holds their options and reasons in full. D-053 to D-056 come from answers of the owner. D-057 to D-072 come from Stage 3. `architecture.md` holds their details. D-073 to D-075 come from answers of the owner after Stage 3. D-076 to D-091 come from Stage 4. `ui_ux_specification.md` and `feature_specifications.md` hold their details. D-092 to D-097 come from Stage 5. `development_roadmap.md` and `risk_assessment.md` hold their details. D-098 to D-102 come from Stage 6. `opus_implementation_guide.md` holds the details of D-098 to D-100. D-103 to D-112 come from two requests of the owner after Stage 6. Section 4.12 names the documents that hold their details.
 
 | ID | Decision | Status | Reason in short | Linked |
 |---|---|---|---|---|
@@ -211,6 +221,16 @@ D-001 to D-032 come from Stage 1. They resolve the conflicts, unclear statements
 | D-100 | The nine documents rule over the code. A conflict between two documents stops the task until both are repaired. A decision changes only with new technical evidence. `opus_implementation_guide.md` Sections 6.2 and 6.4 name the five kinds of evidence and the decisions that stay with the owner. | Accepted | The brief forbids a new debate about major decisions without new technical evidence. Named kinds of evidence make this rule usable. | D-023, D-096 |
 | D-101 | The manifest of the app may hold permissions without a dialog that a library needs. A list in the repository names each of them with its reason. A test compares the merged manifest with this list. Permissions with a dialog stay limited to the microphone and to notifications. | Accepted | WorkManager adds such permissions (`feature_specifications.md` Section 5.3). The earlier words of NFR-SEC-05 did not allow them. | NFR-SEC-05, D-049 |
 | D-102 | A criterion with the mark "P1:" covers a part of version 1.0 and belongs to a phase of version 1.0. A criterion without the mark covers no part that is marked P1. The criteria of extraction, export and archive carry no mark, because these features belong to version 1.0 as a whole. Each P1 part of a requirement has a criterion. | Accepted | The final check found functions of version 1.0 that no criterion covered. A task could then count as done without them. | D-093, NFR-MNT-03 |
+| D-103 | The implementer runs as Claude Code inside VS Code on the computer of the owner. It works in a local copy of the repository. GitHub holds the remote repository. The project uses no cloud session of Claude and no Claude GitHub App. D-073 stays in force: the CI service builds the app and runs the checks. The implementer installs no tool on this computer without a word of the owner. | Accepted | Decision of the owner on 2026-11-20. The owner did not say whether the CI service stays, so Q-16 asks. | Q-06, Q-16, A-11, A-22, A-23, D-073 |
+| D-104 | Version 1.1 adds a second tool, the Decomposer. It is a second main screen beside the Studio. The Mode switch swaps between both. Its requirements carry the priority V1.1 (`requirements.md` Section 5.16). The phases PH-16 to PH-18 build it after version 1.0. The Module Extraction stays as it is. | Accepted | Request of the owner on 2026-11-20: two tools in one app, and a Project as the result of the second tool. The Decomposer needs the parts of extraction, so it follows them. | FR-DEC-01, FR-AIX-18, D-022, Q-18 |
+| D-105 | The Decomposer accepts the sources of D-015. "A link with timestamps" is a direct link to an audio file with a range. The app reads the range from a fragment `#t=start,end` of the link, or the user types it. Links to streaming platforms stay out. | Proposed | D-015 gives the reasons: the terms of the platforms, copy protection and store policy. The owner decides again with Q-17. | Q-17, D-015, FR-DEC-03, FR-DEC-04, NFR-LEG-03 |
+| D-106 | A Decomposition job is one Session with a second agent and a fixed request. One program of the Toolkit, `decompose`, does the work in bounded steps and keeps its state between two calls. It returns a file with the result, the stems as FLAC files and one WAV file for each Hit group. The phone checks the result and builds the Project (`feature_specifications.md` Sections 12.2 and 6.11). | Conditional | Test: V-08. The parts of extraction serve again. A fixed program keeps cost and time predictable (D-029). The limit of time for one command is not documented, so each call is short. | D-028, D-029, D-046, A-25, FR-DEC-09 |
+| D-107 | Methods of the decomposition. The stems come from the stem model of D-046. Tempo, beats and first bar come from the model Beat This! through ONNX Runtime, with own code as the fall-back. The Hit groups come from own signal processing: onsets, a few numbers for each hit, grouping with SciPy. Version 1.1 uses no model that splits the drum kit. | Conditional | Test: V-08. Beat This! has the MIT licence for code and weights (confirm). The examined models for the drum kit forbid commercial use, or their licence is not confirmed (`technology_stack.md` Section 9.7). | D-024, NFR-LEG-02, FR-DEC-10 |
+| D-108 | Notes of a decomposition. The hits of the drums become Notes, with one Sampler instrument for each Hit group. The Notes of the bass come from the conversion of the phone, which reads the stem at double speed (low register). Vocals and the other instruments stay Audio clips. | Conditional | Test: V-08, host part. The conversion exists (D-044, FR-H2M-11) and needs no Session. The transcription of several voices stays out (D-014). | D-014, D-044, FR-DEC-15, FR-DEC-16 |
+| D-109 | Layout of a Project from a result. Each stem gets a Track with one Audio clip. The drums and the bass each get one more Track with Pattern clips, and their stems are muted. A Pattern is 1, 2 or 4 bars long, and equal segments share one Pattern. The Notes snap to 1/16 when the tempo is steady. The first bar of the recording starts at a bar line. The Project builder is plain Kotlin and applies Edits (`feature_specifications.md` Section 12.2.7). | Accepted | The owner asked for a Project with everything laid out. Shared Patterns and Sampler instruments make the result editable with the tools of the Studio. The muted stems let the owner compare. All numbers are provisional. | FR-DEC-13 to FR-DEC-18, D-054, D-059 |
+| D-110 | Limits of a Decomposition job (prov.). A range is 5 s to 240 s long. A Session lasts at most 20 min. The budget is the budget of an Extraction job. Both kinds of job share one queue and one set of limits. A result has at most 200 MB. | Conditional | Test: V-08. If the Sessions with 240 s fail, the limit of the range goes down. The running time of a Session costs 0.08 USD per hour, so a long Session is no question of cost. | NFR-PERF-12, NFR-COST-05, FR-DEC-05, A-24 |
+| D-111 | Verdicts on the tools of the owner's note. Demucs stays the stem model. The models of Ultimate Vocal Remover and the service LALAL.AI are named candidates for the fall-backs of V-06 and V-08. RipX DAW, SpectraLayers and iZotope RX are desktop programs and cannot be parts of the app. The search for the original Samples by similarity is P2 (`technology_stack.md` Section 9.7). | Accepted | The note of the owner of 2026-11-20 and the pages of the tools. No tool changes a decision about extraction. | D-032, D-046, FR-DEC-24 |
+| D-112 | The check V-08 belongs to PH-16, not to PH-00. Its host part measures the decomposition on renders of own test Projects with a known tempo and known Notes. Its Sandbox part measures time, steps and cost of real Sessions. | Accepted | The Decomposer is version 1.1. Its check must not delay the MVP. Own test Projects have exact answers and need no outside data set (D-025). | NFR-QLT-06, D-095, D-096 |
 
 ### 3.1 Notes on the decisions with the widest effect
 
@@ -572,11 +592,38 @@ The final check compared every criterion with its requirements and every task wi
 
 No pending decision is open. The Conditional decisions wait for the checks V-02 to V-07. The Proposed decisions wait for the owner.
 
+### 4.12 Results of the change 7.0
+
+| Topic | Pending decision | Result | Left for later |
+|---|---|---|---|
+| Place of the work of the implementer | — | D-103 | Q-16: the CI service |
+| Second tool and version 1.1 | — | D-104 | Q-18: the order of the phases |
+| Sources of the Decomposer | — | D-105 | Q-17: links to streaming platforms |
+| Decomposition job, methods and Notes | — | D-106, D-107, D-108 | The check V-08 in PH-16 |
+| Layout of the new Project | — | D-109 | Its provisional numbers |
+| Limits of a Decomposition job | — | D-110 | The check V-08 |
+| Tools of the owner's note | — | D-111 | — |
+| Place and content of the check V-08 | — | D-112 | — |
+
+The change touched all nine documents and the script of the checks:
+
+1. `requirements.md` 2.0: the scope of version 1.1, the requirements FR-DEC-01 to FR-DEC-24, five more non-functional requirements, the priority V1.1.
+2. `technology_stack.md` 2.0: the examined tools, the choices for the decomposition, the check V-08.
+3. `architecture.md` 2.0: the module `:ui:decomposer`, the second main screen, the parts and the flow of a Decomposition job.
+4. `feature_specifications.md` 2.0: the feature with its nine subsections and 33 criteria, the format of a result, the manual test MT-21.
+5. `ui_ux_specification.md` 2.0: the Mode switch and the layout of the Decomposer.
+6. `development_roadmap.md` 2.0: the phases PH-16 to PH-18 with 16 tasks and three gates.
+7. `risk_assessment.md` 2.0: RISK-23 and RISK-24.
+8. `opus_implementation_guide.md` 2.0: the pointers to version 1.1, and the first session on the computer of the owner.
+9. `checks/check_docs.py`: the rules for version 1.1.
+
+No pending decision is open. The Conditional decisions wait for the checks V-02 to V-08. The Proposed decisions wait for the owner.
+
 ---
 
 ## 5. Open questions for the owner
 
-No question blocks the work. Q-09 and Q-10 stay open. The documents use their defaults: A-18 for Q-09 and A-17 for Q-10.
+No question blocks the work. Five questions are open: Q-09, Q-10, Q-16, Q-17 and Q-18. The documents use their defaults.
 
 | ID | Question | Default without an answer | Needed before | Why it matters |
 |---|---|---|---|---|
@@ -595,6 +642,9 @@ No question blocks the work. Q-09 and Q-10 stay open. The documents use their de
 | Q-06 | Development setup: which computer and system, are the Android build tools installed, can you install builds over USB, and where will Claude Opus run? | — | — | **Answered on 2026-11-20:** the owner has no computer with the Android build tools. A-05 is withdrawn. D-073 is the new plan. The follow-up is Q-15. |
 | Q-11 | What is the name of the app and its package ID? | — | — | **Answered on 2026-11-20:** the name is "mini daw" (D-075). The application ID is `app.minidaw` (D-098). |
 | Q-15 | Do you have an account at GitHub, or at a similar service that hosts code and runs CI? If not, will you create one? | — | — | **Answered on 2026-11-20:** the owner has a GitHub account. D-073 is accepted. |
+| Q-16 | You wrote that GitHub serves only as the remote repository. Does GitHub Actions stay as the service that builds the app and runs the checks? | Yes. D-073 stays in force (D-103). | TK-001 | Without it, the computer needs the Android build tools, and the way of a build to the phone changes. |
+| Q-17 | Does "a link with timestamps" include links to streaming platforms, for example YouTube? | No. The Decomposer takes direct links to audio files only (D-105). | TK-106 | D-015 keeps such links out because of the terms of the platforms. Another answer needs a new decision and a new look at RISK-18. |
+| Q-18 | Shall the Decomposer be built before the other phases of version 1.0, directly after extraction? | No. It follows version 1.0 (D-104). | GATE-10 | Only the order changes. PH-16 and PH-17 need GATE-10 and the task TK-097. |
 
 ### 5.1 Tasks for the owner
 
@@ -605,11 +655,14 @@ No question blocks the work. Q-09 and Q-10 stay open. The documents use their de
 | O-3 | Done on 2026-11-20: Q-14 is answered. | — |
 | O-4 | Done on 2026-11-20: Q-06 is answered. | — |
 | O-5 | Record 10 hummed melodies for the check V-05. | First phase of development |
-| O-6 | Create an empty private repository in the GitHub account (D-073). | Before development starts |
+| O-6 | Create an empty private repository in the GitHub account (D-073). Make a local copy of it on the computer and open this folder in VS Code (D-103). | Before development starts |
 | O-7 | Choose a long random password for the key for signing. Store it as an encrypted secret of the CI service. Then start the run that creates the key (D-094). | First phase of development, before the first build |
 | O-8 | Allow the browser of the phone to install apps when Android asks. | At the first install of a build |
 | O-9 | At each gate: install the test build, run the manual tests of the gate, and share the file of results (`development_roadmap.md` Section 8). | At every gate from GATE-03 on |
 | O-10 | Give the nine documents and the script `checks/check_docs.py` to the implementer in the first session. | Before development starts |
+| O-11 | Start version 2 of the setup and the Sandbox part of the check V-08, with the API key of O-1. Listen to three results. | In PH-16 |
+| O-12 | Choose 5 ranges of real music that you may use for the manual test MT-21. One of them is a direct link. One is 240 s long. | Before GATE-18 |
+| O-13 | Recommended: install the GitHub CLI on the computer and sign in. The implementer can then read the results of the CI service by itself (A-23). | Before development starts |
 
 ---
 
@@ -630,3 +683,4 @@ No question blocks the work. Q-09 and Q-10 stay open. The documents use their de
 | 2026-11-20 | 4 | Version 4.0. Stage 4 done. `feature_specifications.md` 1.0 and `ui_ux_specification.md` 1.1. New: D-081 to D-091, A-19, Section 4.9. `requirements.md` 1.7 and `architecture.md` 1.2. Continuation point for Stage 5. |
 | 2026-11-20 | 5 | Version 5.0. Stage 5 done. `development_roadmap.md` 1.0 and `risk_assessment.md` 1.0. New: D-092 to D-097, A-20, A-21, O-7 to O-9, Section 4.10. `feature_specifications.md` 1.1, `ui_ux_specification.md` 1.2, `technology_stack.md` 1.3, `requirements.md` 1.8. Continuation point for Stage 6. |
 | 2026-11-20 | 6 | Version 6.0. Stage 6 done. `opus_implementation_guide.md` 1.0. New: D-098 to D-102, A-22, O-10, Section 4.11. Final check: `feature_specifications.md` 1.2, `ui_ux_specification.md` 1.3, `development_roadmap.md` 1.1, `requirements.md` 1.9, `technology_stack.md` 1.4. The continuation point names the task TK-001. |
+| 2026-11-20 | After 6 | Version 7.0. Two requests of the owner. Version 1.1 with the Decomposer (D-104 to D-112). Work of the implementer on the computer of the owner (D-103). New: A-23 to A-25, Q-16 to Q-18, O-11 to O-13, Section 4.12. Eight documents at version 2.0. `checks/check_docs.py` extended. The continuation point still names the task TK-001. |

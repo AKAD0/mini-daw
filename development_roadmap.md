@@ -1,8 +1,9 @@
 # development_roadmap.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 5 of 6 (roadmap) · **Version:** 1.1 · **Date:** 2026-11-20
+**Stage:** 5 of 6 (roadmap) · **Version:** 2.0 · **Date:** 2026-11-20
 **Change in 1.1:** final check of Stage 6. The 22 new criteria of `feature_specifications.md` 1.2 have their tasks. The pointers to `opus_implementation_guide.md` name its sections. The run "Build" checks the size of the release build. Changed parts: Sections 2.1, 2.3, 2.6, 6.1, 6.3, 6.5 to 6.10, 6.13 to 6.15, 8.2, 9.1, 9.2 and 10.
+**Change in 2.0:** version 1.1 adds the Decomposer (D-104). The implementer works on the computer of the owner (D-103). New parts: Section 3.5, the phases PH-16 to PH-18 (Sections 6.17 to 6.19) with the tasks TK-100 to TK-115, the gates GATE-16 to GATE-18, Section 7.4, the milestone M6. Changed parts: Sections 1.1, 1.2, 2.1, 2.3, 2.5, 2.7, 3.1, 3.4, 4.1, 4.2, 4.3, 6.1 (objectives, TK-014), 7.2, 8.1, 8.2, 9.1 and 10.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `risk_assessment.md`, `opus_implementation_guide.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `D-`, `V-`, `AC-`, `MT-` and `RISK-` point to them.
 
 ---
@@ -18,6 +19,7 @@ Conventions:
 5. "(prov.)" marks a provisional value.
 6. This document plans the work. It claims no result of a check and no result of a test.
 7. The decisions D-092 to D-096 of `project_decisions.md` record the main choices of this document.
+8. Version 1.1 follows version 1.0. Section 3.5 describes it (D-104).
 
 | Item that the brief asks for (§4 F and Stage 5) | Section |
 |---|---|
@@ -45,13 +47,13 @@ Each phase in Section 6 has one table. Its first seven rows are the seven items 
 
 | Role | Who | Work |
 |---|---|---|
-| Implementer | Claude Opus | Writes code and tests. Runs every check of the host. Keeps the documents up to date. It cannot listen and cannot hold the phone (CON-17). |
+| Implementer | Claude Opus | Writes code and tests. Runs every check of the host. Keeps the documents up to date. It cannot listen and cannot hold the phone (CON-17). It runs as Claude Code in VS Code on the computer of the owner, in a local copy of the repository (D-103). |
 | Owner | The user of the app | Installs builds on the phone. Runs the checks and the manual tests. Judges sound and feel. Holds the accounts and the secrets. |
 | CI service | GitHub Actions in the repository of the owner (D-073) | Builds the app. Runs the checks of the host and the tests on an emulator. Offers the builds for download. |
 
 ### 1.2 Principles of the order
 
-1. **Checks first.** The checks V-01 to V-07 decide the Conditional decisions. They run before the code that depends on them (PH-00).
+1. **Checks first.** The checks V-01 to V-07 decide the Conditional decisions. They run before the code that depends on them (PH-00). The check V-08 does the same for version 1.1 in PH-16.
 2. **Host before phone.** The implementer can verify work on a host by itself. A test on the phone needs a build of the CI service and the time of the owner. The model and the engine are therefore built and tested on the host first (PH-01, PH-02).
 3. **A usable build per phase.** From PH-03 on, each phase ends with a build that lets the owner do something new.
 4. **The Mixer grows with the engine and the Playlist.** Section 5 shows the steps.
@@ -80,6 +82,7 @@ The column "Done when" of a table of tasks lists the acceptance criteria of `fea
 | Place | Content |
 |---|---|
 | Repository | The code. The nine documents in the folder `docs/`. The script `checks/check_docs.py`. The results of checks and of manual tests in the folder `docs/results/`. The record of the work in the file `docs/progress.md` (D-098). |
+| Computer of the owner | The local copy of the repository. The implementer works in it and sends each change to the repository (D-103). |
 | CI service | The runs of Section 2.3 and the encrypted secrets |
 | Page of releases of the repository | The builds for download (prov.; TK-002 confirms that this way works on the phone) |
 | Phone | The test build and the release build |
@@ -112,6 +115,8 @@ Rules:
 | Setup of the account | By the owner | The setup script, with the API key as an encrypted secret |
 | Sandbox test | By the owner | The check V-06 |
 | Quality of the separation | By hand, after a change of the model file or of the program `separate` | `feature_specifications.md` Section 5.8 |
+| Decomposition test | By the owner | The Sandbox part of the check V-08 |
+| Quality of the decomposition | By hand, after a change of the program `decompose`, of a model file or of the low register | `feature_specifications.md` Section 12.8 |
 
 Parts of the one command:
 
@@ -126,11 +131,12 @@ Parts of the one command:
 
 Rules:
 
-1. The implementer runs the one command on its host before it sends a change (A-11). The CI service repeats it.
+1. The implementer runs the one command on its host before it sends a change (A-11). On the computer of the owner it runs the parts whose tools are present (A-23). The CI service runs the whole command. Its result is the one that counts.
 2. A change enters the main branch only after a green run "Check".
 3. The plan of the account limits the minutes of the CI service. Long runs therefore start only on the main branch (A-21).
 4. The setup script and the Sandbox test can also run on any computer with Python. The API key then never reaches the CI service (D-073).
 5. No run prints a secret into its log.
+6. The implementer reads the result of a run with the GitHub CLI of the computer of the owner. Without this tool, the owner reports the result (A-23, task O-13).
 
 ### 2.4 From a change to the phone
 
@@ -147,7 +153,7 @@ Rules:
 2. The owner starts the measurements of the gate. Each one shows its result, its pass rule and the word "pass" or "fail".
 3. For a test that the owner judges by ear or by eye, the screen holds a row. The owner marks it as passed or failed and can add a note.
 4. One button shares all results as a file.
-5. The owner hands the file to the implementer: in the session with the implementer, or as an attachment to an issue of the repository.
+5. The owner hands the file to the implementer: in the session with the implementer, or as a file in the folder `docs/results/` of the local copy.
 6. The implementer stores the file in `docs/results/` and records the gate.
 
 ### 2.6 Rules for every task
@@ -167,8 +173,8 @@ A criterion whose check is a manual test follows one more rule. The task ends wh
 
 | Review | When | Who | Requirement |
 |---|---|---|---|
-| Licences of all libraries | Automatic on every change. By hand at GATE-09 and GATE-15. | Implementer | NFR-LEG-01 |
-| Terms of the factory Samples and of the model files; notice file | GATE-09 for the app. GATE-15 for the stem model. | Implementer prepares, owner decides | NFR-LEG-02 |
+| Licences of all libraries | Automatic on every change. By hand at GATE-09, GATE-15 and GATE-18. | Implementer | NFR-LEG-01 |
+| Terms of the factory Samples and of the model files; notice file | GATE-09 for the app. GATE-15 for the stem model. GATE-18 for the model file for the beats. | Implementer prepares, owner decides | NFR-LEG-02 |
 | Usage policies and supported regions of the Claude API | GATE-10 | Owner | NFR-LEG-05 |
 | Rules of Google Play | Only if the app is published there | Owner | NFR-LEG-04 |
 
@@ -178,7 +184,7 @@ A criterion whose check is a manual test follows one more rule. The task ends wh
 
 ### 3.1 Border
 
-Stage 5 confirms the border of D-022. P0 requirements form the MVP. P1 requirements form version 1.0. P2 requirements come later.
+Stage 5 confirms the border of D-022. P0 requirements form the MVP. P1 requirements form version 1.0. V1.1 requirements form version 1.1 (Section 3.5). P2 requirements come later.
 
 | Area | MVP | Version 1.0 | Later |
 |---|---|---|---|
@@ -195,7 +201,7 @@ Stage 5 confirms the border of D-022. P0 requirements form the MVP. P1 requireme
 | Effects | Equalizer, delay, reverb | Compressor, limiter, saturation, filter, chorus | Presets |
 | Projects | Autosave, undo, list of Projects | Archive of a Project | — |
 | Export | None. The offline render exists as a test tool (D-021). | WAV, M4A, MIDI file | One file per channel |
-| Extraction | None | The whole feature | Single hits, whole recordings |
+| Extraction | None | The whole feature | — |
 
 `feature_specifications.md` Section 10 lists the P2 requirements by ID.
 
@@ -221,8 +227,28 @@ Stage 5 confirms the border of D-022. P0 requirements form the MVP. P1 requireme
 The P2 requirements have no phase. Three candidates for the first later version:
 
 1. Playback and export while the app is in the background. This needs a foreground service (CON-08).
-2. A hosted separation model with a GPU as one more tool of the Orchestrator (D-032).
+2. A hosted separation model with a GPU as one more tool of the Orchestrator (D-032). `technology_stack.md` Section 9.7 names the first candidate.
 3. Sends in the Mixer (FR-MX-12).
+
+### 3.5 Version 1.1: the Decomposer (D-104)
+
+The owner asked for a second tool on 2026-11-20. Version 1.1 holds it. It follows version 1.0.
+
+| Area | Version 1.1 | Later |
+|---|---|---|
+| Workspace | A second main screen, the Decomposer, with the Mode switch | — |
+| Decomposer | Tempo, four stems, Notes for the drums and for the bass, a new Project | Six stems, Notes for chords, a model for the drum kit, the nearest Sample of the Library |
+| Library | The group Decomposed | — |
+| Humming to MIDI | The low register of the conversion | — |
+
+Reasons for this place in the order:
+
+1. The Decomposer needs the parts of extraction: the client, the Runner, the Toolkit and the setup (PH-10).
+2. Its Notes of the bass need the conversion of any Sample (TK-097).
+3. It adds no requirement of the brief. Version 1.0 therefore closes first.
+4. The check V-08 measures its uncertain parts before its screen is built (D-112).
+
+The owner can ask for another order (Q-18). The phases PH-16 and PH-17 need GATE-10 and the task TK-097. They need nothing else of version 1.0.
 
 ---
 
@@ -248,6 +274,9 @@ The P2 requirements have no phase. Three candidates for the first later version:
 | PH-13 | Editing of version 1.0 | Deeper tools for Transport, Clips, Notes and Sampler instruments. | 1.0 | TK-088 to TK-092 |
 | PH-14 | Library, recording and humming of version 1.0 | The P1 functions of these three parts. | 1.0 | TK-093 to TK-097 |
 | PH-15 | Release of version 1.0 | Version 1.0 passes every manual test. | 1.0 | TK-098 to TK-099 |
+| PH-16 | Decomposition in the Sandbox | The Toolkit turns a range into a tempo, stems and Hit groups. The check V-08 has results. | 1.1 | TK-100 to TK-105 |
+| PH-17 | From a result to a Project | A result of the Toolkit becomes a Project on the host. | 1.1 | TK-106 to TK-110 |
+| PH-18 | Decomposer and release of version 1.1 | The owner decomposes a recording on the phone. | 1.1 | TK-111 to TK-115 |
 
 ### 4.2 Dependencies between the phases
 
@@ -258,15 +287,17 @@ flowchart LR
   P06 --> P07["PH-07 recording"] --> P08["PH-08 humming"] --> P09["PH-09 MVP"]
   P09 --> P10["PH-10 extraction"] & P11["PH-11 export"] & P12["PH-12 Mixer 1.0"] & P13["PH-13 editing 1.0"] & P14["PH-14 Library, recording, humming 1.0"]
   P10 & P11 & P12 & P13 & P14 --> P15["PH-15 version 1.0"]
+  P15 --> P16["PH-16 decomposition in the Sandbox"] --> P17["PH-17 result to Project"] --> P18["PH-18 version 1.1"]
 ```
 
-In words: PH-00 to PH-09 follow each other. PH-10 to PH-14 each need only the MVP. PH-15 needs all of them.
+In words: PH-00 to PH-09 follow each other. PH-10 to PH-14 each need only the MVP. PH-15 needs all of them. PH-16 to PH-18 follow PH-15 and each other.
 
 Rules:
 
 1. The phases PH-10 to PH-14 do not depend on each other. The owner can change their order. One task is an exception: TK-094 needs TK-071.
 2. The planned order puts extraction first, because it is the third core feature of the brief.
 3. Each table of tasks in Section 6 names the tasks that a task needs.
+4. PH-16 and PH-17 need only GATE-10 and TK-097 from version 1.0. The owner can therefore move them forward (Q-18). PH-18 ends with the release of version 1.1 and needs GATE-15.
 
 ### 4.3 Milestones
 
@@ -278,6 +309,7 @@ Rules:
 | M3: MVP | GATE-09 | The MVP is released for daily use. |
 | M4: third core feature | GATE-10 | Extraction works with the account of the owner. |
 | M5: version 1.0 | GATE-15 | All P0 and P1 requirements are met. |
+| M6: version 1.1 | GATE-18 | The Decomposer turns a recording into a Project on the phone. |
 
 ---
 
@@ -317,7 +349,7 @@ Columns of a table of tasks:
 
 | Item | Content |
 |---|---|
-| Objectives | A change in the repository reaches the phone as a build. Each check V-01 to V-07 has a recorded result. Each Conditional decision is confirmed or replaced. |
+| Objectives | A change in the repository reaches the phone as a build. Each check V-01 to V-07 has a recorded result. Each Conditional decision that rests on one of these checks is confirmed or replaced. |
 | Features to implement | No feature of the product. Three small apps for the checks. First versions of four parts that later phases use again. The list below the tasks names them. |
 | Technical dependencies | An empty repository (task O-6). The password of the key for signing (task O-7). For V-05: 10 melodies of the owner (task O-5). For V-06: a new API key (task O-1). |
 | Implementation order | TK-001 to TK-003 come first, because no test build exists without them. All other tasks are the checks. TK-014 closes the phase. |
@@ -341,7 +373,7 @@ Columns of a table of tasks:
 | TK-011 | Toolkit, first version | `toolkit/` | TK-001 | L | AC-AIX-09 |
 | TK-012 | Setup script and test script of the Sandbox | `setup/` | TK-011 | M | AC-AIX-18 |
 | TK-013 | Check V-06: Sandbox | `setup/`, manual runs | TK-012 | S | The values of `technology_stack.md` Section 9.6 are recorded for 10 Sessions. The owner judged three results. |
-| TK-014 | Review of the provisional values and of the Conditional decisions | Documents | TK-003 to TK-013 | S | Each check has its file of results. Each Conditional decision has its new status. The limits and the sizes are reviewed. |
+| TK-014 | Review of the provisional values and of the Conditional decisions | Documents | TK-003 to TK-013 | S | Each check has its file of results. Each Conditional decision that rests on one of these checks has its new status. The limits and the sizes are reviewed. |
 
 Parts that later phases use again:
 
@@ -683,6 +715,70 @@ The recordings of the owner stay on the phone. The file of results holds numbers
 | TK-098 | Full run of the manual tests; fixes | All modules | TK-077, TK-082, TK-087, TK-092, TK-097 | M | Every manual test has passed with the build of the release. |
 | TK-099 | Reviews of Section 2.7; release build; final documents | Documents, CI service | TK-098 | S | GATE-15 is passed. |
 
+### 6.17 PH-16: decomposition in the Sandbox
+
+| Item | Content |
+|---|---|
+| Objectives | The Toolkit turns a range of a recording into a tempo, four stems and Hit groups. The check V-08 has a recorded result. Each Conditional decision of the Decomposer is confirmed or replaced. |
+| Features to implement | The program `decompose`, the low register of the conversion, version 2 of the setup and the format of a result (`feature_specifications.md` Sections 12.2.5, 12.2.6, 12.2.8 and 6.11). No screen. |
+| Technical dependencies | GATE-10. The task TK-097. The offline render of the engine. A valid API key for the Sandbox part of V-08 (task O-11). |
+| Implementation order | TK-100 to TK-105. The measured quality on the host comes before the Sessions. |
+| Expected deliverables | The Toolkit of version 2 with its tests. The six test Projects with their renders. The file of results of V-08. An updated `project_decisions.md`. |
+| Testing requirements | The tests of the Toolkit. The measured quality of `feature_specifications.md` Section 12.8. The Sandbox part of V-08 with the real service. |
+| Definition of done | GATE-16 |
+| Risks to watch | RISK-08, RISK-09, RISK-17, RISK-18, RISK-23, RISK-24 |
+
+| ID | Task | Modules | Needs | Size | Done when |
+|---|---|---|---|---|---|
+| TK-100 | Program `decompose`: the steps `prepare`, `beats`, `stems` and `write`; the state between two calls; the file of the result | `toolkit/` | TK-068 | L | AC-DEC-08, AC-DEC-09 |
+| TK-101 | Step `hits`: onsets, Hit groups, Samples, strengths | `toolkit/` | TK-100 | M | AC-DEC-10 |
+| TK-102 | Low register of the conversion | `:analysis`, `:core` | TK-097 | S | AC-DEC-24 |
+| TK-103 | Test Projects with their renders; measured quality of the decomposition | `toolkit/`, fixtures, CI service | TK-100 to TK-102 | M | AC-DEC-11 |
+| TK-104 | Setup script, version 2; model file for the beats with its comparison | `setup/`, `toolkit/` | TK-077, TK-100 | M | AC-DEC-12 |
+| TK-105 | Check V-08: decomposition in the Sandbox | `setup/`, manual runs | TK-103, TK-104 | S | The values of `technology_stack.md` Section 9.8 are recorded for 7 Sessions. The owner judged three results. D-106, D-107, D-108 and D-110 have their new status. |
+
+### 6.18 PH-17: from a result to a Project
+
+| Item | Content |
+|---|---|
+| Objectives | A Decomposition job runs from the request to a checked result. The Project builder turns a result into a Project. Both work on the host, against a fake of the API. |
+| Features to implement | Decomposition job, reading of a result, Project builder, Notes and Sample of the bass, group Decomposed (FR-DEC-03 to FR-DEC-05, FR-DEC-07 to FR-DEC-11, FR-DEC-13 to FR-DEC-19, FR-DEC-21, FR-DEC-22; `feature_specifications.md` Section 12; `architecture.md` Section 10.7). |
+| Technical dependencies | GATE-16. The result of V-08 (D-106 to D-110). The Runner of TK-072 and the work outside the foreground of TK-074. |
+| Implementation order | TK-106 to TK-110. The job comes first. The flow that joins all parts comes last. |
+| Expected deliverables | The new parts of `:extraction` and of `:core`. Fixtures of results with their expected Projects. No new screen. |
+| Testing requirements | The Runner against the fake `ClaudeApi`, with a stop after every state. Hostile results. Fixtures and random results for the Project builder. |
+| Definition of done | GATE-17 |
+| Risks to watch | RISK-17, RISK-19, RISK-23, RISK-24 |
+
+| ID | Task | Modules | Needs | Size | Done when |
+|---|---|---|---|---|---|
+| TK-106 | Decomposition job: rules of source and range, fragment of a link, cut, first message, states, shared queue, limits and time limit | `:extraction`, `:data` | TK-071, TK-072, TK-074, TK-105 | L | AC-DEC-03 to AC-DEC-05, AC-DEC-07, AC-DEC-13 to AC-DEC-15 |
+| TK-107 | Reading of a result: checks, limits, free storage | `:extraction` | TK-106 | M | AC-DEC-16, AC-DEC-17 |
+| TK-108 | Project builder: time, Tracks, Sampler instruments, Notes, snap, Patterns | `:core` | TK-105 | L | AC-DEC-18 to AC-DEC-23 |
+| TK-109 | Bass of a result: Notes through the conversion, Sample of the bass, Root note, levels | `:core`, `:analysis` | TK-102, TK-108 | M | AC-DEC-25 |
+| TK-110 | Flow "Project from a result": import into the group Decomposed, save of the new Project, second creation | `:core`, `:data` | TK-107 to TK-109 | M | AC-DEC-26 |
+
+### 6.19 PH-18: Decomposer and release of version 1.1
+
+| Item | Content |
+|---|---|
+| Objectives | The owner decomposes a recording on the phone and opens the new Project in the Studio. Version 1.1 passes its manual tests. |
+| Features to implement | Mode switch and second main screen (FR-DEC-01, FR-DEC-02). The Decomposer with its pages and its review (FR-DEC-06, FR-DEC-12, FR-DEC-20, FR-DEC-23; `ui_ux_specification.md` Section 19). Entries from outside. |
+| Technical dependencies | GATE-15 and GATE-17. The sheet for a shared file of TK-094. A valid API key and version 2 of the setup. |
+| Implementation order | TK-111 to TK-115. The Mode switch comes first, because the Decomposer needs it. |
+| Expected deliverables | The module `:ui:decomposer`. The release build of version 1.1. The results of the manual tests. The final documents. |
+| Testing requirements | One test for each rule of `ui_ux_specification.md` Section 19. The manual tests of GATE-18, with the real service. |
+| Definition of done | GATE-18 |
+| Risks to watch | RISK-10, RISK-11, RISK-14, RISK-20, RISK-21, RISK-23, RISK-24 |
+
+| ID | Task | Modules | Needs | Size | Done when |
+|---|---|---|---|---|---|
+| TK-111 | Mode switch and shell: two main screens, the state of both, stop of playback, Back gesture | `:ui:workspace`, `:core`, `:app` | TK-067 | M | AC-DEC-01, AC-DEC-02 |
+| TK-112 | Decomposer: source area, range with waveform, pages "New" and "Jobs", blocking states | `:ui:decomposer` | TK-106, TK-111 | L | AC-DEC-06, AC-DEC-28, AC-DEC-30 |
+| TK-113 | Review of a result: previews, tempo, notes, "Create Project", "Open in Studio" | `:ui:decomposer`, `:core` | TK-110, TK-112 | M | AC-DEC-27, AC-DEC-29 |
+| TK-114 | Entries from outside: third action of the sheet for a shared file, action of a Sample, notification | `:app`, `:ui:library` | TK-094, TK-112 | S | AC-DEC-31 |
+| TK-115 | Setup of version 2 for the release; manual tests with the real service; release build of version 1.1; final documents | `setup/`, documents, CI service | TK-099, TK-113, TK-114 | M | AC-DEC-32, AC-DEC-33 |
+
 ---
 
 ## 7. Gates (D-096)
@@ -711,7 +807,7 @@ Further rules:
 
 | ID | Phase | Must pass | Early runs | Further conditions |
 |---|---|---|---|---|
-| GATE-00 | PH-00 | — | — | Each check V-01 to V-07 has its file of results. Each Conditional decision is confirmed or replaced (Section 7.3). The provisional limits and sizes are reviewed. |
+| GATE-00 | PH-00 | — | — | Each check V-01 to V-07 has its file of results. Each Conditional decision that rests on one of these checks is confirmed or replaced (Section 7.3). The provisional limits and sizes are reviewed. |
 | GATE-01 | PH-01 | — | — | Every fixture compiles into its expected Snapshot. |
 | GATE-02 | PH-02 | — | — | Every fixture renders as expected. The sanitizers report nothing. |
 | GATE-03 | PH-03 | MT-04, MT-08, MT-14, MT-17 | MT-01, MT-10 | MT-08: the part with the playhead. MT-14: the part with the cutout. MT-17: the part with the idle state. |
@@ -727,6 +823,9 @@ Further rules:
 | GATE-13 | PH-13 | MT-02, MT-05 | — | — |
 | GATE-14 | PH-14 | MT-07, MT-12, MT-20 | — | — |
 | GATE-15 | PH-15 | MT-01 to MT-20 | — | Every criterion of version 1.0 passes. The reviews of Section 2.7 are done. |
+| GATE-16 | PH-16 | — | — | The check V-08 has its file of results. Each Conditional decision of the Decomposer is confirmed or replaced (Section 7.4). The limit of the range is reviewed. |
+| GATE-17 | PH-17 | — | — | Every fixture of a result gives its expected Project. |
+| GATE-18 | PH-18 | MT-01, MT-13, MT-14, MT-21 | — | Every criterion of version 1.1 passes. The reviews of Section 2.7 are done. MT-14 includes the Decomposer. |
 
 ### 7.3 Answers if a check of PH-00 fails
 
@@ -742,6 +841,14 @@ This table plans the answers. It claims no result.
 | V-06 | D-028, D-046, D-047, D-088 | Three answers exist, in this order (`technology_stack.md` Section 14). First: another model tier or another model. Second: a hosted model as one more tool. Third: extraction moves behind version 1.0. If attached files load slowly, the Sandbox downloads the Toolkit instead (`technology_stack.md` Section 9.3). |
 | V-07 | D-040 | If both methods differ by more than 10 ms, the calibration by loopback becomes the default for the speaker. The manual offset stays available. |
 
+### 7.4 Answers if the check of PH-16 fails
+
+This table plans the answers. It claims no result.
+
+| Check | Decides | Answer if the check fails |
+|---|---|---|
+| V-08 | D-106, D-107, D-108, D-110 | Four answers exist, in this order (`technology_stack.md` Section 14). First: a lower limit for the range, when only the long Sessions fail. Second: the second method of the part that fails. Third: a hosted model for the stems. Fourth: a Decomposer without Notes. If one command may not run for 45 s, the steps of `decompose` get shorter. |
+
 ---
 
 ## 8. Manual tests and tasks of the owner
@@ -752,7 +859,7 @@ This table turns Section 7.2 around. The script of the checks keeps both tables 
 
 | Manual test | Name | Must pass at | Early run at |
 |---|---|---|---|
-| MT-01 | Startup | GATE-09, GATE-15 | GATE-03 |
+| MT-01 | Startup | GATE-09, GATE-15, GATE-18 | GATE-03 |
 | MT-02 | Frame timing | GATE-09, GATE-13, GATE-15 | GATE-05 |
 | MT-03 | Load of the engine | GATE-09, GATE-12, GATE-15 | GATE-05 |
 | MT-04 | Tap to sound | GATE-03, GATE-15 | — |
@@ -764,34 +871,38 @@ This table turns Section 7.2 around. The script of the checks keeps both tables 
 | MT-10 | Audio devices and audio focus | GATE-09, GATE-15 | GATE-03 |
 | MT-11 | End of a Take | GATE-07, GATE-15 | — |
 | MT-12 | Humming | GATE-08, GATE-14, GATE-15 | — |
-| MT-13 | Flight mode | GATE-09, GATE-15 | — |
-| MT-14 | Interface on the phone | GATE-03, GATE-09, GATE-15 | — |
+| MT-13 | Flight mode | GATE-09, GATE-15, GATE-18 | — |
+| MT-14 | Interface on the phone | GATE-03, GATE-09, GATE-15, GATE-18 | — |
 | MT-15 | Factory set | GATE-09, GATE-15 | GATE-04 |
 | MT-16 | Extraction | GATE-10, GATE-15 | — |
 | MT-17 | Memory and idle state | GATE-03, GATE-09, GATE-15 | GATE-05 |
 | MT-18 | Export | GATE-11, GATE-15 | — |
 | MT-19 | Long run with Edits | GATE-09, GATE-15 | — |
 | MT-20 | Shortcuts of the launcher | GATE-14, GATE-15 | — |
+| MT-21 | Decomposition | GATE-18 | — |
 
 Notes on the time of the owner (prov.):
 
 1. MT-03 runs for 40 min by itself. MT-19 runs for 30 min by itself.
-2. MT-12 needs 10 hummed melodies. MT-16 needs 10 requests and one more look at the Claude Console on the next day.
+2. MT-12 needs 10 hummed melodies. MT-16 needs 10 requests and one more look at the Claude Console on the next day. MT-21 needs 5 ranges of music and the time of 5 jobs.
 3. Every other test takes a few minutes.
 
 ### 8.2 Tasks of the owner by phase
 
-`project_decisions.md` Section 5.1 holds the tasks O-1 to O-10.
+`project_decisions.md` Section 5.1 holds the tasks O-1 to O-13.
 
 | No. | Phases | Tasks of the owner |
 |---|---|---|
-| 1 | PH-00 | Create the repository (O-6). Give the documents and the script of the checks to the implementer (O-10). Set the password of the key for signing and start the run that creates the key (O-7). Allow the browser to install apps (O-8). Run the apps for the checks (O-2). Record 10 melodies (O-5). Create a new API key with a limit of spending, and start the Sandbox test (O-1). Judge three results of V-06. |
+| 1 | PH-00 | Create the repository and its local copy (O-6). Install the GitHub CLI, if the implementer shall read the runs by itself (O-13). Give the documents and the script of the checks to the implementer (O-10). Set the password of the key for signing and start the run that creates the key (O-7). Allow the browser to install apps (O-8). Run the apps for the checks (O-2). Record 10 melodies (O-5). Create a new API key with a limit of spending, and start the Sandbox test (O-1). Judge three results of V-06. |
 | 2 | PH-01, PH-02 | None. The work runs on the host. |
 | 3 | PH-03 to PH-08 | Install the build of each gate. Run its manual tests. Hand over the file of results (O-9). |
 | 4 | PH-09 | Run every manual test of GATE-09. Accept the MVP, or name what blocks it. |
 | 5 | PH-10 | Start the setup of the account. Send 10 real requests (MT-16). Review the usage policies and the supported regions (NFR-LEG-05). |
 | 6 | PH-11 to PH-14 | As in the phases PH-03 to PH-08. |
 | 7 | PH-15 | Run every manual test. Decide about the terms of the model files before the app goes to other people (NFR-LEG-02). |
+| 8 | PH-16 | Start the setup of version 2 and the Sandbox part of the check V-08. Listen to three results (O-11). |
+| 9 | PH-17 | None. The work runs on the host. |
+| 10 | PH-18 | Choose 5 ranges of real music (O-12). Run the manual tests of GATE-18. Decide about the terms of the model file for the beats before the app goes to other people (NFR-LEG-02). |
 
 ---
 
@@ -804,6 +915,7 @@ Notes on the time of the owner (prov.):
 3. A criterion that starts with "P1:" belongs to a phase of version 1.0 (D-102).
 4. A criterion with a manual test counts as passed at the gate of its phase (Section 2.6).
 5. The script `checks/check_docs.py` verifies rule 1 and rule 3. It also verifies that the gate of each phase lists the manual tests of its criteria.
+6. A criterion of the group `AC-DEC` belongs to a phase of version 1.1. No other criterion belongs there. The script verifies this too (D-104).
 
 ### 9.2 Groups of criteria and their tasks
 
@@ -827,6 +939,7 @@ This table turns Section 6 around. The script of the checks keeps both equal.
 | `AC-FS` | Factory set | 8 | TK-027, TK-032, TK-044, TK-065, TK-066 |
 | `AC-PRJ` | Projects | 12 | TK-017, TK-019, TK-029, TK-031, TK-045, TK-062, TK-082 |
 | `AC-EXP` | Export | 9 | TK-078, TK-079, TK-080, TK-081 |
+| `AC-DEC` | Decomposer | 33 | TK-100, TK-101, TK-102, TK-103, TK-104, TK-106, TK-107, TK-108, TK-109, TK-110, TK-111, TK-112, TK-113, TK-114, TK-115 |
 
 ---
 
@@ -835,7 +948,9 @@ This table turns Section 6 around. The script of the checks keeps both equal.
 | Topic | Decision |
 |---|---|
 | Border between the MVP and version 1.0 | D-092 |
-| Order of the work: 16 phases, 99 tasks, one task per criterion | D-093 |
+| Order of the work: 16 phases and 99 tasks up to version 1.0, one task per criterion | D-093 |
+| Version 1.1: 3 more phases and 16 more tasks; the check V-08 in PH-16 | D-104, D-112 |
+| Place of the work of the implementer | D-103 |
 | Workflow in detail: places, builds, key for signing, runs | D-094 |
 | How three checks run before the product exists | D-095 |
 | Gates, manual tests, early runs | D-096 |
@@ -848,3 +963,4 @@ Open points:
 3. The sizes of the tasks are estimates. `opus_implementation_guide.md` Section 4.2 says how the implementer splits a task.
 4. The plan has no calendar. The order and the gates decide. The time of the owner at the gates sets the pace (A-20).
 5. The results of PH-00 can change later phases. TK-014 updates this document then.
+6. The phases of version 1.1 rest on the check V-08. TK-105 updates this document with its results.

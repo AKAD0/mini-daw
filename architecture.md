@@ -1,9 +1,10 @@
 # architecture.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 3 of 6 (architecture) · **Version:** 1.2 · **Date:** 2026-11-20
+**Stage:** 3 of 6 (architecture) · **Version:** 2.0 · **Date:** 2026-11-20
 **Change in 1.1:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 1.1, Section 10.5, Section 15, Section 16.5.
 **Change in 1.2:** results of Stage 4. The index of the Library also holds the length of the song of each Project. Changed parts: Section 8.2 (table `project`), Section 16.4 (closing note).
+**Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: the module `:ui:decomposer`, Section 10.7, Section 16.6. Changed parts: Sections 1.1, 2.1, 2.2, 2.3, 6.1, 6.2, 6.4, 7, 11.4, 12.1, 12.3, 13.2, 14 and 15.
 **Companion documents:** `requirements.md`, `technology_stack.md` and `project_decisions.md` in their newest versions. `feature_specifications.md` and `ui_ux_specification.md` hold the details of Stage 4. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-`, `Q-` and `V-` point to them.
 
 ---
@@ -50,15 +51,15 @@ flowchart LR
     UI --> Storage[("Private storage of the app")]
     Engine --> Oboe[Oboe on AAudio]
   end
-  UI -- "HTTPS, extraction only" --> API["Claude API"]
+  UI -- "HTTPS, for jobs only" --> API["Claude API"]
   API --> Session["Session: agent, Sandbox, Toolkit"]
   Setup["Setup script: a computer or the CI service"] --> API
 ```
 
 Parts:
 
-1. The app on the phone. It holds all data. It does all work except the audio work of an Extraction job.
-2. The Claude API. The app calls it only for Extraction jobs (D-027).
+1. The app on the phone. It holds all data. It does all work except the audio work of an Extraction job and the analysis of a Decomposition job.
+2. The Claude API. The app calls it only for Extraction jobs and for Decomposition jobs (D-027, D-106).
 3. The place where the setup script runs once: any computer with Python, or the CI service (D-073). The CI service also runs builds and tests during development.
 
 ### 1.2 Principles
@@ -91,16 +92,17 @@ Parts:
 | Module | Kind | Content | May depend on |
 |---|---|---|---|
 | `:engine-api` | Kotlin, no Android | Interfaces `AudioEngine` and `AudioTools`. Types of Live commands and of telemetry. Writer for the format of a Snapshot. A fake engine for tests. | nothing |
-| `:core` | Kotlin, no Android | State of a Project, Edits, Reducer, undo, math for time, limits. Compiler from the state to a Snapshot. `ProjectSession`. State of the workspace. Flows that span several parts. Writer for standard MIDI files. Interfaces of stores, analysis and extraction. | `:engine-api` |
+| `:core` | Kotlin, no Android | State of a Project, Edits, Reducer, undo, math for time, limits. Compiler from the state to a Snapshot. `ProjectSession`. State of the workspace. Flows that span several parts. From version 1.1 on: `ProjectBuilder`. Writer for standard MIDI files. Interfaces of stores, analysis and extraction. | `:engine-api` |
 | `:engine` | Android library with C++ | Native library of the engine: `engine-core` (portable C++), glue for Oboe, JNI bridge. Kotlin classes that implement `:engine-api`. | `:engine-api` |
 | `:analysis` | Android library with C++ | Detection of pitch, code for Notes, ONNX Runtime. An own native library. | `:core` |
 | `:data` | Android library | Store of Projects. Library with Room. Import. Settings. Store for the secret. | `:core` |
-| `:extraction` | Android library | Client of the Claude API. States of a job. Task for WorkManager. | `:core` |
+| `:extraction` | Android library | Client of the Claude API. States of a job. Task for WorkManager. Jobs of both kinds: extraction and decomposition. | `:core` |
 | `:ui:kit` | Compose | Theme, shared controls (fader, knob, button), helpers for drawing on a canvas. | `:core` |
-| `:ui:workspace` | Compose | Shell with two panels, global bar, host of the Mixer, menu of Projects, settings, diagnostics view. | `:ui:kit` |
+| `:ui:workspace` | Compose | Shell with two panels, global bar, host of the Mixer, menu of Projects, settings, diagnostics view. From version 1.1 on: the switch between the Studio and the Decomposer. | `:ui:kit` |
 | `:ui:editors` | Compose | Playlist, Piano roll, Channel Rack. | `:ui:kit` |
 | `:ui:mixer` | Compose | Mixer, Effect editor. | `:ui:kit` |
 | `:ui:library` | Compose | Sample browser, Recorder, Module Extraction. | `:ui:kit` |
+| `:ui:decomposer` | Compose | The Decomposer: form of a request, list of jobs, review of a result (version 1.1). | `:ui:kit` |
 | `:app` | Android app | The activity, the order of startup, the wiring of all parts. | all modules |
 | `:benchmark` | Test module | Macrobenchmark tests. Generator of the profiles. | `:app` |
 | `toolkit/`, `setup/` | Python, outside Gradle | Toolkit for the Sandbox. Setup script for the account. | — |
@@ -116,17 +118,17 @@ Rules for dependencies:
 7. `engine-core` and the native code of `:analysis` share one small static library. It reads and writes WAV files.
 8. A task of the build checks rules 1 to 4 on every change.
 
-`:extraction`, `toolkit/` and `setup/` belong to version 1.0. All other modules belong to the MVP (D-022).
+`:extraction`, `toolkit/` and `setup/` belong to version 1.0. `:ui:decomposer` belongs to version 1.1 (D-104). All other modules belong to the MVP (D-022).
 
-The app uses no library for navigation. The workspace is the only screen (Section 6).
+The app uses no library for navigation. The shell shows the workspace or, from version 1.1 on, the Decomposer (Section 6).
 
 ### 2.2 Diagram of the modules
 
 ```mermaid
 flowchart TD
-  app[":app"] --> uiw[":ui:workspace"] & uie[":ui:editors"] & uim[":ui:mixer"] & uil[":ui:library"]
+  app[":app"] --> uiw[":ui:workspace"] & uie[":ui:editors"] & uim[":ui:mixer"] & uil[":ui:library"] & uid[":ui:decomposer"]
   app --> engine[":engine"] & data[":data"] & extraction[":extraction"] & analysis[":analysis"]
-  uiw & uie & uim & uil --> kit[":ui:kit"]
+  uiw & uie & uim & uil & uid --> kit[":ui:kit"]
   kit --> core[":core"]
   data & extraction & analysis --> core
   core --> engineapi[":engine-api"]
@@ -151,6 +153,7 @@ In words: `:app` depends on every module. Each UI module depends on `:ui:kit`. `
 | Projects (5.12) | `:core`, `:data` |
 | Export (5.13) | `:engine`, `:data` |
 | Settings and diagnostics (5.14) | `:ui:workspace`, `:data` |
+| Decomposer (5.16) | `:ui:decomposer`, `:extraction`, `:core`, `:analysis`, `toolkit/`, `setup/` |
 
 The section numbers in the first column belong to `requirements.md`.
 
@@ -672,18 +675,19 @@ Version 1 uses no foreground service (D-049). All sound ends when the app leaves
 
 ### 6.1 Structure of the screen
 
-The app has one activity and one screen: the workspace. Everything else opens over the workspace.
+The app has one activity. Up to version 1.0 it has one screen: the workspace. Version 1.1 adds a second screen, the Decomposer (Section 10.7). The shell shows one of the two. Everything else opens over the shown screen.
 
 | Layer | Content | Opened by |
 |---|---|---|
 | Workspace | Global bar, Playlist, Editing workspace with one Module | Always present |
+| Decomposer (version 1.1) | Takes the place of the workspace while it is shown | The Mode switch (FR-DEC-01) |
 | Mixer | Lies over the workspace, in one of two sizes (D-012) | The Mixer control of the global bar (FR-WS-08) |
 | Sheets | Menu of Projects, settings, diagnostics view, page of licences | The Project menu |
 | Dialogs | A question that needs an answer. Example: "Delete this Pattern?" | An action of the user |
 
 Rules:
 
-1. The Back gesture closes the top layer. On the bare workspace it leaves the app.
+1. The Back gesture closes the top layer. On the bare workspace it leaves the app. On the bare Decomposer it returns to the workspace.
 2. `:ui:workspace` offers the shell with empty places. `:app` fills the places with the Modules of the other UI modules.
 3. The window uses the full screen and keeps clear of the display cutout (FR-WS-11).
 
@@ -693,6 +697,8 @@ Rules:
 |---|---|---|---|
 | State of the Project | Section 4.1 | `ProjectSession` in `:core` | Document of the Project |
 | Layout of the workspace | Sides of the panels, border, active Module, Mixer open or closed | `WorkspaceState` in `:core` | DataStore, 500 ms after a change (FR-WS-10) |
+| Shown screen (version 1.1) | Studio or Decomposer | `WorkspaceState` in `:core` | Nowhere. Every launch starts in the Studio. |
+| State of the Decomposer (version 1.1) | Source, range, options, shown page, shown job, settings of a review | `DecomposerState` in `:core` | Nowhere. The jobs themselves live in the store of jobs. |
 | View of each editor | Zoom, scroll position, tool | `WorkspaceState` in `:core` | DataStore: the zoom (FR-WS-10) |
 | Focus | Open Pattern and Part, selected Track, selected Effect slot, selected Clips and Notes | `WorkspaceState` in `:core` | DataStore: the open Pattern and Part |
 | State of a gesture | The drag in progress | The editor | Nowhere |
@@ -728,12 +734,12 @@ Rules:
 |---|---|
 | Launcher icon | Opens the workspace with the last Project (FR-PRJ-01) |
 | Shortcut on the launcher icon | Creates a new Project and starts a Take (FR-REC-10) |
-| Share from another app | Imports the file into the Library (FR-LIB-08), or uses it as the source of an Extraction job (FR-AIX-01) |
-| Tap on a notification | Opens the Module Extraction with the job (FR-AIX-10) |
+| Share from another app | Imports the file into the Library (FR-LIB-08), or uses it as the source of an Extraction job (FR-AIX-01) or of a Decomposition job (FR-DEC-03) |
+| Tap on a notification | Opens the Module Extraction with the job (FR-AIX-10). For a Decomposition job, it opens the Decomposer with the job (FR-DEC-11). |
 
 All entries arrive at the one activity. The activity turns each entry into an action. The action runs when the workspace is ready.
 
-The app asks for the microphone permission at the first Take (FR-REC-01). It asks for the notification permission at the first Extraction job. Both questions come from the system.
+The app asks for the microphone permission at the first Take (FR-REC-01). It asks for the notification permission at the first job of either kind. Both questions come from the system.
 
 ---
 
@@ -748,13 +754,13 @@ The app asks for the microphone permission at the first Take (FR-REC-01). It ask
 | 5 | Project parsed | Main | Publishes the state. The editors draw Clips and Notes. The app reports "fully drawn". |
 | 6 | After the first frame | Control | Loads the native library. Creates the engine. Registers the click of the metronome and the Samples of the Project. Loads the first Snapshot. |
 | 7 | Engine ready | Main | Enables Play and Record. |
-| 8 | A few seconds later | Worker | Looks for unfinished Takes and unfinished Extraction jobs. Runs the cleanup of the Library (Section 8.3). |
+| 8 | A few seconds later | Worker | Looks for unfinished Takes and for unfinished jobs of both kinds. Runs the cleanup of the Library (Section 8.3). |
 
 Parts that start at their first use:
 
 1. The database of the Library: when the Sample browser opens, or at an import.
 2. `:analysis` with its native library: at the first conversion.
-3. The client for the network and WorkManager: at the first Extraction job, or when step 8 finds a job.
+3. The client for the network and WorkManager: at the first job of either kind, or when step 8 finds a job.
 4. The input stream: at the first Take.
 5. The output stream: at the first touch (Section 5.11).
 
@@ -765,6 +771,7 @@ Rules:
 3. Step 6 registers the Samples of the Sampler instruments first, then the Samples of the Clips in the order of their start.
 4. At the first launch, step 2 finds no Project. The app opens a new empty Project in memory. A worker copies the factory set from the app package into the Library (FR-LIB-07).
 5. After a return from the background, all holders of state are still alive. The workspace draws at once (NFR-PERF-03).
+6. Every launch starts in the Studio. The Decomposer is created at its first use (FR-DEC-01). It adds no work to the steps 1 to 7.
 
 The Baseline Profile and the Startup Profile cover steps 1 to 7 (D-042).
 
@@ -1127,6 +1134,99 @@ The request that creates a Session can replace the model of the agent for this o
 3. After the end, the Runner reads the cost of the Session from its usage and writes it into the ledger [W4].
 4. Between jobs no Session exists. Nothing costs money then (NFR-COST-02).
 
+### 10.7 Decomposition (version 1.1; D-104, D-106, D-108, D-109)
+
+A Decomposition job reuses the parts of Section 10.1. This section names what is new.
+
+| Part | Where | Task |
+|---|---|---|
+| Decomposer | `:ui:decomposer` | The second main screen: form of a request, list of jobs, review of a result |
+| `DecompositionService` | `:extraction` | Entry for the UI: start, cancel, delete, hand out the checked result of a job |
+| Runner, store of jobs, `ClaudeApi`, `SourceReader`, ledger of cost | `:extraction` | Shared with extraction. Each job carries its kind. |
+| Reader of a result | `:extraction` | Checks the file of the result and the audio files under the rules of Section 10.4 |
+| `ProjectBuilder` | `:core` | Turns a result and the settings of the review into the state of a new Project |
+| Flow "Project from a result" | `:core` | Runs the steps from a checked result to a saved Project |
+| `HummingConverter` | `:analysis` | Converts the stem of the bass to Notes, with the low register |
+| Second agent, Toolkit with the program `decompose`, model for the beats | Account of the owner | Version 2 of the setup (Section 10.5) |
+
+**States of a job.** A Decomposition job uses the states of Section 10.2. Five points differ:
+
+1. It never enters the state Question. A result that asks a question fails the job.
+2. The state Review shows the result. The user can create a Project from it more than once. The job stays in this state until the user deletes it.
+3. The Runner interrupts the Session after 20 min, not after 10 min (NFR-COST-05).
+4. The Runner works on one job at a time. Jobs of both kinds wait in one queue (FR-DEC-11).
+5. If the Session ends its turn before the program has reported its end, the Runner sends one message that asks it to go on. A second such stop fails the job.
+
+**Contract with the Session.**
+
+Files that the Session receives, mounted for reading only:
+
+1. The cut audio.
+2. The Toolkit.
+3. The model file for the stems.
+4. The model file for the beats.
+
+Values in the first message:
+
+1. The mode `decompose`.
+2. Whether the result shall hold Hit groups.
+
+What the Session returns in its folder for outputs:
+
+1. One file with the result, `decomposition.json`.
+2. One FLAC file for each stem that holds sound.
+3. One WAV file for each Hit group.
+
+Rules inside the Session:
+
+1. The Orchestrator starts the program `decompose`. It repeats the call until the program reports its end.
+2. Each call does one step of the work. A step is bounded in time (`technology_stack.md` Section 9.7).
+3. The program stores its state in the folder for work in progress. The next call continues from there.
+4. The program writes the file of the result itself. The Orchestrator writes no file.
+
+Rules on the phone:
+
+1. The six rules of Section 10.4 hold for the file of the result and for each audio file.
+2. The app downloads the file of the result first. It then compares the size of the audio files with the free storage (NFR-RES-08). Only then it downloads them.
+
+**From a result to a Project.**
+
+```mermaid
+sequenceDiagram
+  participant D as Decomposer
+  participant F as Flow in core
+  participant L as Library
+  participant H as HummingConverter
+  participant B as ProjectBuilder
+  participant P as ProjectStore
+  D->>F: create a Project from the result of a job
+  F->>L: import the stems and the Samples of the Hit groups
+  F->>H: convert the stem of the bass with the low register
+  F->>L: import the Sample of the bass
+  F->>B: build with result, Notes, hashes and settings
+  B-->>F: state of the new Project
+  F->>P: save the new Project
+  F-->>D: ID of the new Project
+```
+
+In words:
+
+1. The flow imports the audio files of the result through the path of Section 8.4. Each file gets its hash.
+2. If the user wants Notes for the bass, `HummingConverter` converts the stem of the bass. The flow cuts one Note out of the stem as the Sample of the bass and imports it.
+3. `ProjectBuilder` gets the result, the Notes, the hashes and the settings of the review. It returns the state of a new Project.
+4. `ProjectStore` saves the new Project. The open Project stays untouched.
+5. The Decomposer then offers "Open in Studio". This action loads the new Project like a tap in the list of Projects.
+
+Rules:
+
+1. `ProjectBuilder` is plain Kotlin without Android. It reads no file and uses no network. The same input gives the same Project.
+2. `ProjectBuilder` applies Edits to an empty Project. The Reducer therefore guards every rule and every limit of a Project (Section 4.2).
+3. The new Project is saved in one step at the end. A stop before this step leaves no half Project. Samples that were already imported stay in the Library.
+4. A second creation from the same result imports no file twice, because the Library stores each file under its hash (Section 8.4).
+5. The app starts in the Studio at every launch (Section 7). The Decomposer and its state are created at its first use.
+
+`feature_specifications.md` Section 12 fixes the fields of the result, the first message, the system prompt and the rules of the layout.
+
 ---
 
 ## 11. Flows of data
@@ -1194,6 +1294,7 @@ In words: one flow in `:core` runs the steps. The UI only starts and stops it an
 | Launch | Section 7 |
 | Import of a file | Section 8.4 |
 | Extraction job | Sections 10.2 and 10.4 |
+| Decomposition job; a Project from its result | Section 10.7 |
 | Export | Section 5.9 |
 | Change of the audio device | Section 5.11 |
 
@@ -1214,8 +1315,10 @@ In words: one flow in `:core` runs the steps. The UI only starts and stops it an
 | `AudioFiles` | `:core` | `:data` | `:extraction`, flows | Decode a source; cut a range into a WAV file |
 | `SettingsStore` | `:core` | `:data` | All modules | Read and write settings; saved layout |
 | `SecretStore` | `:core` | `:data` | `:extraction`, settings | Store the API key; read it for one call; delete it; tell whether a key exists |
-| `HummingConverter` | `:core` | `:analysis` | Flows | Convert a Sample to Notes with times in seconds, with progress and cancel; detect the Root note |
+| `HummingConverter` | `:core` | `:analysis` | Flows | Convert a Sample to Notes with times in seconds, with progress and cancel; detect the Root note. From version 1.1 on: a low register for a bass (Section 10.7). |
 | `ExtractionService` | `:core` | `:extraction` | Module Extraction, settings | Observe jobs; start; answer; cancel; delete; accept or reject a candidate; limits and cost |
+| `DecompositionService` | `:core` | `:extraction` | Decomposer, flows | Observe jobs; start; cancel; delete; hand out the checked result of a job (version 1.1) |
+| `ProjectBuilder` | `:core`, as a function | — | Flow "Project from a result" | Build the state of a new Project from a result, the Notes of the bass and the settings of the review (version 1.1) |
 | `ClaudeApi` | `:extraction` | `:extraction`; a fake for tests | Runner | Calls of Section 10.3 |
 | `SourceReader` | `:extraction` | `:extraction` | Runner | Open a source as a local file, within limits for size and type |
 | `PitchDetector` | `:analysis`, in C++ | The two candidates of D-044 | `HummingConverter` | Pitch, confidence and loudness per frame |
@@ -1248,6 +1351,7 @@ Rules for all interfaces:
 | Peaks, pre-filtered copies, pitch curve | `AudioTools`, `:analysis` | UI, `engine-core` | Version in the header; rebuilt on a mismatch |
 | State of a job (JSON) | `:extraction` | `:extraction` | Field for the version |
 | Report of a Session (JSON) | Toolkit and Orchestrator | `:extraction` | Field for the version; unknown versions are refused |
+| Result of a Decomposition job (JSON, with FLAC and WAV files) | Toolkit | `:extraction` | Field for the version; unknown versions are refused |
 | Standard MIDI file | Writer in `:core` (D-052) | Other apps | Public standard |
 
 Stage 4 fixes each format field by field.
@@ -1280,7 +1384,8 @@ Stage 4 fixes each format field by field.
 | Import | Format not supported; file too long | Import | Adds nothing | A message |
 | Permission | The microphone is not allowed | Recorder | Starts no Take | How to allow it (FR-REC-07) |
 | Analysis | No Notes found; the model does not load | `HummingConverter` | Keeps the Take | A message (FR-H2M-08) |
-| Network and Claude API | Section 13.3 | `:extraction` | Section 13.3 | The messages of FR-AIX-14 |
+| Network and Claude API | Section 13.3 | `:extraction` | Section 13.3 | The messages of FR-AIX-14 and of FR-DEC-21 |
+| Build of a Project from a result | A part of the result is missing; the Reducer refuses an Edit | Flow "Project from a result" | Builds the Project without this part | The review names the missing part (FR-DEC-21) |
 | Bug | An exception that nobody expects; a crash in native code | Android | The process ends | The next launch opens the Project in its last saved state (FR-PRJ-03) |
 
 ### 13.3 Errors of the Claude API
@@ -1324,13 +1429,16 @@ Content of the diagnostics view:
 | Reading of the request and choice of the steps | Session: Orchestrator | — | Agent on the account |
 | Separation and post-processing | Session: Sandbox | — | `toolkit/` |
 | Review of candidates and use in a Project | Phone | No | `:ui:library`, `:data` |
+| Cut of the range for a Decomposition job | Phone | No | `:data` |
+| Tempo, stems and Hit groups of a Decomposition job | Session: Sandbox | — | `toolkit/` |
+| Notes of the bass; build of the new Project | Phone | No | `:analysis`, `:core`, `:data` |
 
 Rules:
 
 1. Only `:extraction` contains code for the network. The build checks this (Section 2.1).
 2. All traffic uses TLS (NFR-SEC-02).
-3. No part of a Project leaves the phone. No audio leaves except the cut range of an Extraction job (NFR-SEC-03).
-4. Without a network, the Module Extraction shows this state, and the jobs wait. Every other function works (`requirements.md` Section 7).
+3. No part of a Project leaves the phone. No audio leaves except the cut range of an Extraction job or of a Decomposition job (NFR-SEC-03).
+4. Without a network, the Module Extraction and the Decomposer show this state, and the jobs wait. Every other function works (`requirements.md` Section 7).
 5. A Session keeps its transcript until it is deleted [W1]. The app therefore deletes each Session after the download (NFR-SEC-04).
 
 Hosts that the app talks to:
@@ -1350,6 +1458,7 @@ Data that arrives on the phone:
 2. The report.
 3. The candidates.
 4. The cost.
+5. The result of a Decomposition job with its audio files.
 
 ---
 
@@ -1368,6 +1477,9 @@ Data that arrives on the phone:
 | `:analysis` | Fixed recordings give the expected Notes; evaluation on vocadito (V-05) | Host |
 | `:extraction` | The Runner against a fake `ClaudeApi`, with a stop after every state: never two Sessions | Host |
 | `toolkit/` | Programs of the Toolkit on short audio fixtures | Host |
+| `toolkit/` | The program `decompose` on renders of test Projects with known content (V-08) | Host |
+| `:core` | `ProjectBuilder`: fixed results give the expected Projects; random results never break a rule of a Project | Host |
+| `:extraction` | A Decomposition job against the fake `ClaudeApi`; hostile results | Host |
 | UI | Geometry, hit tests and gestures of the editors | Host |
 | App | Macrobenchmark: produces the profiles and shows trends of startup and frame times | Emulator of the CI service |
 | App | Startup and frame times, measured inside a test build (NFR-PERF-01, NFR-PERF-07, NFR-MNT-06) | Phone |
@@ -1462,6 +1574,15 @@ Stage 4 answered these ten points. `project_decisions.md` Section 4.9 names the 
 | Android clears caches or ends the process at any time. | Files decide (Section 1.2). Caches are rebuilt. Every save replaces the file in one step. |
 | The memory limit of Android 17 for this phone is unknown (CON-02). | A budget per part (Section 3.3). V-01 measures the real limit. |
 | The owner has no computer with the Android build tools. No tool can drive the phone over USB. | Builds and tests run in the CI service. Measurements on the phone run inside test builds (D-073). |
+
+### 16.6 Change 2.0: the Decomposer
+
+| Topic | Decision | Section |
+|---|---|---|
+| Second main screen and its module | D-104 | 2.1, 6.1, 6.2 |
+| Decomposition job and its contract with the Session | D-106 | 10.7 |
+| Notes of the bass on the phone | D-108 | 10.7 |
+| `ProjectBuilder` and the layout of the new Project | D-109 | 10.7 |
 
 ---
 

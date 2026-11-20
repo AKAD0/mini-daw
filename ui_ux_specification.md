@@ -1,10 +1,11 @@
 # ui_ux_specification.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 4 of 6 (feature specifications) · **Version:** 1.3 · **Date:** 2026-11-20
+**Stage:** 4 of 6 (feature specifications) · **Version:** 2.0 · **Date:** 2026-11-20
 **Change in 1.1:** results of `feature_specifications.md`. Changed parts: Section 15.1 (entry Export), Section 15.4 (measurements), Section 16.3 (Hint for limited values).
 **Change in 1.2:** results of Stage 5. The screen "Measurements" also takes the verdicts of the owner (D-094). Changed part: Section 15.4.
 **Change in 1.3:** final check of Stage 6. Six functions of version 1.0 have their places on the screen (FR-TR-05, FR-SM-10, FR-CR-06, FR-LIB-02, FR-LIB-08, FR-H2M-13). Changed parts: Sections 3, 6.2, 7.1, 7.2, 8.1, 8.2 and 9.1.
+**Change in 2.0:** version 1.1 adds the Decomposer as a second main screen (D-104). New part: Section 19. Changed parts: convention 3, Sections 1.2, 2.2, 3 (Mode switch), 8.2, 13, 15.3, 16.2, 17 and 18.
 **Companion documents:** `requirements.md`, `architecture.md`, `feature_specifications.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-` and `V-` point to them.
 
 ---
@@ -15,7 +16,7 @@ Conventions:
 
 1. Capitalized names (Playlist, Track, Mixer channel) are terms of `requirements.md` Section 2. Section 1.2 adds the names of the parts of the screen.
 2. All sizes are in dp. Sizes of text are in sp. Every size is provisional until the check V-01 has measured the screen of the phone.
-3. Priorities follow `requirements.md`: P0 is the MVP, P1 is version 1.0, P2 comes later. A part without a mark is P0.
+3. Priorities follow `requirements.md`: P0 is the MVP, P1 is version 1.0, P2 comes later. V1.1 is version 1.1. A part without a mark is P0.
 4. This document fixes layout and behaviour. `feature_specifications.md` fixes the functions behind the controls: ranges, formulas and limits.
 5. Each editor has a table of gestures. A row of this table is a gesture. A column is the place that the finger touches.
 6. The decisions D-076 to D-080 of `project_decisions.md` record the main choices of this document.
@@ -35,7 +36,7 @@ Conventions:
 | Navigation and interaction patterns | 14 |
 | Behaviour of important controls and interactions | 3, and the tables of gestures in Sections 4 to 12 |
 
-Section 5 (Modules), Section 7 (Channel Rack), Section 15 (sheets) and Section 16 (first launch and messages) complete the picture.
+Section 5 (Modules), Section 7 (Channel Rack), Section 15 (sheets) and Section 16 (first launch and messages) complete the picture. Section 19 describes the Decomposer of version 1.1. The brief does not name it (D-104).
 
 ---
 
@@ -55,7 +56,8 @@ Section 5 (Modules), Section 7 (Channel Rack), Section 15 (sheets) and Section 1
 
 | Name | Meaning |
 |---|---|
-| Global bar | The bar at the top edge. It is always visible (FR-WS-07). |
+| Global bar | The bar at the top edge of the Studio. It is always visible there (FR-WS-07). |
+| Decomposer bar | The bar at the top edge of the Decomposer (version 1.1, Section 19.2). |
 | Panel | One of the two areas below the global bar: the panel of the Playlist and the panel of the Editing workspace. |
 | Border | The line between the two panels. The user can drag it. |
 | Module strip | The column of buttons that switches the Module of the Editing workspace. |
@@ -151,7 +153,7 @@ The panel of the Playlist is on the left at the first launch (FR-WS-02).
 
 ### 2.2 Layers
 
-The workspace is the only screen (`architecture.md` Section 6.1).
+Up to version 1.0 the workspace is the only screen (`architecture.md` Section 6.1). Version 1.1 adds the Decomposer (Section 19).
 
 | Layer | Opens by | Closes by |
 |---|---|---|
@@ -160,7 +162,7 @@ The workspace is the only screen (`architecture.md` Section 6.1).
 | Menu or picker | A tap on a button with the mark ▾, or a hold on an item | A choice, a tap beside it, or the Back gesture |
 | Dialog | An action that cannot be undone | A choice |
 
-The Back gesture closes the top layer. On the bare workspace it leaves the app.
+The Back gesture closes the top layer. On the bare workspace it leaves the app. On the bare Decomposer it returns to the workspace.
 
 ### 2.3 Border between the panels (FR-WS-04)
 
@@ -197,10 +199,11 @@ Controls from left to right:
 | 8 | Undo | 44 | Undoes the last step (FR-PRJ-04). | — | Dim when nothing can be undone |
 | 9 | Redo | 44 | Repeats the undone step. | — | Dim when nothing can be repeated |
 | 10 | Swap | 44 | Exchanges the panels (Section 2.4). | — | — |
-| 11 | Mixer | 48 | Opens or closes the Mixer (FR-WS-08). | — | Lit while the Mixer is open |
-| 12 | Menu | 44 | Opens the Project menu (Section 15). | — | — |
+| 11 | Mode switch (version 1.1) | 44 | Shows the Decomposer (Section 19.1, FR-DEC-01). | — | A mark when a Decomposition job is ready or has failed |
+| 12 | Mixer | 48 | Opens or closes the Mixer (FR-WS-08). | — | Lit while the Mixer is open |
+| 13 | Menu | 44 | Opens the Project menu (Section 15). | — | — |
 
-The fixed controls need 576 dp. The Status control takes the rest.
+The fixed controls need 576 dp. From version 1.1 on they need 620 dp. The Status control takes the rest.
 
 Rules:
 
@@ -532,6 +535,7 @@ Menu of a Sample (FR-LIB-05):
 | Trim, normalize (FR-LIB-10) | P1 |
 | Favorite, tags (FR-LIB-02) | P1 |
 | Extract a sound from this Sample (FR-AIX-01) | P1 |
+| Decompose this Sample (FR-DEC-03) | V1.1 |
 
 Rules:
 
@@ -541,7 +545,7 @@ Rules:
 4. A Sample that a Project still uses can be deleted. It leaves the list. The Project keeps playing it (FR-LIB-06).
 5. In the mode for choosing, a tap on a row picks the Sample and returns to the caller. The preview button still plays.
 6. P1: the search field keeps the Samples whose name holds the text. The filter button offers "Favorites" and every tag (FR-LIB-02).
-7. P1: when another app shares an audio file, a sheet offers two actions: "Add to Library" and "Extract a sound" (FR-LIB-08, FR-AIX-01).
+7. P1: when another app shares an audio file, a sheet offers two actions: "Add to Library" and "Extract a sound" (FR-LIB-08, FR-AIX-01). From version 1.1 on, it offers a third action: "Decompose" (Section 19.7).
 
 ---
 
@@ -814,6 +818,7 @@ Notifications: when the app is not visible, a job that becomes "Ready", "Needs a
 | Drag of the Border | The widths of the panels | Sides, Module, playback |
 | Drag of the Border past the limit | One panel hides. The other takes the full width. | The hidden panel keeps its state. A handle stays at the edge. |
 | Tap on the Module strip | The Module | The Project, playback, the state of the hidden Module (FR-WS-06) |
+| Mode switch (version 1.1) | The shown screen: Studio or Decomposer. Playback stops. | The Project, the layout of the workspace, the state of the Decomposer (FR-DEC-02) |
 | Mixer button | The Mixer opens over the panels | Everything below it. Playback continues (FR-WS-08). |
 | Size button of the Mixer | Half or Full | The scroll position of the Strips |
 | Double tap on a Pattern clip | The Module becomes the Piano roll. The Pattern opens. | The Playlist |
@@ -930,7 +935,7 @@ The Project menu opens at the right edge. It is 280 dp wide.
 | Group | Content | Priority |
 |---|---|---|
 | Recording | Offset for latency in milliseconds, calibration, count-in (FR-SET-03) | P1 |
-| Extraction | API key, state of the setup, budget per job, jobs per day, cost per month, cost so far, deletion of all jobs and their data (FR-SET-04) | P1 |
+| Extraction | API key, state of the setup, budget per job, jobs per day, cost per month, cost so far, deletion of all jobs and their data (FR-SET-04). From version 1.1 on, the same values serve the Decomposer (FR-DEC-22). | P1 |
 | Audio | A text: the app follows the audio device that Android uses (FR-SET-05) | P0 |
 | About | Version of the app | P0 |
 
@@ -965,6 +970,7 @@ The field for the API key hides its characters. The app never shows a stored key
 | Group of the Sample browser without Samples | "No Samples yet. Record a Take or import a file." |
 | Channel Rack without Parts | "Add a Part to enter beats." |
 | Page "Jobs" without jobs | "No jobs yet." |
+| Decomposer without a source | "Pick a file, a link or a Sample." |
 
 ### 16.3 Important Hints
 
@@ -990,6 +996,7 @@ The field for the API key hides its characters. The app never shows a stored key
 | Geometry and hit tests of every editor | Automatic tests (`architecture.md` Section 6.3) | Host |
 | Gestures: scroll against edit, hold, handles, pinch | Automatic tests with recorded touches | Host |
 | Every row of the tables of gestures in Sections 4 to 12 | One automatic test per row, where no finger is needed | Host |
+| Every rule and every gesture of Section 19 | One automatic test per rule, where no finger is needed | Host |
 | Frame timing of scroll and zoom (NFR-PERF-07) | Measurement inside a test build (D-073) | Phone |
 | Sizes of touch areas (NFR-UX-02) | A test that reads the sizes of all controls | Host |
 | Reach of the thumbs, display cutout, Back gesture at the edges (NFR-UX-03), readable text | Manual test of the owner | Phone |
@@ -1008,6 +1015,7 @@ The field for the API key hides its characters. The app never shows a stored key
 | Effects: one Channel page and one editor, shown in the Module and in the Mixer | D-078 | 11 |
 | Gestures: select first, then act. A Pencil switch in the Piano roll. No other tool modes. | D-079 | 4.2, 6.3, 14.1 |
 | Content of a new Project | D-080 | 16.1 |
+| Second main screen with its own layout; place of the Mode switch | D-104 | 3, 19 |
 
 The texts are English. This is the default of Q-10 (D-026, A-17).
 
@@ -1016,3 +1024,140 @@ Open points:
 1. All sizes are provisional. The check V-01 measures the screen. One review of the sizes follows.
 2. Icons are not drawn yet. The implementer uses a free icon set with a licence that D-024 allows.
 3. The exact texts of dialogs and of the settings are written during implementation. Section 16 fixes the style: short, plain, without blame.
+
+---
+
+## 19. Decomposer (version 1.1)
+
+The Decomposer is the second main screen of the app (FR-DEC-01, D-104). It has its own layout. `feature_specifications.md` Section 12 fixes the functions behind its controls.
+
+### 19.1 Mode switch
+
+| Topic | Rule |
+|---|---|
+| Place in the Studio | The global bar, between Swap and Mixer (Section 3) |
+| Place in the Decomposer | The Decomposer bar, at the same place of the screen. Two taps at one place lead there and back. |
+| What it shows | In the Studio: the icon of the Decomposer. In the Decomposer: the icon of the Studio. A small mark appears when a Decomposition job is ready or has failed. |
+| Tap | Swaps the screen at once (FR-DEC-01) |
+| During a Take | The Mode switch is dim and does nothing (FR-DEC-02) |
+
+Rules:
+
+1. A swap to the Decomposer stops playback. It closes an open sheet. An open Mixer stays open and shows again after the return.
+2. Each screen keeps its state: the Project, the layout, the scroll positions, the fields of a request and the shown job (FR-DEC-02).
+3. The Back gesture on the bare Decomposer returns to the Studio.
+4. Every launch shows the Studio (FR-PRJ-01).
+5. The swap has no animation that lasts longer than 150 ms.
+
+### 19.2 Zones
+
+```text
++----------------------------------------------------------------------------------+
+| Decomposer bar (44)                                                              |
++------------------------------------------------+---------------------------------+
+| Source row (48)                                | Tabs "New" and "Jobs" (40)      |
++------------------------------------------------+---------------------------------+
+| Waveform with two handles                      | Page                            |
+|                                                |                                 |
++------------------------------------------------+                                 |
+| Range row (48)                                 |                                 |
++------------------------------------------------+---------------------------------+
+  Source area                                      Side area
+```
+
+| Zone | Size (prov.) | Content |
+|---|---|---|
+| Decomposer bar | full width × 44 | The title "Decomposer", marks for a running job, the Mode switch, the Menu button |
+| Source area | 60 % of the width | Source row, waveform, range row (Section 19.3) |
+| Side area | 40 % of the width | The pages "New" and "Jobs". The review of a result takes this area while a job is open. |
+
+The Menu button opens the Project menu of Section 15.1. The settings are therefore one tap away. The areas keep clear of the display cutout (FR-WS-11).
+
+### 19.3 Source area
+
+| Row | Content | Requirement |
+|---|---|---|
+| Source row | Three buttons: "File", "Link", "Sample". A shared file arrives here too. After the choice, the row shows the name and the length of the recording. | FR-DEC-03 |
+| Waveform | For a source on the phone: the waveform of the recording with two handles. The part outside the range is dim. A Play button plays the range. For a link: a plain bar with the two times. | FR-DEC-04, FR-DEC-06 |
+| Range row | The fields "Start" and "End" in minutes and seconds. The length of the range. The button "Whole file". | FR-DEC-04, FR-DEC-05 |
+
+Gestures on the waveform:
+
+| Gesture | Place | Effect |
+|---|---|---|
+| Drag | A handle | Moves the start or the end of the range |
+| Drag | Between the handles | Moves the whole range |
+| Drag | Outside the handles | Scrolls the waveform |
+| Pinch | Anywhere | Zooms in time |
+| Tap | Anywhere | Moves the playhead of the preview |
+
+Rules:
+
+1. The handles and the fields always show the same range.
+2. A range shorter than 5 s or longer than 240 s is refused. The length then takes the warning color. A line names the limit (FR-DEC-05).
+3. "Link" opens the dialog of Section 12.1. Another link than a direct link to an audio file gets the same message (D-105).
+4. If the link ends with `#t=start,end`, the app fills both fields from it (FR-DEC-04).
+5. Each handle has a touch area of 48 dp.
+6. "Whole file" sets the range to the whole recording. The button is dim when the recording is longer than 240 s.
+7. Without a source, the waveform shows the text "Pick a file, a link or a Sample."
+
+### 19.4 Page "New"
+
+| Row | Content | Requirement |
+|---|---|---|
+| What you get | The line "Stems as Audio clips". Two switches: "Notes for the drums" and "Notes for the bass". Both are on at first. | FR-DEC-07 |
+| What it needs | What is left: the budget of the job and the jobs of today. An estimate of the time. An estimate of the size of the download: 0.4 MB for each second of the range (prov.). | FR-DEC-22 |
+| Foot | The button "Decompose" | FR-DEC-09 |
+
+Rules:
+
+1. The button is dim while a part is missing. A line below it names the missing part.
+2. The five blocking states of Section 12.1 hold here too. The state "Setup on the account missing" asks for version 2 of the setup.
+3. The notice about the rights appears before the first job of either kind (FR-DEC-23).
+
+### 19.5 Page "Jobs"
+
+One row per Decomposition job, 56 dp high: the name of the source, the range, the state, the elapsed time. An active job has a Cancel button (FR-DEC-11).
+
+| State shown | Meaning | Tap opens |
+|---|---|---|
+| Waiting | Another job runs first | Cancel |
+| Uploading | The phone prepares and sends the audio | Progress |
+| Running | The Session works | Elapsed time and Cancel |
+| Downloading | The result arrives. The row shows its size. | Progress |
+| Ready | A result waits for the review | The review (Section 19.6) |
+| Failed | The job ended with an error | The cause and a Retry button (FR-DEC-21) |
+| Cancelled | The user stopped the job | A Delete button |
+
+Rules:
+
+1. The page lists Decomposition jobs only. Extraction jobs stay in the Module Extraction (Section 12.2).
+2. "Delete" asks first. It removes the files of the job. The Samples in the Library and the Projects from this result stay.
+3. Without jobs, the page shows the text "No jobs yet."
+
+### 19.6 Review of a result
+
+| Part | Content |
+|---|---|
+| Tempo | A field with the tempo. The buttons "÷2" and "×2". "First bar" with the buttons − and +. The switch "Snap to 1/16" (FR-DEC-12, FR-DEC-17). |
+| Notes about the tempo | The texts of `feature_specifications.md` Section 12.4 that apply |
+| Parts | One row for each stem and for each Hit group: a Play button, the name, and the level or the number of hits |
+| Original | A Play button for the range. Only for a source on the phone. |
+| What you get | The two switches for Notes. A part that the result does not hold is dim. |
+| Limits of a result | The sentence of FR-DEC-23 |
+| Cost | The cost of this job (NFR-COST-04) |
+| Create Project | The button. During the work it shows the steps "Importing", "Bass Notes" and "Building", with a Cancel button. |
+| After the creation | Two buttons: "Open in Studio" and "Create again" (FR-DEC-20) |
+
+Rules:
+
+1. A preview plays through the preview player of the Sample browser (FR-LIB-03). A second tap or another preview stops it.
+2. A change of the tempo, of the first bar or of the snap needs no new job (FR-DEC-20).
+3. "Open in Studio" loads the new Project and swaps to the Studio. The Project that was open is saved first.
+4. "Create again" builds one more Project with the current settings.
+
+### 19.7 Entries from outside
+
+1. When another app shares an audio file, the sheet of Section 8.2 offers a third action: "Decompose". It opens the Decomposer with this file as the source (FR-DEC-03).
+2. The menu of a Sample in the Sample browser offers "Decompose this Sample" (Section 8.2).
+3. When the app is not visible, a job that becomes "Ready" or "Failed" shows a notification. A tap opens the Decomposer with this job (FR-DEC-11).
