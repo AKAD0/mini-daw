@@ -18,6 +18,8 @@ ktlint = "1.8.0"
 detekt = "1.23.8"
 # The state of ProjectSession as a StateFlow (TK-017, technology_stack.md Section 1: Kotlin coroutines).
 kotlinxCoroutines = "1.10.2"
+# The document of a Project as JSON (TK-019, D-043). Only its tree of JSON elements is used; no compiler plugin.
+kotlinxSerialization = "1.9.0"
 composeBom = "2025.10.01"
 activityCompose = "1.11.0"
 profileinstaller = "1.4.1"
@@ -29,6 +31,7 @@ oboe = { module = "com.google.oboe:oboe", version.ref = "oboe" }
 onnxruntime-android = { module = "com.microsoft.onnxruntime:onnxruntime-android", version.ref = "onnxruntime" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 # The apps for the check V-02 (checkapps/). D-041 decides later whether the product uses Compose.

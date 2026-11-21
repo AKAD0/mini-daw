@@ -634,7 +634,7 @@ Notes:
 TK-018  Mixer in the model: channels, assignment, volume, pan, mute, solo, Effect slots, flags "audible"
 State: done
 Change: branch tk-018, merged into main
-Criteria (run "Check" of the branch tk-018, part "kotlin-tests", module :core, MixerEditsTest):
+Criteria (run "Check" 44944271315, part "kotlin-tests", module :core, MixerEditsTest):
   AC-MX-04: pass (theFlagsAudibleFollowSection323ForEveryCombinationOfThreeChannels: all 64
     combinations of mute and solo of three channels; theRowsOfTheTableOfSection323: the six rows)
   Also: the solo path of version 1.0 through a bus, a target that closes a loop is refused, the mute of
@@ -652,4 +652,31 @@ Notes:
   2. The fault of TK-015 (note 3 of TK-016) is repaired: LiveCommand.ClearClipFlag names a channel, the
      Master channel (0) or the output (-2).
   3. The Mixer channel of a new channel gets the default name "Channel N"; no section names one.
+```
+
+```text
+TK-019  Document of a Project: writing, reading, defaults, migration
+State: done
+Change: branch tk-019, merged into main
+Criteria (run "Check" of the branch tk-019, part "kotlin-tests", module :core, ProjectDocumentTest):
+  AC-PRJ-10: pass (anyValidStateSurvivesWritingAndReading: the new Project and a state that uses every
+    field of Section 6.1, also those of version 1.0; unknownFieldsAreIgnored;
+    valuesOutsideTheirRangeAreHeldInside; missingFieldsGetTheirDefaults)
+  AC-PRJ-09: pass (theDocumentOfSchema1OpensAsTheExpectedState: the test document
+    core/src/test/resources/documents/schema-1.json gives the new Project, and every schema below the
+    current one has a migration (none: schema 1 is the first); aDocumentOfANewerSchemaIsRefused)
+  AC-MX-11 and AC-FX-08: pass (anyValidStateSurvivesWritingAndReading compares the Mixer and every Effect
+    slot value by value)
+  Also: a document that is no JSON object, that breaks an invariant or has a wrong hash is "Broken".
+Documents: none
+Decisions: none
+Owner: none
+Notes:
+  1. The codec uses the tree of JSON elements of kotlinx-serialization-json 1.9.0 (Apache-2.0, new in the
+     catalog and the list of licences), without the compiler plugin of kotlinx.serialization. Every field
+     name, default and range is in one place: core/src/main/kotlin/app/minidaw/core/document/.
+  2. The fields that Section 6.1 leaves open are written so: an envelope as an object of attackMs,
+     decayMs, sustain and releaseMs; a loop as two numbers; the parameters of an effect sorted by name.
+  3. The files on disk (temporary file, backup, the order of the renames of architecture.md Section 4.4)
+     belong to ProjectStore in :data. The codec answers "Newer" so that the store keeps such a file.
 ```

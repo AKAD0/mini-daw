@@ -88,6 +88,13 @@ use = "app"
 source = "github.com/Kotlin/kotlinx.coroutines, file LICENSE.txt. The state of ProjectSession as a StateFlow (TK-017)."
 
 [[entry]]
+name = "org.jetbrains.kotlinx:kotlinx-serialization-json"
+kind = "library"
+licence = "Apache-2.0"
+use = "app"
+source = "github.com/Kotlin/kotlinx.serialization, file LICENSE.txt. The document of a Project as JSON (TK-019, D-043)."
+
+[[entry]]
 name = "org.jetbrains.kotlin:kotlin-test"
 kind = "library"
 licence = "Apache-2.0"

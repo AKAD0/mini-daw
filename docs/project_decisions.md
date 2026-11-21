@@ -75,8 +75,8 @@ State of the work:
 | Item | State |
 |---|---|
 | Phase | PH-01 in progress. PH-00 is done: GATE-00 closed on 2026-11-21 (`docs/results/GATE-00.md`). |
-| Last finished task | TK-018, done: the Mixer in `:core` (channels, assignment, values, Effect slots with the catalog of `feature_specifications.md` Section 3.10) and the flags "audible" of `feature_specifications.md` Section 3.2.3. TK-001 to TK-017 are done; GATE-00 is closed. |
-| Next task | TK-019 |
+| Last finished task | TK-019, done: the document of a Project in `:core`, written and read by the rules of `feature_specifications.md` Section 6.1, with a chain of migrations. TK-001 to TK-018 are done; GATE-00 is closed. |
+| Next task | TK-020 |
 | Open gate | GATE-01, after TK-015 to TK-020. Nothing waits for the owner. Open for later gates: Q-21 (limits of version 1.0, GATE-12) and Q-22 (fidelity of the stem model, TK-068); the typed values of V-01 stay "not measured yet". |
 
 How to continue:
