@@ -82,3 +82,42 @@ Notes:
   4. The run "Emulator" is still not set up (TK-001, note 8).
 ```
 
+```text
+TK-008  Pitch candidates and code for Notes
+State: split into TK-008a (done) and TK-008b (open: SwiftF0 through ONNX Runtime)
+Change: branch tk-008, merged into main
+Steps of TK-008a:
+  1. analysis-core, the portable C++ of :analysis (architecture.md 2.2, rule 6).
+  2. Preparation: 48 kHz to 16 kHz with a low-pass filter, high-pass filter at 60 Hz.
+  3. The interface PitchDetector and the own pYIN.
+  4. The code for Notes of feature_specifications.md Section 4.2.5.
+  5. The six kinds of test melodies of Section 4.8, written by code with exact expected Notes.
+Criteria (run "Check" 44847330125, Clang 18 with ASan and UBSan, test target analysis-core-tests):
+  AC-H2M-01: pass for pYIN (MelodiesPyin.EveryNoteIsFound: 36 of 36 Notes, every pitch exact,
+             starts between -12 ms and +38 ms of the true start)
+  AC-H2M-10: pass for pYIN (MelodiesPyin.TwoConversionsGiveTheSameNotes)
+  AC-H2M-13: pass for pYIN (MelodiesPyin.VoiceKeepsItsPitchAndWhistleGoesTwoOctavesDown)
+  For SwiftF0 the three criteria are open until TK-008b.
+  Also: AC-H2M-02, the part of :analysis (MelodiesPyin.SilenceAndNoiseGiveNoNotes); 9 tests of the
+  code for Notes on exact frames; 3 tests of the preparation; 3 tests of pYIN (error at most
+  1.04 cents for pure tones from 65 Hz to 2,000 Hz).
+Documents: feature_specifications.md 2.2 (Sections 4.2.4, 4.2.5, 4.4, 4.6), architecture.md 2.2
+Decisions: none
+Owner: none
+Notes:
+  1. Two faults found and repaired during the task: the first YIN compared samples of the left half
+     of the window, so each frame lay 16 ms late; the parabola on the normalized difference gave up
+     to 11.6 cents of error at 2,000 Hz. Now: the symmetric form and the parabola on the raw
+     difference.
+  2. Limits that the tests found (feature_specifications.md 4.6, items 4 and 11): a slide longer
+     than about 100 ms starts the second Note more than 50 ms late; a vibrato wider than ±0.5
+     semitones can split a Note at its start. The test melodies use a slide of 60 ms and a vibrato
+     of ±0.5 semitones.
+  3. SwiftF0 0.3.0 (MIT, github.com/lars76/swift-f0) takes audio at 16 kHz, not a spectrogram
+     (technology_stack.md Section 15, item 4). Its confidence is calibrated so that 0.5 counts as
+     voiced; feature_specifications.md 4.2.4 names 0.9. TK-008b treats this as evidence (guide 6.2).
+  4. The Android build of the native code of :analysis comes with the app for the checks (TK-010).
+  5. On the computer of the owner the tests ran with a small stand-in for GoogleTest in the
+     scratchpad of the session, with g++ and the sanitizers. The run "Check" is the validation.
+```
+
