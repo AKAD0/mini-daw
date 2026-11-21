@@ -24,4 +24,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    // Each test names its outcome in the log of the run "Check".
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
