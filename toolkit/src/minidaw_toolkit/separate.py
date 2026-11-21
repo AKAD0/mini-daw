@@ -65,8 +65,15 @@ def stems_of(mix, run):
         piece = np.zeros((1, 2, SEGMENT), dtype=np.float32)
         piece[0, :, : end - start] = mix[:, start:end]
         result = np.asarray(run(piece), dtype=np.float32)
-        out[:, :, start:end] += result[:, :, : end - start] * w[: end - start]
-        weight[start:end] += w[: end - start]
+        # No piece lies before the first one or after the last one, so their outer edges get the
+        # full weight. Else the first sample of the file, with the weight 0, would be lost.
+        wp = w.copy()
+        if i == 0:
+            wp[:OVERLAP] = 1.0
+        if end == total:
+            wp[SEGMENT - OVERLAP:] = 1.0
+        out[:, :, start:end] += result[:, :, : end - start] * wp[: end - start]
+        weight[start:end] += wp[: end - start]
     out /= np.maximum(weight, 1e-8)
     return {name: out[k] for k, name in enumerate(MODEL_ORDER)}
 
