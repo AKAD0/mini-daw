@@ -39,6 +39,14 @@ PASS_SECONDS = 420
 MOUNTS = {"toolkit": "/toolkit.pyz", "model": "/htdemucs.onnx"}
 STEM_NAMES = ("vocals", "drums", "bass", "other")
 STEM_THRESHOLD_DB = 30.0
+# A turn on a message ends with one of these stop reasons; "requires_action" waits for the client
+# (Managed Agents, client patterns 5).
+FINAL_STOPS = ("end_turn", "retries_exhausted", "budget_reached")
+BUSY = ("running", "rescheduling")
+SETTLE_READS = 20
+SETTLE_S = 0.5
+FILE_TRIES = 3
+FILE_WAIT_S = 2.0
 # The instruction of the Session of step 6. It replaces the system prompt for this Session only.
 STEMS_SYSTEM = (
     "You work inside a Linux sandbox for a test of the tool mini daw. Run exactly these two commands and nothing "
@@ -98,18 +106,85 @@ def setup_ids(client):
     return {k: v.id for k, v in ids.items()}
 
 
+def turn_finished(events):
+    """True when the agent has finished its turn on the last message: an idle event with a final stop
+    reason after the last user.message, or the end of the Session. Right after a message the Session
+    can still report "idle" for a moment, so its status alone says nothing (client patterns 5)."""
+    done = None
+    for e in events:
+        kind = getattr(e, "type", "")
+        if kind == "user.message":
+            done = False
+        elif done is None:
+            continue
+        elif kind == "session.status_terminated":
+            done = True
+        elif kind == "session.status_running":
+            done = False
+        elif kind == "session.status_idle":
+            done = getattr(getattr(e, "stop_reason", None), "type", None) in FINAL_STOPS
+    return bool(done)
+
+
+def settle(client, session_id, pause):
+    """The status of a Session follows its idle event a little later (client patterns 6)."""
+    session = client.beta.sessions.retrieve(session_id=session_id)
+    for _ in range(SETTLE_READS):
+        if session.status not in BUSY:
+            break
+        time.sleep(pause)
+        session = client.beta.sessions.retrieve(session_id=session_id)
+    return session
+
+
 def wait(client, session_id, poll_s, deadline):
+    """Waits until the agent has finished its turn on the message, or until the deadline."""
     first_action = None
     started = time.monotonic()
     while True:
-        session = client.beta.sessions.retrieve(session_id=session_id)
-        if first_action is None:
-            events = client.beta.sessions.events.list(session_id=session_id)
-            if any(getattr(e, "type", "") == "agent.tool_use" for e in events.data):
-                first_action = time.monotonic() - started
-        if session.status in ("idle", "terminated") or time.monotonic() > deadline:
-            return session, first_action
+        events = client.beta.sessions.events.list(session_id=session_id).data
+        if first_action is None and any(getattr(e, "type", "") == "agent.tool_use" for e in events):
+            first_action = time.monotonic() - started
+        if turn_finished(events) or time.monotonic() > deadline:
+            return settle(client, session_id, min(SETTLE_S, poll_s)), first_action
         time.sleep(poll_s)
+
+
+def fetch_files(client, session_id, wanted, folder, pause):
+    """Downloads the wanted output files of a Session. They reach the list a few seconds after the idle."""
+    names = []
+    for _ in range(FILE_TRIES):
+        for f in client.beta.files.list(scope_id=session_id, betas=["managed-agents-2026-04-01"]):
+            if f.filename in wanted and f.filename not in names:
+                client.files.download(f.id).write_to_file(os.path.join(folder, f.filename))
+                names.append(f.filename)
+        if names:
+            break
+        time.sleep(pause)
+    return names
+
+
+def close(client, session_id, status, uploaded_id, pause):
+    """Deletes the Session and its uploaded cut. A Session still at work gets an interrupt first, so that it
+    spends nothing more. A refusal is noted in the results; it does not stop the test."""
+    import anthropic
+
+    note = f"left as {status}"
+    try:
+        if status in BUSY:
+            client.beta.sessions.events.send(session_id=session_id, events=[{"type": "user.interrupt"}])
+            status = settle(client, session_id, pause).status
+            note = f"left as {status}"
+        if status not in BUSY:
+            client.beta.sessions.delete(session_id=session_id)
+            note = "deleted"
+    except anthropic.APIError as e:
+        note = f"not deleted: {type(e).__name__}"
+    try:
+        client.files.delete(uploaded_id)
+    except anthropic.APIError as e:
+        note += f"; cut not deleted: {type(e).__name__}"
+    return note
 
 
 def run_session(client, ids, index, cut_bytes, mode, value, length_s, out_dir, poll_s, quiet_s):
@@ -132,23 +207,19 @@ def run_session(client, ids, index, cut_bytes, mode, value, length_s, out_dir, p
     seconds = time.monotonic() - started
     folder = os.path.join(out_dir, f"session_{index + 1:02d}")
     os.makedirs(folder, exist_ok=True)
-    names = []
-    for f in client.beta.files.list(scope_id=session.id, betas=["managed-agents-2026-04-01"]):
-        if f.filename in ("report.json", "candidate_1.wav", "candidate_2.wav", "candidate_3.wav"):
-            client.files.download(f.id).write_to_file(os.path.join(folder, f.filename))
-            names.append(f.filename)
+    wanted = ("report.json", "candidate_1.wav", "candidate_2.wav", "candidate_3.wav")
+    names = fetch_files(client, session.id, wanted, folder, min(FILE_WAIT_S, poll_s))
     usage = getattr(final, "usage", None)
     cost = getattr(getattr(usage, "list_cost", None), "amount", None)
     stop = getattr(getattr(final, "stop_reason", None), "type", None)
-    if final.status == "idle":
-        client.beta.sessions.delete(session_id=session.id)
-    client.files.delete(uploaded.id)
+    cleanup = close(client, session.id, final.status, uploaded.id, min(SETTLE_S, poll_s))
     return {"session": index + 1, "tier": MIDDLE_TIER if middle else sa.SMALL_TIER, "mode": mode, "request": value,
             "status": final.status, "stop_reason": stop, "seconds_to_idle": round(seconds, 1),
             "seconds_to_first_action": None if first_action is None else round(first_action, 1),
             "input_tokens": getattr(usage, "input_tokens", None),
             "output_tokens": getattr(usage, "output_tokens", None),
-            "list_cost_cents": None if cost is None else int(cost), "disconnected": bool(quiet_s), "files": names}
+            "list_cost_cents": None if cost is None else int(cost), "disconnected": bool(quiet_s), "files": names,
+            "cleanup": cleanup}
 
 
 def stems_session(client, ids, cut_bytes, folder, poll_s):
@@ -167,12 +238,8 @@ def stems_session(client, ids, cut_bytes, folder, poll_s):
     final, _ = wait(client, session.id, poll_s, time.monotonic() + TIME_LIMIT_S)
     target = os.path.join(folder, "sandbox")
     os.makedirs(target, exist_ok=True)
-    for f in client.beta.files.list(scope_id=session.id, betas=["managed-agents-2026-04-01"]):
-        if f.filename in tuple(n + ".wav" for n in STEM_NAMES):
-            client.files.download(f.id).write_to_file(os.path.join(target, f.filename))
-    if final.status == "idle":
-        client.beta.sessions.delete(session_id=session.id)
-    client.files.delete(uploaded.id)
+    fetch_files(client, session.id, tuple(n + ".wav" for n in STEM_NAMES), target, min(FILE_WAIT_S, poll_s))
+    close(client, session.id, final.status, uploaded.id, min(SETTLE_S, poll_s))
     with open(os.path.join(folder, "input.wav"), "wb") as f:
         f.write(cut_bytes)
     return final.status

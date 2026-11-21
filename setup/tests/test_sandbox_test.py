@@ -4,6 +4,7 @@ import io
 import json
 import struct
 import wave
+from types import SimpleNamespace
 
 import sandbox_test as st
 import setup_account as sa
@@ -45,8 +46,39 @@ def test_the_script_runs_each_session_and_cleans_up(fake, local_files, tmp_path)
     assert result["results"][-1]["disconnected"] is True
     assert (out_dir / "session_01" / "report.json").exists()
     assert fake.sessions == {}
+    assert fake.refused == []
+    assert [r["cleanup"] for r in result["results"]] == ["deleted"] * 3
     assert all(f["filename"] != "input.wav" for f in fake.files.values())
     assert not any(TEST_KEY in line for line in lines)
+
+
+def event(kind, stop=None):
+    return SimpleNamespace(type=kind, stop_reason=None if stop is None else SimpleNamespace(type=stop))
+
+
+def test_a_turn_ends_only_with_a_final_idle_after_the_message():
+    message, running = event("user.message"), event("session.status_running")
+    assert not st.turn_finished([])
+    assert not st.turn_finished([message])
+    assert not st.turn_finished([message, running])
+    assert not st.turn_finished([message, running, event("session.status_idle", "requires_action")])
+    assert st.turn_finished([message, running, event("session.status_idle", "end_turn")])
+    assert st.turn_finished([message, running, event("session.status_idle", "budget_reached")])
+    assert st.turn_finished([message, event("session.status_terminated")])
+    assert not st.turn_finished([event("session.status_idle", "end_turn"), message])
+    assert not st.turn_finished([message, event("session.status_idle", "end_turn"), running])
+
+
+def test_a_refused_cleanup_does_not_stop_the_test(fake, local_files, tmp_path, monkeypatch):
+    assert sa.main(["--toolkit", local_files[0], "--model", local_files[1]], out=lambda *_: None) == 0
+    monkeypatch.setattr(st, "TIME_LIMIT_S", 0)
+    out_dir = tmp_path / "V-06"
+    code = st.main(["--audio", song(tmp_path / "a.wav"), "--sessions", "2", "--range-s", "1", "--quiet-minutes",
+                    "0", "--poll-s", "0", "--out", str(out_dir)], out=lambda *_: None)
+    assert code == 0
+    rows = json.loads((out_dir / "results.json").read_text())["results"]
+    assert len(rows) == 2 and fake.refused
+    assert all(r["cleanup"].startswith("not deleted") for r in rows)
 
 
 def test_the_script_stops_when_the_setup_is_missing(fake, tmp_path):

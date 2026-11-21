@@ -290,6 +290,12 @@ Notes:
      The run "Build" had saved a cache without ktlint and detekt under the same key, so every run
      "Check" downloaded both; twice (44858882000, 44860008214 attempt 1) Maven Central did not
      answer in time.
+  4. Fault found in the first run "Sandbox test" of the owner (44923707080, 2026-11-21): right after
+     its message a Session still reports "idle" for a moment. The script took that for the end, and
+     the delete was refused ("Cannot delete session while it is running"). The script now waits for an
+     idle event with a final stop reason after its message, lets the status settle before it deletes,
+     interrupts a Session at the time limit, retries the list of output files, and notes a refused
+     cleanup instead of stopping. The fake of the API now behaves so too.
 ```
 
 ```text
