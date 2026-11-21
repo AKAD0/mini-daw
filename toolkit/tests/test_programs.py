@@ -120,7 +120,7 @@ def test_finish_refuses_a_file_of_silence(tmp_path, run):
 def test_report_checks_the_draft_and_measures_the_candidates(tmp_path, run):
     out = tmp_path / "outputs"
     out.mkdir()
-    write(out / "candidate_1.wav", tone(200, 0.5), rate=48000)
+    write(out / "candidate_1.wav", tone(200, 0.5, rate=48000), rate=48000)
     draft = {"status": "done", "steps": ["convert", "separate"],
              "candidates": [{"file": "candidate_1.wav", "label": "Kick", "note": "one kick", "stem": "drums"}]}
     path = tmp_path / "draft.json"
