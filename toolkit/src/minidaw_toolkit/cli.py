@@ -57,6 +57,7 @@ def parser():
     q.add_argument("--end", type=float, required=True)
     q.add_argument("--outdir", default=OUTPUTS)
     q.add_argument("--model", default=MODEL)
+    q.add_argument("--workdir", default="/tmp/work")
     r = sub.add_parser("report", add_help=False)
     r.add_argument("--json", dest="draft", required=True)
     r.add_argument("--outdir", default=OUTPUTS)
@@ -117,12 +118,20 @@ def report(a):
     return rp.build(draft, a.outdir, a.model)
 
 
-def not_yet(a):
-    raise ToolkitError(f"the program {a.program} comes with the next version of the Toolkit (TK-011b)")
+def separate(a):
+    from . import separate as sp
+
+    return sp.separate(a.input, a.outdir, a.model)
 
 
-PROGRAMS = {"convert": convert, "separate": not_yet, "describe": describe, "narrow": narrow,
-            "finish": finish, "quick": not_yet, "report": report}
+def quick(a):
+    from . import separate as sp
+
+    return sp.quick(a.kind, a.input, a.start, a.end, a.outdir, a.model, a.workdir)
+
+
+PROGRAMS = {"convert": convert, "separate": separate, "describe": describe, "narrow": narrow,
+            "finish": finish, "quick": quick, "report": report}
 
 
 def run(argv):

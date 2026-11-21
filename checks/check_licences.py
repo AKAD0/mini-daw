@@ -6,7 +6,8 @@ The list of licences is the file checks/licences.toml. The check compares it wit
 of the build declare: libraries and plugins in gradle/libs.versions.toml, native libraries in
 FetchContent_Declare of a CMake file, Python packages in a file requirements*.txt, actions in the
 workflows of the CI service, Gradle through its wrapper, and every model file (*.onnx) of the
-repository by its path (NFR-LEG-02), and every public set of a file datasets.toml (kind "data").
+repository by its path (NFR-LEG-02), every model of a file models.toml by its name, and every public
+set of a file datasets.toml (kind "data").
 Rules:
   1. Each declared item has an entry.
   2. Each entry has a licence of D-024. An expression "A AND B" needs both. 0BSD and CC0-1.0 count
@@ -74,6 +75,9 @@ def declared(root):
     for path in walk(root, lambda n: n.endswith(".onnx")):
         rel = os.path.relpath(path, root).replace(os.sep, "/")
         found[(rel, "model")] = rel
+    for path in walk(root, lambda n: n == "models.toml"):
+        for spec in tomllib.loads(read(path)).get("model", []):
+            found[(spec["name"], "model")] = os.path.relpath(path, root)
     for path in walk(root, lambda n: n == "datasets.toml"):
         for spec in tomllib.loads(read(path)).get("dataset", []):
             found[(spec["name"], "data")] = os.path.relpath(path, root)

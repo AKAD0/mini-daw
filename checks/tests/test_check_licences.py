@@ -123,6 +123,13 @@ class Licences(unittest.TestCase):
         write(self.root, "checks/licences.toml", LIST + bad)
         self.assertTrue(any("GPL-2.0" in p for p in check_licences.check(self.root)))
 
+    def test_a_model_of_a_file_models_toml_needs_an_entry(self):
+        write(self.root, "toolkit/models.toml", '[[model]]\nname = "stems"\nurl = "u"\nsha256 = "s"\n')
+        self.assertTrue(any("stems" in p for p in check_licences.check(self.root)))
+        entry = '[[entry]]\nname = "stems"\nkind = "model"\nlicence = "MIT"\nuse = "toolkit"\n'
+        write(self.root, "checks/licences.toml", LIST + entry)
+        self.assertEqual(check_licences.check(self.root), [])
+
     def test_a_public_set_may_carry_cc_by_for_tests_only(self):
         write(self.root, "tools/datasets.toml", '[[dataset]]\nname = "set"\nurl = "u"\nsha256 = "s"\n')
         self.assertTrue(any("set" in p for p in check_licences.check(self.root)))

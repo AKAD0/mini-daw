@@ -2,3 +2,4 @@
 # The tests of the one command use the same list. Entries in checks/licences.toml.
 numpy==2.5.4
 scipy==1.18.1
+onnxruntime==1.31.1

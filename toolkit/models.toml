@@ -1,0 +1,14 @@
+# Model files of the Toolkit (D-046). The tests and the setup of the account download each file
+# with its checksum. No model file of the Toolkit is stored in the repository.
+# checks/check_licences.py reads this file: each model needs an entry of the kind "model".
+
+[[model]]
+name = "htdemucs"
+# The variant with 16-bit weights: 166 MB in place of 316 MB, at the same speed
+# (technology_stack.md Section 9.4, fact 6). The Session receives it as htdemucs.onnx.
+file = "htdemucs_fp16weights.onnx"
+session_name = "htdemucs.onnx"
+url = "https://huggingface.co/StemSplitio/htdemucs-onnx/resolve/d54ed9eb60e258ea82131c6ee14578628816456a/htdemucs_fp16weights.onnx"
+sha256 = "d05c269d0178d2a72ad484b10b11dd370193fc923201c3b27a99f848745db70a"
+size = 165612636
+licence = "MIT"

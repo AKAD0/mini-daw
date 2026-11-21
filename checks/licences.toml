@@ -89,6 +89,13 @@ licence = "MIT"
 use = "app"
 source = "github.com/lars76/swift-f0, tag v0.3.0, file swift_f0/model.onnx, SHA-256 6385e8c2...0a22; LICENSE read on 2026-11-21"
 
+[[entry]]
+name = "htdemucs"
+kind = "model"
+licence = "MIT"
+use = "toolkit"
+source = "huggingface.co/StemSplitio/htdemucs-onnx, revision d54ed9eb, model card: licence MIT; read on 2026-11-21. Demucs is MIT. The terms of the data behind the weights stay open (technology_stack.md 9.4, NFR-LEG-02)."
+
 # --- Python tools
 [[entry]]
 name = "ruff"
@@ -117,6 +124,13 @@ kind = "python"
 licence = "MIT"
 use = "test"
 source = "github.com/mir-evaluation/mir_eval, read on 2026-11-21. The metric of NFR-QLT-01 (TK-009)."
+
+[[entry]]
+name = "onnxruntime"
+kind = "python"
+licence = "MIT"
+use = "toolkit"
+source = "PyPI onnxruntime 1.31.1, field license, read on 2026-11-21. Runs the stem model in the Sandbox (D-046)."
 
 [[entry]]
 name = "pytest"
