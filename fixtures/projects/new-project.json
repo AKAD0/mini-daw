@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "0123456789abcdef0123456789abcdef",
+  "name": "2026-11-20 07:55",
+  "created": "2026-11-20T07:55:00Z",
+  "modified": "2026-11-20T07:55:00Z",
+  "tempo": 120000,
+  "timeSignature": [4, 4],
+  "nextId": 5,
+  "tracks": [
+    {"id": 1, "name": "Track 1", "color": 0, "mute": false, "solo": false, "channel": 2, "clips": []}
+  ],
+  "patterns": [
+    {"id": 4, "name": "Pattern 1", "color": 0, "length": 3840, "parts": [{"instrument": 3, "notes": []}], "take": null}
+  ],
+  "instruments": [
+    {
+      "id": 3, "name": "Kick", "color": 0, "sample": "1111111111111111111111111111111111111111111111111111111111111111",
+      "rootNote": 60, "playMode": "gate", "volumeDb": 0.0, "mute": false,
+      "pan": 0.0, "solo": false, "fineCents": 0.0,
+      "envelope": null, "startFrame": null, "endFrame": null, "loop": null, "channel": null
+    }
+  ],
+  "samples": [
+    {"hash": "1111111111111111111111111111111111111111111111111111111111111111", "name": "Kick", "frames": 24000, "channels": 1},
+    {"hash": "2222222222222222222222222222222222222222222222222222222222222222", "name": "Loop", "frames": 480000, "channels": 2}
+  ],
+  "mixer": {
+    "channels": [
+      {"id": 2, "name": "Track 1", "color": 0, "volumeDb": 0.0, "pan": 0.0, "mute": false, "solo": false,
+       "target": null, "slots": [null, null, null, null]}
+    ],
+    "master": {"volumeDb": 0.0, "slots": [null, null, null, null]}
+  }
+}

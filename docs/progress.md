@@ -658,7 +658,7 @@ Notes:
 TK-019  Document of a Project: writing, reading, defaults, migration
 State: done
 Change: branch tk-019, merged into main
-Criteria (run "Check" of the branch tk-019, part "kotlin-tests", module :core, ProjectDocumentTest):
+Criteria (run "Check" 44947128088, part "kotlin-tests", module :core, ProjectDocumentTest):
   AC-PRJ-10: pass (anyValidStateSurvivesWritingAndReading: the new Project and a state that uses every
     field of Section 6.1, also those of version 1.0; unknownFieldsAreIgnored;
     valuesOutsideTheirRangeAreHeldInside; missingFieldsGetTheirDefaults)
@@ -679,4 +679,29 @@ Notes:
      decayMs, sustain and releaseMs; a loop as two numbers; the parameters of an effect sorted by name.
   3. The files on disk (temporary file, backup, the order of the renames of architecture.md Section 4.4)
      belong to ProjectStore in :data. The codec answers "Newer" so that the store keeps such a file.
+```
+
+```text
+TK-020  Compiler and chain of the fixtures
+State: done; GATE-01 closed with it
+Change: branch tk-020, merged into main
+Criteria (run "Check" of the branch tk-020, part "kotlin-tests", module :core, SnapshotCompilerTest):
+  "Fixed Projects give the expected Snapshots": pass (theNewProjectGivesItsExpectedSnapshot,
+    theFixtureWithRoutingGivesItsExpectedSnapshot: every record of the twelve tables written out; the
+    second fixture has a bus first in the Mixer, a soloed channel that sends into it, a muted Track, an
+    envelope, an own channel of a Sampler instrument, effects with default and set values, and unsorted
+    Notes and Clips)
+  "A task of the build compiles every fixture": pass (theBuildCompiledEveryFixture: the task
+    :core:compileFixtures, which runs before the tests, wrote build/fixtures/NAME.mdsn for each
+    fixtures/projects/NAME.json with the bytes of the compiler, and each passes checks 1 and 2)
+  Also: gainsFollowSection14, everyChannelComesBeforeItsTarget.
+GATE-01 (development_roadmap.md Section 7.2): "Every fixture compiles into its expected Snapshot":
+  pass, by the tests above. The gate needs no test of the owner.
+Documents: architecture.md 2.12 (Section 15: the folders of the fixtures)
+Decisions: none
+Owner: none
+Notes:
+  1. The order of processing sorts by the number of steps to the Master channel, the farthest first,
+     and keeps the order of the Mixer among equals (feature_specifications.md Section 3.2.5).
+  2. The table of Samples holds every entry of the table of used Samples, in its order.
 ```

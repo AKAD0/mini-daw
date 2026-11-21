@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "id": "fedcba9876543210fedcba9876543210",
+  "name": "Routing",
+  "created": "2026-11-21T12:00:00Z",
+  "modified": "2026-11-21T12:00:00Z",
+  "tempo": 100000,
+  "timeSignature": [
+    4,
+    4
+  ],
+  "nextId": 20,
+  "tracks": [
+    {
+      "id": 1,
+      "name": "Drums",
+      "color": 0,
+      "mute": false,
+      "solo": false,
+      "channel": 2,
+      "clips": [
+        {
+          "type": "audio",
+          "id": 6,
+          "sample": "1111111111111111111111111111111111111111111111111111111111111111",
+          "start": 7680,
+          "offset": 0,
+          "length": 24000,
+          "gainDb": -6
+        },
+        {
+          "type": "pattern",
+          "id": 5,
+          "pattern": 4,
+          "start": 0,
+          "length": 7680,
+          "offset": 0,
+          "gainDb": 0
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Loop",
+      "color": 1,
+      "mute": true,
+      "solo": false,
+      "channel": 8,
+      "clips": [
+        {
+          "type": "audio",
+          "id": 9,
+          "sample": "2222222222222222222222222222222222222222222222222222222222222222",
+          "start": 0,
+          "offset": 4800,
+          "length": 96000,
+          "gainDb": 0
+        }
+      ]
+    }
+  ],
+  "patterns": [
+    {
+      "id": 4,
+      "name": "Pattern 1",
+      "color": 0,
+      "length": 3840,
+      "take": null,
+      "parts": [
+        {
+          "instrument": 3,
+          "notes": [
+            [
+              960,
+              240,
+              64,
+              90
+            ],
+            [
+              0,
+              240,
+              60,
+              100
+            ]
+          ]
+        },
+        {
+          "instrument": 10,
+          "notes": [
+            [
+              0,
+              480,
+              48,
+              127
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "instruments": [
+    {
+      "id": 3,
+      "name": "Kick",
+      "color": 0,
+      "sample": "1111111111111111111111111111111111111111111111111111111111111111",
+      "rootNote": 60,
+      "playMode": "gate",
+      "volumeDb": -6,
+      "envelope": {
+        "attackMs": 5,
+        "decayMs": 100,
+        "sustain": 0.5,
+        "releaseMs": 200
+      }
+    },
+    {
+      "id": 10,
+      "name": "Loop",
+      "color": 1,
+      "sample": "2222222222222222222222222222222222222222222222222222222222222222",
+      "rootNote": 48,
+      "playMode": "oneShot",
+      "channel": 11
+    }
+  ],
+  "samples": [
+    {
+      "hash": "1111111111111111111111111111111111111111111111111111111111111111",
+      "name": "Kick",
+      "frames": 24000,
+      "channels": 1
+    },
+    {
+      "hash": "2222222222222222222222222222222222222222222222222222222222222222",
+      "name": "Loop",
+      "frames": 480000,
+      "channels": 2
+    }
+  ],
+  "mixer": {
+    "channels": [
+      {
+        "id": 11,
+        "name": "Bus",
+        "color": 2,
+        "volumeDb": -1,
+        "slots": [
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Drums",
+        "color": 0,
+        "solo": true,
+        "target": 11,
+        "slots": [
+          {
+            "id": 12,
+            "kind": "eq3",
+            "bypass": false,
+            "params": {
+              "lowGainDb": 3
+            }
+          },
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "id": 8,
+        "name": "Loop",
+        "color": 1,
+        "volumeDb": -3,
+        "pan": -0.5,
+        "slots": [
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    ],
+    "master": {
+      "volumeDb": -2,
+      "slots": [
+        {
+          "id": 13,
+          "kind": "reverb",
+          "bypass": false,
+          "params": {}
+        },
+        null,
+        null,
+        null
+      ]
+    }
+  }
+}
