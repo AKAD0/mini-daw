@@ -73,12 +73,10 @@ class MeasurementsActivity : Activity() {
         layout.button(getString(R.string.v04_load_full)) { measureAudio(LOAD_VERSION_10) }
 
         layout.text(getString(R.string.v05_title), SECTION_SP)
-        val humming = Humming(this) { rows ->
+        Humming(this, hummed) { rows ->
             hummed = hummed + rows
             refresh()
-        }
-        humming.resume(hummed)
-        humming.addTo(layout)
+        }.addTo(layout)
 
         layout.text(getString(R.string.v07_title), SECTION_SP)
         layout.text(getString(R.string.v07_how))

@@ -25,7 +25,11 @@ import org.json.JSONObject
  * candidates convert it with the same code for Notes. The screen shows both results as a picture and
  * plays them with the default tone "Keys". The owner counts the wrong and the missing Notes of each.
  */
-internal class Humming(private val activity: Activity, private val onRows: (List<ResultRow>) -> Unit) {
+internal class Humming(
+    private val activity: Activity,
+    kept: List<ResultRow>,
+    private val onRows: (List<ResultRow>) -> Unit
+) {
     private class Result(
         val name: String,
         val notes: DoubleArray,
@@ -46,8 +50,8 @@ internal class Humming(private val activity: Activity, private val onRows: (List
     private lateinit var status: TextView
     private lateinit var picture: NotesView
 
-    /** Goes on after the melodies that the screen kept in its file (SavedRows). */
-    fun resume(kept: List<ResultRow>) {
+    init {
+        // Goes on after the melodies that the screen kept in its file (SavedRows).
         val numbers = kept.mapNotNull { row -> MELODY.find(row.title)?.groupValues?.get(1)?.toIntOrNull() }
         melody = (numbers.maxOrNull() ?: 0) + 1
         sizesKept = kept.isNotEmpty()
