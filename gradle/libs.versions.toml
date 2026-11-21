@@ -12,6 +12,8 @@ cmake = "3.31.5"
 oboe = "1.10.0"
 # Unit tests of the Kotlin modules on the JVM (TK-007). JUnit 5 is EPL-2.0: test use only (D-115).
 junit = "5.13.4"
+# ONNX Runtime for the candidate SwiftF0 of V-05, in the test build only (TK-010)
+onnxruntime = "1.31.1"
 ktlint = "1.8.0"
 detekt = "1.23.8"
 composeBom = "2025.10.01"
@@ -22,6 +24,7 @@ profileinstaller = "1.4.1"
 ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint" }
 detekt-cli = { module = "io.gitlab.arturbosch.detekt:detekt-cli", version.ref = "detekt" }
 oboe = { module = "com.google.oboe:oboe", version.ref = "oboe" }
+onnxruntime-android = { module = "com.microsoft.onnxruntime:onnxruntime-android", version.ref = "onnxruntime" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }

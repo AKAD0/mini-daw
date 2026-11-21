@@ -24,6 +24,10 @@ class Rendered(unittest.TestCase):
         self.assertEqual(values[0], 0)
         self.assertEqual(values[-1], 0)
         self.assertEqual(max(abs(v) for v in values), round(10 ** (-3 / 20) * render.FULL_SCALE))
+        keys = render.SOUNDS["keys.wav"]()
+        self.assertEqual(len(keys), 120000)  # 2.5 s
+        self.assertEqual((keys[0], keys[-1]), (0, 0))
+        self.assertEqual(max(abs(v) for v in keys), round(10 ** (-6 / 20) * render.FULL_SCALE))
 
 
 if __name__ == "__main__":

@@ -15,7 +15,8 @@ add_library(minidaw-engine SHARED
   glue/latency_probe.cpp
   glue/load_probe.cpp
   jni/audio_path_probe_jni.cpp
-  jni/engine_load_probe_jni.cpp)
+  jni/engine_load_probe_jni.cpp
+  jni/tone_player_jni.cpp)
 target_link_libraries(minidaw-engine PRIVATE engine-core oboe::oboe log)
 target_compile_options(minidaw-engine PRIVATE -Wall -Wextra -Werror)
 # Pages of 16 KB (CON-11): the NDK r29 links so by default; checks/check_native_pages.py checks it.

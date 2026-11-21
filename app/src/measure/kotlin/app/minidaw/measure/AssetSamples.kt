@@ -5,11 +5,12 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 /**
- * The Sample "Click high" of the test build: WAV with 48 kHz, 16 bits and one channel
- * (feature_specifications.md Section 7.2).
+ * The Samples of the test build: WAV with 48 kHz, 16 bits and one channel (feature_specifications.md
+ * Section 7.2), rendered by tools/sounds/render.py.
  */
-internal object ClickSample {
-    private const val ASSET = "click_high.wav"
+internal object AssetSamples {
+    const val CLICK_HIGH = "click_high.wav"
+    const val KEYS = "keys.wav"
     private const val RIFF_HEADER = 12
     private const val CHUNK_HEADER = 8
     private const val ID_LENGTH = 4
@@ -17,9 +18,9 @@ internal object ClickSample {
     private const val BYTES_PER_VALUE = 2
     private const val FULL_SCALE = 32768f
 
-    /** The values of the Sample. */
-    fun load(context: Context): FloatArray {
-        val bytes = context.assets.open(ASSET).use { it.readBytes() }
+    /** The values of the Sample [asset]. */
+    fun load(context: Context, asset: String): FloatArray {
+        val bytes = context.assets.open(asset).use { it.readBytes() }
         val buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
         var offset = RIFF_HEADER
         while (offset + CHUNK_HEADER <= bytes.size) {
@@ -31,6 +32,6 @@ internal object ClickSample {
             }
             offset = start + size + (size and 1)
         }
-        error("$ASSET holds no data")
+        error("$asset holds no data")
     }
 }

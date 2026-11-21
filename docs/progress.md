@@ -417,3 +417,29 @@ Notes:
   2. The first unit tests on the JVM: kotlin-test with JUnit 5 (EPL-2.0, test use only, D-115).
 ```
 
+```text
+TK-010  Check V-05: humming on the phone
+State: delivered for the gate (the section "V-05" of the test build is in the run "Build"; the owner hums)
+Change: branch tk-010, merged into main
+Criteria:
+  "The owner hummed 10 melodies. The count of corrections and the time are recorded for each
+  candidate. The rule of technology_stack.md Section 8.2 names the winner": not done yet; it needs
+  the owner. The section "V-05" records a melody, converts it with pYIN and with SwiftF0 (same
+  code for Notes), shows both results as a picture, plays the recording and both results with the
+  default tone "Keys", and keeps for each melody: length, Notes, time of the conversion, time to
+  load, the counts of the owner (wrong or extra, missing) and the F-measure of Notes.
+  Done on the host: engine-core/tone (render of Notes with a Sample, play mode gate) with 3 tests;
+  "Keys" rendered by its recipe, compared by a test. The rule names the winner in TK-014, from the
+  file of results and from docs/results/TK-009-vocadito.md.
+Documents: architecture.md 2.8 (Section 2.1), technology_stack.md 2.12 (Section 8.2)
+Decisions: none. D-044 stays Conditional until TK-014.
+Owner (task O-5, after TK-002): in the test build, section "V-05": tap "Record a melody", hum
+  10 to 30 s, tap "Stop", wait for both results. Play the recording and both results. Type for each
+  candidate the wrong or extra Notes and the missing Notes, tap "Keep the results of this melody".
+  10 melodies in all. Then share the results and put the file into docs/results/.
+Notes:
+  1. ONNX Runtime 1.31.1 for Android adds 34.2 MB of native code for arm64-v8a. Only the test
+     build holds it (:checkapps:humming) while D-044 is open.
+  2. Both native modules bring libc++_shared.so; the app packs one copy.
+```
+

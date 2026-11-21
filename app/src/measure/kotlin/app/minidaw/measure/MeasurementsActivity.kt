@@ -14,8 +14,8 @@ import app.minidaw.R
 
 /**
  * The screen "Measurements" of a test build (ui_ux_specification.md Section 15.4). It holds the row of
- * TK-002, the checks V-01 (TK-003), V-03 (TK-005), V-04 (TK-007) and V-07 (TK-006), and the button that shares the
- * results as a file
+ * TK-002, the checks V-01 (TK-003), V-03 (TK-005), V-04 (TK-007), V-05 (TK-010) and V-07 (TK-006), and the button
+ * that shares the results as a file
  * (NFR-MNT-06).
  */
 class MeasurementsActivity : Activity() {
@@ -24,6 +24,7 @@ class MeasurementsActivity : Activity() {
     private var facts: List<ResultRow> = emptyList()
     private var noise: ResultRow? = null
     private var audio: List<ResultRow> = emptyList()
+    private var hummed: List<ResultRow> = emptyList()
     private var running = false
     private val entries = Entries()
     private lateinit var verdictView: TextView
@@ -67,6 +68,12 @@ class MeasurementsActivity : Activity() {
         layout.button(getString(R.string.v04_kernels)) { measureAudio(KERNELS) }
         layout.button(getString(R.string.v04_load_mvp)) { measureAudio(LOAD_MVP) }
         layout.button(getString(R.string.v04_load_full)) { measureAudio(LOAD_VERSION_10) }
+
+        layout.text(getString(R.string.v05_title), SECTION_SP)
+        Humming(this) { rows ->
+            hummed = hummed + rows
+            refresh()
+        }.addTo(layout)
 
         layout.text(getString(R.string.v07_title), SECTION_SP)
         layout.text(getString(R.string.v07_how))
@@ -159,7 +166,7 @@ class MeasurementsActivity : Activity() {
         else -> AudioPath.run(kind == RUN_WITH_HINT)
     }
 
-    private fun rows(): List<ResultRow> = facts + listOfNotNull(noise) + audio + entries.rows()
+    private fun rows(): List<ResultRow> = facts + listOfNotNull(noise) + audio + hummed + entries.rows()
 
     private fun refresh() {
         verdictView.text = getString(R.string.verdict_line, verdict.word)

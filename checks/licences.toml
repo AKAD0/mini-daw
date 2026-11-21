@@ -74,6 +74,13 @@ use = "app"
 source = "github.com/google/oboe, read on 2026-11-21. Audio input and output (D-035)."
 
 [[entry]]
+name = "com.microsoft.onnxruntime:onnxruntime-android"
+kind = "library"
+licence = "MIT"
+use = "app"
+source = "Maven Central, the official package of Microsoft, file LICENSE of the AAR, read on 2026-11-21. Only the test build holds it (TK-010, V-05)."
+
+[[entry]]
 name = "org.jetbrains.kotlin:kotlin-test"
 kind = "library"
 licence = "Apache-2.0"

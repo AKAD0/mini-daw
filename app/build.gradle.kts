@@ -14,6 +14,12 @@ val buildNumber = providers.environmentVariable("MINIDAW_VERSION_CODE").orNull?.
 val changeId = providers.environmentVariable("GITHUB_SHA").orNull?.take(12) ?: "local"
 
 android {
+    // :engine and :checkapps:humming both bring the same shared C++ library of the NDK.
+    packaging {
+        jniLibs {
+            pickFirsts += "**/libc++_shared.so"
+        }
+    }
     namespace = "app.minidaw"
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
@@ -73,6 +79,8 @@ kotlin {
 
 dependencies {
     implementation(project(":engine-api"))
+    // Both pitch candidates of V-05 with ONNX Runtime: only in the test build (TK-010).
+    "measureImplementation"(project(":checkapps:humming"))
     implementation(project(":core"))
     implementation(project(":engine"))
     implementation(project(":analysis"))

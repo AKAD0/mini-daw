@@ -19,14 +19,15 @@ internal object EngineLoad {
     /** Renders a standard test Project on the audio thread for 60 s. */
     fun load(context: Context, version10: Boolean): List<ResultRow> {
         val name = if (version10) "version 1.0" else "MVP"
-        val json = EngineLoadProbe.probeLoad(if (version10) 1 else 0, RUN_SECONDS, ClickSample.load(context))
+        val click = AssetSamples.load(context, AssetSamples.CLICK_HIGH)
+        val json = EngineLoadProbe.probeLoad(if (version10) 1 else 0, RUN_SECONDS, click)
         return AudioPath.rowsOf(ID, "Load of the test Project of the $name", json) { unitOf(it) }
     }
 
     /** The kernels alone, and the compile and the load of the Snapshot of version 1.0. */
     fun kernelsAndSnapshot(context: Context): List<ResultRow> {
         val rows = mutableListOf<ResultRow>()
-        val kernels = EngineLoadProbe.probeKernels(ClickSample.load(context))
+        val kernels = EngineLoadProbe.probeKernels(AssetSamples.load(context, AssetSamples.CLICK_HIGH))
         rows += AudioPath.rowsOf(ID, "Kernels, for 128 frames", kernels) { if (it.endsWith("Micros")) "µs" else "" }
         repeat(WARM_UP) { SnapshotPrototype.write(SnapshotPrototype.version10) }
         val times = DoubleArray(RUNS)

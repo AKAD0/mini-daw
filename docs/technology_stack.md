@@ -1,7 +1,7 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.11 · **Date:** 2026-11-21
+**Stage:** 2 of 6 (technical research) · **Version:** 2.12 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
@@ -18,6 +18,7 @@
 **Change in 2.9:** TK-005. Section 4 names the native build of Oboe.
 **Change in 2.10:** TK-006. Section 5.6 names how V-07 measures.
 **Change in 2.11:** TK-007. Section 5.4 names the blend of the taps and how V-04 measures. Section 12 names the first unit tests on the JVM.
+**Change in 2.12:** TK-010. Section 8.2 names the facts of ONNX Runtime for Android and how V-05 runs.
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -446,6 +447,12 @@ Costs of the first candidate:
 2. The runtime loads at the first conversion, never at startup.
 
 ONNX Runtime supports memory pages of 16 KB on Android since a fix in 2025 [R13].
+
+Facts from TK-010 (read on 2026-11-21):
+
+1. The AAR `com.microsoft.onnxruntime:onnxruntime-android` 1.31.1 has 55 MB. It holds the headers of the C and C++ API and `libonnxruntime.so` for four ABIs, but no prefab package. The library for `arm64-v8a` has 34,208,680 bytes. The app stores native code uncompressed (minimum API level 31), so SwiftF0 would add about 34 MB to the release build. Against NFR-RES-05 (50 MB) this is a large share; pYIN adds no library.
+2. While D-044 is open, only the test build holds ONNX Runtime (`:checkapps:humming`). Its file of results gives the size of the test build and of `libonnxruntime.so` in it. `checks/check_native_pages.py` checks its pages of 16 KB.
+3. How V-05 runs on the phone: the owner hums a melody of 10 to 30 s. Both candidates convert it with the same code for Notes and the times are recorded. The screen shows both results in two lanes and plays them with the default tone "Keys" (`tools/sounds/render.py`). The owner counts for each candidate the wrong or extra Notes and the missing Notes. The file of results gives the F-measure of Notes from these counts: the correct Notes against the found Notes and against the true Notes.
 
 ---
 

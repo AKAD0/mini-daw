@@ -69,9 +69,9 @@ State of the work:
 | Item | State |
 |---|---|
 | Phase | PH-00 in progress |
-| Last finished task | TK-007, delivered for the gate. TK-002 to TK-006 and TK-013 are delivered for the gate too: they wait for O-7 and O-1. |
-| Next task | TK-010 |
-| Open gate | GATE-00 waits for the owner: O-7 (key for signing), O-1 (API key), the runs and the manual checks of PH-00 |
+| Last finished task | TK-010, delivered for the gate. TK-002 to TK-007 and TK-013 are delivered for the gate too: they wait for O-7, O-1 and O-5. |
+| Next task | TK-014 |
+| Open gate | GATE-00 waits for the owner: O-7 (key for signing), O-1 (API key), O-5 (10 melodies), and the runs and the manual checks of PH-00 on the phone. TK-014 is blocked until the files of results of V-01 to V-07 lie in `docs/results/`; no other task of PH-00 is open. |
 
 How to continue:
 

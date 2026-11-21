@@ -32,11 +32,13 @@ RULES = {
     ":extraction": {":core"},
     ":ui:kit": {":core"},
     **{m: {":ui:kit"} for m in UI},
-    ":app": {":engine-api", ":core", ":engine", ":analysis", ":data", ":extraction", ":ui:kit", *UI},
+    ":app": {":engine-api", ":core", ":engine", ":analysis", ":data", ":extraction", ":ui:kit", ":checkapps:humming", *UI},
     ":benchmark": {":app"},
     # The apps for the check V-02 (TK-004). They use no module of the product.
     ":checkapps:views": set(),
     ":checkapps:compose": set(),
+    # Both pitch candidates of the check V-05 (TK-010); only the test build of :app uses it.
+    ":checkapps:humming": set(),
 }
 KOTLIN_WITHOUT_ANDROID = {":engine-api", ":core"}
 UI_REACH = {":ui:kit", ":core", ":engine-api"}

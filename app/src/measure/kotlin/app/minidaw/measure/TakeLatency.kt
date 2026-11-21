@@ -12,7 +12,7 @@ internal object TakeLatency {
 
     /** Plays the click and records it; takes about 12 s. Needs the microphone. */
     fun run(context: Context, route: String): List<ResultRow> {
-        val json = AudioPathProbe.probeTakeLatency(ClickSample.load(context))
+        val json = AudioPathProbe.probeTakeLatency(AssetSamples.load(context, AssetSamples.CLICK_HIGH))
         return AudioPath.rowsOf(ID, "Loopback with $route", json) { if (it.endsWith("Ms")) "ms" else "" }
     }
 }
