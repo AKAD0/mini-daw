@@ -1,0 +1,11 @@
+# Static checks of the Python code (technology_stack.md Section 12)
+target-version = "py312"
+line-length = 120
+extend-exclude = ["build", ".gradle", ".venv"]
+
+[lint]
+select = ["E", "F", "W", "B", "I"]
+
+[lint.per-file-ignores]
+# The script of the checks of the documents came with the documents (task O-10). Its short names stay.
+"checks/check_docs.py" = ["E501", "E741"]

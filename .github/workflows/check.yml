@@ -1,0 +1,47 @@
+# Run "Check" (development_roadmap.md Section 2.3): the one command on every change.
+# A missing tool is a failure here (--strict). The result of this run is the one that counts.
+name: Check
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v6.1.0
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Python tools of the checks
+        run: python -m pip install -r checks/requirements-ci.txt
+
+      - name: Versions of the tools
+        run: |
+          java -version 2>&1 | head -1
+          cmake --version | head -1
+          clang++ --version | head -1
+          echo "ANDROID_HOME=$ANDROID_HOME"
+
+      - name: The one command
+        run: python checks/one_command.py --strict

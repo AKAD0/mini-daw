@@ -1,0 +1,119 @@
+# List of licences (NFR-LEG-01, D-024). checks/check_licences.py compares it with the files of the build.
+# Every library, plugin, native library, Python package and action that a file of the build declares
+# has one entry. A "tool" is a program of the CI service or of the host; nothing declares its version.
+# Fields:
+#   name     coordinate, ID of a plugin, name in FetchContent_Declare, Python package or action
+#   kind     library | plugin | native | python | action | tool
+#   licence  SPDX identifier; it must be one of D-024
+#   use      app (inside the app package) | build | test | toolkit (inside the Sandbox)
+#   source   where the licence was read
+
+# --- Gradle build
+[[entry]]
+name = "gradle"
+kind = "tool"
+licence = "Apache-2.0"
+use = "build"
+source = "github.com/gradle/gradle, read on 2026-11-21"
+
+[[entry]]
+name = "com.android.application"
+kind = "plugin"
+licence = "Apache-2.0"
+use = "build"
+source = "Android Gradle Plugin, Android Open Source Project"
+
+[[entry]]
+name = "com.android.library"
+kind = "plugin"
+licence = "Apache-2.0"
+use = "build"
+source = "Android Gradle Plugin, Android Open Source Project"
+
+[[entry]]
+name = "com.android.test"
+kind = "plugin"
+licence = "Apache-2.0"
+use = "build"
+source = "Android Gradle Plugin, Android Open Source Project"
+
+[[entry]]
+name = "org.jetbrains.kotlin.android"
+kind = "plugin"
+licence = "Apache-2.0"
+use = "build"
+source = "github.com/JetBrains/kotlin, file license/LICENSE.txt"
+
+[[entry]]
+name = "org.jetbrains.kotlin.jvm"
+kind = "plugin"
+licence = "Apache-2.0"
+use = "build"
+source = "github.com/JetBrains/kotlin, file license/LICENSE.txt"
+
+[[entry]]
+name = "com.pinterest.ktlint:ktlint-cli"
+kind = "library"
+licence = "MIT"
+use = "build"
+source = "github.com/pinterest/ktlint, read on 2026-11-21"
+
+[[entry]]
+name = "io.gitlab.arturbosch.detekt:detekt-cli"
+kind = "library"
+licence = "Apache-2.0"
+use = "build"
+source = "github.com/detekt/detekt, read on 2026-11-21"
+
+# --- Native code
+[[entry]]
+name = "googletest"
+kind = "native"
+licence = "BSD-3-Clause"
+use = "test"
+source = "github.com/google/googletest, read on 2026-11-21"
+
+# --- Python tools
+[[entry]]
+name = "ruff"
+kind = "python"
+licence = "MIT"
+use = "build"
+source = "github.com/astral-sh/ruff, read on 2026-11-21"
+
+# --- Actions of the CI service
+[[entry]]
+name = "actions/checkout"
+kind = "action"
+licence = "MIT"
+use = "build"
+source = "github.com/actions/checkout, read on 2026-11-21"
+
+[[entry]]
+name = "actions/setup-java"
+kind = "action"
+licence = "MIT"
+use = "build"
+source = "github.com/actions/setup-java, read on 2026-11-21"
+
+[[entry]]
+name = "actions/setup-python"
+kind = "action"
+licence = "MIT"
+use = "build"
+source = "github.com/actions/setup-python, read on 2026-11-21"
+
+# --- Programs of the runner of the CI service
+[[entry]]
+name = "clang"
+kind = "tool"
+licence = "Apache-2.0 WITH LLVM-exception"
+use = "build"
+source = "LLVM project: clang, clang-format, clang-tidy, sanitizers"
+
+[[entry]]
+name = "cmake"
+kind = "tool"
+licence = "BSD-3-Clause"
+use = "build"
+source = "Kitware CMake"

@@ -1,0 +1,3 @@
+# Settings of detekt on top of its defaults (technology_stack.md Section 12).
+build:
+  maxIssues: 0

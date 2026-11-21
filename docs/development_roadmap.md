@@ -1,9 +1,10 @@
 # development_roadmap.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 5 of 6 (roadmap) · **Version:** 2.0 · **Date:** 2026-11-20
+**Stage:** 5 of 6 (roadmap) · **Version:** 2.1 · **Date:** 2026-11-21
 **Change in 1.1:** final check of Stage 6. The 22 new criteria of `feature_specifications.md` 1.2 have their tasks. The pointers to `opus_implementation_guide.md` name its sections. The run "Build" checks the size of the release build. Changed parts: Sections 2.1, 2.3, 2.6, 6.1, 6.3, 6.5 to 6.10, 6.13 to 6.15, 8.2, 9.1, 9.2 and 10.
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). The implementer works on the computer of the owner (D-103). New parts: Section 3.5, the phases PH-16 to PH-18 (Sections 6.17 to 6.19) with the tasks TK-100 to TK-115, the gates GATE-16 to GATE-18, Section 7.4, the milestone M6. Changed parts: Sections 1.1, 1.2, 2.1, 2.3, 2.5, 2.7, 3.1, 3.4, 4.1, 4.2, 4.3, 6.1 (objectives, TK-014), 7.2, 8.1, 8.2, 9.1 and 10.
+**Change in 2.1:** TK-001. Section 2.1 names the list of licences and `CLAUDE.md`. Section 2.3 names the one command and its behaviour when a tool is missing.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `risk_assessment.md`, `opus_implementation_guide.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `D-`, `V-`, `AC-`, `MT-` and `RISK-` point to them.
 
 ---
@@ -81,7 +82,7 @@ The column "Done when" of a table of tasks lists the acceptance criteria of `fea
 
 | Place | Content |
 |---|---|
-| Repository | The code. The nine documents in the folder `docs/`. The script `checks/check_docs.py`. The results of checks and of manual tests in the folder `docs/results/`. The record of the work in the file `docs/progress.md` (D-098). |
+| Repository | The code. The nine documents in the folder `docs/`. The script `checks/check_docs.py`. The results of checks and of manual tests in the folder `docs/results/`. The record of the work in the file `docs/progress.md` (D-098). The list of licences in `checks/licences.toml`. The limits that the owner set for the sessions of the implementer in `CLAUDE.md` (D-114). |
 | Computer of the owner | The local copy of the repository. The implementer works in it and sends each change to the repository (D-103). |
 | CI service | The runs of Section 2.3 and the encrypted secrets |
 | Page of releases of the repository | The builds for download (prov.; TK-002 confirms that this way works on the phone) |
@@ -117,6 +118,8 @@ Rules:
 | Quality of the separation | By hand, after a change of the model file or of the program `separate` | `feature_specifications.md` Section 5.8 |
 | Decomposition test | By the owner | The Sandbox part of the check V-08 |
 | Quality of the decomposition | By hand, after a change of the program `decompose`, of a model file or of the low register | `feature_specifications.md` Section 12.8 |
+
+The one command is `python3 checks/one_command.py`. It runs its parts in a fixed order and reports each one. On the computer of the owner, a part whose tool is missing is skipped, and the output names the tool (A-23). The CI service adds `--strict`, so a missing tool fails the run there.
 
 Parts of the one command:
 

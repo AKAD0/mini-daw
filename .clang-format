@@ -1,0 +1,3 @@
+# Style of the C++ code (technology_stack.md Section 12)
+BasedOnStyle: Google
+ColumnLimit: 100

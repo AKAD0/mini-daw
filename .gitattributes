@@ -1,0 +1,10 @@
+# Line endings: the repository holds LF. Windows scripts get CRLF in a checkout.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.jar binary
+*.wav binary
+*.flac binary
+*.png binary
+*.onnx binary
+*.jks binary
+*.keystore binary

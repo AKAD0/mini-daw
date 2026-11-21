@@ -1,12 +1,13 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.0 · **Date:** 2026-11-20
+**Stage:** 2 of 6 (technical research) · **Version:** 2.1 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
 **Change in 1.4:** results of Stage 6. A library may add permissions to the manifest of the app (D-101). Changed part: Section 15 (item 9).
 **Change in 2.0:** the owner asked for the decomposition of a recording into a Project (D-104). The tools of the owner's note are examined (D-111). New parts: Sections 9.7 and 9.8, the check V-08 in Section 14, the sources R19 to R30. Changed parts: Section 1 (three rows), Section 9.4 (facts 4 and 6, fall-back models), Section 10 (one row), Section 13, Section 14 (answers), Section 15 (items 10 to 12).
+**Change in 2.1:** TK-001 fixed the versions of the build and the place of the list of licences. Changed parts: Section 3.2 (compile SDK), Section 3.3 (item 5), Section 12 (closing notes).
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -114,7 +115,7 @@ The Toolkit of the extraction feature is written in Python, because the Sandbox 
 |---|---|---|
 | Lowest API level | 31 (Android 12) | The owner can test Android 17 only. From API 27 Oboe uses AAudio alone [R2]. From API 31 the system has its own splash screen and its interface for performance hints. Fewer code paths remain. |
 | Target API level | 36 | Google Play demands it for new apps (CON-11). |
-| Compile SDK | Newest stable | Normal practice. |
+| Compile SDK | 36 | The build uses the Android Gradle Plugin 8.13 (Section 3.3). It supports API 36 at most. API 37 is stable (Android SDK repository, read on 2026-11-21) and needs version 9 of the plugin. A move to API 37 is a change of its own. |
 | Processor types | `arm64-v8a` in release builds; `x86_64` added in debug builds for the emulator | The phone is 64-bit ARM. |
 | Page size | Native code aligned for 16 KB | CON-11. The NDK does this by default from release r28. The build checks it. |
 
@@ -126,6 +127,7 @@ Parts of the build:
 2. CMake for the C++ code. The same CMake files build the engine for Android and for the host.
 3. Three build types: debug, release, and benchmark. The benchmark type equals release but allows profiling.
 4. R8 in full mode for release and benchmark.
+5. Versions since TK-001: Gradle 8.14.3, Android Gradle Plugin 8.13.2, Kotlin 2.2.21. The file `gradle/libs.versions.toml` holds them. Newer major versions exist. The build keeps these until a task needs a newer one (`opus_implementation_guide.md` Section 6.2).
 
 ---
 
@@ -609,6 +611,13 @@ Notes are data of the Project. The app has no MIDI engine. An own writer produce
 | Diagnostics | Own view in the app; exit reasons that Android records | FR-SET-01; no remote service (D-051) |
 
 Every check of the host runs with one command. The CI service runs this command on every change (D-073).
+
+Notes from TK-001:
+
+1. The list of licences is the file `checks/licences.toml` (NFR-LEG-01). The script `checks/check_licences.py` compares it with the files of the build.
+2. ktlint 1.8.0 and detekt 1.23.8 run as programs of their own through Gradle. Their versions therefore do not depend on the version of Kotlin in the modules.
+3. The C++ tests on a host use GoogleTest 1.17.0, which the build downloads with a fixed checksum.
+4. The CI service uses only actions with a licence of D-024. The cache of Gradle comes from `actions/setup-java`, because the caching of `gradle/actions` from version 6 on uses a proprietary component.
 
 Facts behind D-073:
 

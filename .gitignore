@@ -1,0 +1,24 @@
+# Outputs of Gradle, CMake and the IDE
+build/
+.gradle/
+.cxx/
+.externalNativeBuild/
+.kotlin/
+local.properties
+*.iml
+.idea/
+.vscode/
+captures/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Files that may hold secrets never enter the repository (NFR-SEC-01)
+.env
+.env.*
+*.secret
+secrets.properties

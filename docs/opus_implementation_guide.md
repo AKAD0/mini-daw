@@ -1,8 +1,9 @@
 # opus_implementation_guide.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 6 of 6 (handoff) · **Version:** 2.0 · **Date:** 2026-11-20
+**Stage:** 6 of 6 (handoff) · **Version:** 2.1 · **Date:** 2026-11-21
 **Change in 2.0:** the plan gained version 1.1 with the Decomposer (D-104), and the work moved to the computer of the owner (D-103). Changed parts: Sections 2.2, 3.1 to 3.8, 3.10 to 3.13, 4.3, 5, 6.4, 7.1, 7.3, 8.1, 8.2 and 10.
+**Change in 2.1:** first task of development. The owner wants work without waiting (D-114): steps 1 and 8 of Section 4.1, the form of Section 4.4 and rule 4 of Section 7.2 changed. Section 8.1 names the one command, the list of licences and `CLAUDE.md`. Section 7.3 names Q-19.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `development_roadmap.md`, `risk_assessment.md` and `project_decisions.md` in their newest versions. Every ID in this guide points to one of them.
 
 ---
@@ -297,14 +298,14 @@ The service is a beta service. Read its current documentation before TK-070, and
 
 Do one task at a time. Each task runs through these ten steps:
 
-1. **Choose.** Take the task with the smallest ID that is not done. Every task in its column "Needs" must be done.
+1. **Choose.** Take the task with the smallest ID that is neither done nor waiting for the owner. Each task in its column "Needs" is done or delivered for the gate (D-114).
 2. **Read.** Read the row of the task, its criteria in `feature_specifications.md`, and the sections of Section 2.2 for its modules.
 3. **Plan.** Write down the files to touch, the tests to add and the open points. Split a task of size L into steps before the first line of code.
 4. **Test first.** Where a program checks a criterion, write this check before the code or together with it.
 5. **Implement.** Stay inside the modules that the task names. A change of an interface between modules is a major gap (Section 1.3).
 6. **Validate.** Run the one command. The criteria of the task pass, and no earlier criterion fails.
 7. **Update the documents.** Follow Section 9. Run `checks/check_docs.py` after every change of a document.
-8. **Send.** Send the change to the repository. Wait for the run "Check" of the CI service. Repair until it is green.
+8. **Send.** Push the branch of the task to `origin`. Wait for the run "Check" of the CI service. Repair until it is green. Then merge the branch into `main` and push `main`. Never force a push.
 9. **Record.** Add the task to the record of the work (Section 4.4). Renew the continuation point in `project_decisions.md` Section 1.
 10. **Proceed.** Go to step 1. After the last task of a phase, prepare the gate (Section 5).
 
@@ -344,8 +345,11 @@ Change: <ID of the change in the repository>
 Criteria: <ID>: pass (<name of the test>) ...
 Documents: <file and new version> ... | none
 Decisions: <ID> ... | none
+Owner: <the action that the task waits for, with the place where the owner acts> | none
 Notes: <open points, faults found outside the task>
 ```
+
+A task that waits for the owner is "blocked" or "delivered for the gate". Its line "Owner" names the action. The work goes on with the next task that step 1 allows.
 
 The continuation point in `project_decisions.md` Section 1 names the current phase, the last finished task and the next task. A new session starts there.
 
@@ -471,14 +475,14 @@ These things are no evidence:
 1. Ask one question at a time, in plain words.
 2. Name a default and say what it leads to. The owner can answer with one word.
 3. Record the question as a new row in `project_decisions.md` Section 5.
-4. Go on with the default when the task does not depend on the answer. Mark the result as "Proposed".
+4. Never wait for the answer. Go on with the default and mark the result as "Proposed". A task that cannot go on without the answer is "blocked" (D-114).
 5. Never ask for something that the documents already answer.
 
 ### 7.3 Open items by ID
 
 | Kind | Items | What they wait for |
 |---|---|---|
-| Open questions | Q-09, Q-10, Q-16, Q-17, Q-18 | An answer of the owner. Their defaults are in force (A-18, A-17, D-073, D-105, D-104). |
+| Open questions | Q-09, Q-10, Q-16, Q-17, Q-18, Q-19 | An answer of the owner. Their defaults are in force (A-18, A-17, D-073, D-105, D-104; for Q-19 nothing changes). |
 | Proposed decisions | D-009, D-074, D-090, D-105 | A word of the owner. For the factory set: the manual test MT-15. |
 | Conditional decisions | D-028, D-035, D-038, D-040, D-041, D-044, D-046, D-047, D-088, D-106, D-107, D-108, D-110 | The checks V-02 to V-07 in PH-00, and the check V-08 in PH-16 |
 | Provisional values | Every value with the mark "(prov.)" | The review of TK-014, or a later measurement |
@@ -503,6 +507,9 @@ The check V-01 confirms no Conditional row by itself. Its values feed the review
 | Place of the nine documents | Folder `docs/` |
 | Place of the script of the checks | `checks/check_docs.py`. It finds the documents in `docs/`. |
 | Place of the record of the work | `docs/progress.md` |
+| The one command | `python3 checks/one_command.py`; in the CI service with `--strict` |
+| Place of the list of licences | `checks/licences.toml` |
+| Limits that the owner set for the sessions | `CLAUDE.md` at the top level |
 | Place of the work | A local copy of the repository on the computer of the owner, open in VS Code (D-103) |
 
 An application ID cannot change after a release in a store. The app is a personal tool (D-002). The owner checks the ID again before any publication.
@@ -569,6 +576,7 @@ The documents are written for readers who may have another first language than E
 | Rules for conflicts, evidence, changes of decisions and stops | D-100 |
 | Place of the work of the implementer | D-103 |
 | Pointers to the Decomposer of version 1.1 | D-104 |
+| Work without waiting for the owner | D-114 |
 
 Open points:
 
