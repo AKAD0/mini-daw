@@ -75,8 +75,8 @@ State of the work:
 | Item | State |
 |---|---|
 | Phase | PH-02 in progress. PH-01 is done: GATE-01 closed on 2026-11-21 (`docs/progress.md`, TK-020). PH-00 is done: GATE-00 closed on 2026-11-21 (`docs/results/GATE-00.md`). |
-| Last finished task | TK-020, done: the compiler from a state to a Snapshot and the chain of the fixtures. TK-001 to TK-019 are done. |
-| Next task | TK-021 |
+| Last finished task | TK-021, done: the loader and checker of the Snapshot format, the swap on the audio thread, the Live commands and the render function in `engine-core`. TK-001 to TK-020 are done; GATE-00 and GATE-01 are closed. |
+| Next task | TK-022 |
 | Open gate | GATE-02, after TK-021 to TK-026: every fixture renders as expected, and the sanitizers report nothing. Nothing waits for the owner. Open for later gates: Q-21 (limits of version 1.0, GATE-12) and Q-22 (fidelity of the stem model, TK-068); the typed values of V-01 stay "not measured yet". |
 
 How to continue:

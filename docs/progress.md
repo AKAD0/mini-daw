@@ -685,7 +685,7 @@ Notes:
 TK-020  Compiler and chain of the fixtures
 State: done; GATE-01 closed with it
 Change: branch tk-020, merged into main
-Criteria (run "Check" of the branch tk-020, part "kotlin-tests", module :core, SnapshotCompilerTest):
+Criteria (run "Check" 44948910461, part "kotlin-tests", module :core, SnapshotCompilerTest):
   "Fixed Projects give the expected Snapshots": pass (theNewProjectGivesItsExpectedSnapshot,
     theFixtureWithRoutingGivesItsExpectedSnapshot: every record of the twelve tables written out; the
     second fixture has a bus first in the Mixer, a soloed channel that sends into it, a muted Track, an
@@ -704,4 +704,37 @@ Notes:
   1. The order of processing sorts by the number of steps to the Master channel, the farthest first,
      and keeps the order of the Mixer among equals (feature_specifications.md Section 3.2.5).
   2. The table of Samples holds every entry of the table of used Samples, in its order.
+```
+
+```text
+TK-021  Loader and checker of a Snapshot, render function, swap, Live commands
+State: done
+Change: branch tk-021, merged into main
+Criteria (run "Check" of the branch tk-021, part "cpp-tests", engine-core-tests, with AddressSanitizer
+  and UndefinedBehaviorSanitizer):
+  "A broken Snapshot is refused": pass (Format.TheHeaderIsChecked, Format.EveryReferenceIsChecked,
+    Format.NotesAndClipsAreSortedAndTheOrderIsComplete, Format.NumbersAndCountsKeepTheirLimits,
+    Format.ARefusedSnapshotLeavesTheOldOneUnchanged, Format.RandomBytesNeverBreakTheLoader,
+    Engine.ABrokenSnapshotIsRefusedAndTheOldOneStays)
+  "Random Live commands and swaps cause no crash and no invalid number": pass
+    (Engine.RandomLiveCommandsAndSwapsCauseNoCrashAndNoInvalidNumber: 20,000 steps with a fixed seed;
+    Engine.TheThreadsOfTheEngineWorkTogether: audio, main and Control thread at once)
+  Also: Format.TheFixturesOfTheCompilerLoad (the Snapshots of core/build/fixtures),
+    Engine.TheTransportAdvancesByTheTempo, Engine.TheLoopOfSongModeWraps,
+    Engine.ALiveValueStaysUntilAnEditChangesIt, Engine.CommandsForUnknownItemsAreDroppedAndCounted.
+Documents: architecture.md 2.13 (Section 5.2: the loader of the format)
+Decisions: none
+Owner: none
+Notes:
+  1. engine-core/include/minidaw/engine/format.h reads the format of feature_specifications.md
+     Section 6.2 with its six checks, and also refuses numbers that are not finite or out of range, so
+     that no invalid number reaches the audio. Its codes equal EngineResult of :engine-api.
+  2. engine.h: a Snapshot travels as one pointer; the audio thread takes the newest at the start of a
+     block and gives the old one back through a ring buffer, so it never allocates or frees. The rule
+     for values at a swap keeps a live value until an Edit changes it.
+  3. The part "cpp-tests" of the one command first runs :core:compileFixtures and passes the folder to
+     the tests (MINIDAW_FIXTURES); in the strict mode a missing fixture fails the test.
+  4. The prototype snapshot.h of TK-007 stays for the test build of V-04 until TK-026 at the latest.
+  5. The C++ tests ran on this computer too: GCC 15 with both sanitizers and a small stand-in for
+     GoogleTest in the scratchpad (not in the repository); the run "Check" is the validation (A-11).
 ```

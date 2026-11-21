@@ -155,6 +155,17 @@ def part_cpp_tests(strict):
         configure.append("-DMINIDAW_REQUIRE_SWIFTF0=ON")
     if run(configure)[0] != 0 or run([cmake, "--build", HOST_BUILD, "--parallel"])[0] != 0:
         return False
+    # The chain of the fixtures (architecture.md Section 15): the tests of engine-core load the Snapshots
+    # that the compiler of :core writes. Without a JDK they skip, except in the strict mode.
+    try:
+        if not gradle(":core:compileFixtures"):
+            return False
+        env["MINIDAW_FIXTURES"] = os.path.join(ROOT, "core", "build", "fixtures")
+    except Skip:
+        if strict:
+            raise
+    if strict:
+        env["MINIDAW_REQUIRE_FIXTURES"] = "1"
     return run(["ctest", "--test-dir", HOST_BUILD, "--output-on-failure", "--no-tests=error"], env=env)[0] == 0
 
 
