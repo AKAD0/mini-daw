@@ -66,8 +66,8 @@ State of the work:
 | Item | State |
 |---|---|
 | Phase | PH-00 in progress |
-| Last finished task | None |
-| Next task | TK-001 |
+| Last finished task | TK-001 |
+| Next task | TK-002 |
 | Open gate | None |
 
 How to continue:
