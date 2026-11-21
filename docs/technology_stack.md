@@ -1,7 +1,7 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.12 · **Date:** 2026-11-21
+**Stage:** 2 of 6 (technical research) · **Version:** 2.13 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
@@ -19,6 +19,7 @@
 **Change in 2.10:** TK-006. Section 5.6 names how V-07 measures.
 **Change in 2.11:** TK-007. Section 5.4 names the blend of the taps and how V-04 measures. Section 12 names the first unit tests on the JVM.
 **Change in 2.12:** TK-010. Section 8.2 names the facts of ONNX Runtime for Android and how V-05 runs.
+**Change in 2.13:** TK-014. V-05 named pYIN (D-117) and V-07 gave the correction of a Take (D-118). Changed parts: Section 1 (recording, humming), Section 8.2 (choice, result of V-05), Section 14 (V-05, V-07).
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -49,14 +50,14 @@ Conventions:
 | Resampling at import | r8brain-free-src as first candidate | MIT (confirm) | D-037 |
 | Change of pitch in the sampler | Windowed sinc with 8 taps, plus pre-filtered copies | own code | D-038, test pending |
 | Effects, Mixer, meters | Own code after published algorithms | own code | D-039 |
-| Recording | Oboe input with the unprocessed preset; correction by timestamps and calibration | Apache-2.0 | D-040, test pending |
+| Recording | Oboe input with the unprocessed preset; place by timestamps with the correction that the loopback measured | Apache-2.0 | D-118 |
 | UI | Jetpack Compose; each editor draws on one canvas | Apache-2.0 | D-041, test pending |
 | Startup | One activity, no framework for dependency injection, Baseline Profile and Startup Profile, late start of the engine | — | D-042 |
 | Project on disk | One JSON document per Project with kotlinx.serialization, replaced atomically | Apache-2.0 | D-043 |
 | Index of the Library | SQLite through Room | Apache-2.0 | D-043 |
 | Settings | Jetpack DataStore | Apache-2.0 | D-043 |
-| Pitch for humming | SwiftF0 through ONNX Runtime, compared with an own pYIN | MIT, MIT, own code | D-044, test pending |
-| Notes for humming | Own code, shared by both pitch methods | own code | D-044 |
+| Pitch for humming | Own pYIN in C++ | own code | D-117 |
+| Notes for humming | Own code | own code | D-117 |
 | Calls to Claude | Direct HTTPS calls with OkHttp and kotlinx.serialization | Apache-2.0 | D-045 |
 | Toolkit in the Sandbox | Python, ONNX Runtime on a CPU, HTDemucs with 4 stems, NumPy, SciPy, ffmpeg | MIT and BSD; weights: confirm | D-046, test pending |
 | Orchestrator | Agent of Claude Managed Agents; small model tier first | service | D-047, test pending |
@@ -420,9 +421,9 @@ Parts of the conversion:
 
 | Part | Choice | Note |
 |---|---|---|
-| Pitch, first candidate | SwiftF0 (MIT) through ONNX Runtime for Android (MIT) | Most accurate and most robust to noise in the benchmark. 16 kHz input, one value every 16 ms, range 47 Hz to 2,094 Hz [R5]. |
-| Pitch, second candidate | pYIN, written in C++ after the paper | No runtime library. The program Tony, which contains the reference code, is under the GPL [R8]. The project therefore writes its own code. The Python library librosa has a version under a permissive licence for comparison in tests (confirm). |
-| Notes | Own code, shared by both candidates | Input: pitch, confidence and loudness per frame. Stage 4 specifies it. |
+| Pitch | pYIN, written in C++ after the paper (D-117) | The choice of V-05. No runtime library. The program Tony, which contains the reference code, is under the GPL [R8]. The project therefore writes its own code. The Python library librosa has a version under a permissive licence for comparison in tests (confirm). |
+| Notes | Own code | Input: pitch, confidence and loudness per frame. Stage 4 specifies it. V-05 ran both candidates with it. |
+| SwiftF0 (MIT) through ONNX Runtime for Android (MIT) | Compared in V-05, not used (D-117) | Most accurate and most robust to noise in the benchmark [R5], but its runtime adds about 34 MB (facts from TK-010). TK-056 removes it from the code. |
 | Tuning offset and quantization | Own code | FR-H2M-07, FR-H2M-09. |
 | Basic Pitch | Rejected | Weak for one voice in both sources [R5], [R7]. |
 
@@ -441,7 +442,13 @@ Rule for the comparison (V-05):
 3. The candidate with the higher F-measure of Notes wins.
 4. If the difference is below 0.02, pYIN wins, because it needs no runtime library.
 
-Costs of the first candidate:
+Result of V-05 (TK-014, D-117):
+
+1. vocadito: F-measure 0.641 for pYIN and 0.659 for SwiftF0. The difference of 0.018 lies below 0.02, so rule 4 names pYIN.
+2. The phone: the owner hummed one melody and heard both results. pYIN had 2 wrong or extra Notes of 37 and took 428 ms; SwiftF0 had 4 and took 602 ms. The owner chose pYIN: "pYIN works the best, we can skip the choosing between in and the other one." The other 9 melodies were not hummed.
+3. NFR-QLT-02 and NFR-PERF-09 are measured on the product in MT-12.
+
+Costs of SwiftF0, the candidate that is not used:
 
 1. ONNX Runtime adds several megabytes to the app. V-05 records the size against NFR-RES-05.
 2. The runtime loads at the first conversion, never at startup.
@@ -451,7 +458,7 @@ ONNX Runtime supports memory pages of 16 KB on Android since a fix in 2025 [R13]
 Facts from TK-010 (read on 2026-11-21):
 
 1. The AAR `com.microsoft.onnxruntime:onnxruntime-android` 1.31.1 has 55 MB. It holds the headers of the C and C++ API and `libonnxruntime.so` for four ABIs, but no prefab package. The library for `arm64-v8a` has 34,208,680 bytes. The app stores native code uncompressed (minimum API level 31), so SwiftF0 would add about 34 MB to the release build. Against NFR-RES-05 (50 MB) this is a large share; pYIN adds no library.
-2. While D-044 is open, only the test build holds ONNX Runtime (`:checkapps:humming`). Its file of results gives the size of the test build and of `libonnxruntime.so` in it. `checks/check_native_pages.py` checks its pages of 16 KB.
+2. Only the test build holds ONNX Runtime (`:checkapps:humming`), for V-05. TK-056 removes it with SwiftF0 (D-117). Its file of results gives the size of the test build and of `libonnxruntime.so` in it. `checks/check_native_pages.py` checks its pages of 16 KB.
 3. How V-05 runs on the phone: the owner hums a melody of 10 to 30 s. Both candidates convert it with the same code for Notes and the times are recorded. The screen shows both results in two lanes and plays them with the default tone "Keys" (`tools/sounds/render.py`). The owner counts for each candidate the wrong or extra Notes and the missing Notes. The file of results gives the F-measure of Notes from these counts: the correct Notes against the found Notes and against the true Notes.
 
 ---
@@ -725,9 +732,9 @@ The owner runs the checks on the phone with small test builds from the implement
 | V-02 | Startup floor | Cold start of an empty Views app and of an empty Compose app, each with a Baseline Profile. Each app measures its own start and shows the median. The check also records whether a build from a download runs with its compiled profile at once. | Section 6.1 | D-041, D-073 |
 | V-03 | Audio path | Minimal Oboe app or OboeTester: rate, Burst, latency, Underruns with and without performance hints; time to open and start each stream | Speaker path at 48 kHz; no Underruns in 10 min at 2 to 4 Bursts; the times to open a stream are recorded | D-035, D-067 |
 | V-04 | Load of the engine | Benchmark of the sampler and the effects with the counts of the standard test Project; time of a compile and of a load of a Snapshot | Mean load at most 50 % of the block time (NFR-AUD-08); compile and load within 5 ms (prov.) | D-038, D-062, limits of Section 8 |
-| V-05 | Humming | Both pitch candidates with the same Note code on vocadito and on 10 melodies of the owner | Section 8.2; the winner also meets NFR-QLT-02 and NFR-PERF-09 | D-044 |
+| V-05 | Humming | Both pitch candidates with the same Note code on vocadito and on 10 melodies of the owner | Section 8.2; the winner also meets NFR-QLT-02 and NFR-PERF-09 | D-044, replaced by D-117 |
 | V-06 | Sandbox | Section 9.6 | 9 of 10 Sessions finish within 420 s; cost at most 0.30 USD each; the disconnected Session finishes; stems match the original model; the owner accepts 2 of 3 results | D-028, D-046, D-047 |
-| V-07 | Latency of a Take | Offset from timestamps against offset from loopback calibration | Difference at most 10 ms | D-040 |
+| V-07 | Latency of a Take | Offset from timestamps against offset from loopback calibration | Difference at most 10 ms | D-040, replaced by D-118 |
 | V-08 | Decomposition (version 1.1) | Section 9.8 | Host part: the rules of `feature_specifications.md` Section 12.8 hold. Sandbox part: 4 of 5 Sessions with 60 s finish within 6 min; both Sessions with 240 s finish within 15 min; no step runs longer than 120 s; cost at most 0.30 USD each; the disconnected Session finishes; the owner accepts 2 of 3 results | D-106, D-107, D-108, D-110 |
 
 If V-06 fails, the order of the answers is: change the model tier or the model, then add a hosted model as a tool, then move extraction after version 1. LALAL.AI is the first candidate for the hosted model (Section 9.7).

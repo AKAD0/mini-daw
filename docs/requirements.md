@@ -1,7 +1,7 @@
 # requirements.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 1 of 6 (project analysis) · **Version:** 2.0 · **Date:** 2026-11-20
+**Stage:** 1 of 6 (project analysis) · **Version:** 2.1 · **Date:** 2026-11-21
 **Change in 1.1:** the owner decided against a server of the project. Extraction now runs in a Session on the owner's Claude API account (D-027 to D-030, D-032). Humming to MIDI is fixed as work for the CPU of the phone (D-031). Changed parts: Section 1.2, Section 2, CON-13, CON-15, CON-18 to CON-23, T-08, T-10, T-18, U-16, G-11, FR-H2M-02, Section 5.9, FR-SET-04, NFR-PERF-10, NFR-REL-05, Section 6.6, Section 6.8, NFR-QLT-03, Sections 7 and 8.
 **Change in 1.2:** results of Stage 2. Changed rows: FR-LIB-04, NFR-AUD-01, NFR-QLT-01.
 **Change in 1.3:** answers of the owner. A Pattern can hold several Sampler instruments (D-054). The Channel Rack is a Module (D-056, Section 5.15). Audio follows the device that Android uses (D-053). Changed parts: Sections 1.2, 1.3 and 2, T-04, U-08, G-09, FR-WS-05, FR-PT-01, FR-PT-06, FR-SM-10, FR-H2M-04, FR-H2M-13, FR-MX-03, FR-MX-19, FR-SET-05, Sections 5.15, 8 and 9.
@@ -12,6 +12,7 @@
 **Change in 1.8:** results of Stage 5. The file of the key for signing may lie in the repository under a password (D-094). Changed row: NFR-SEC-01.
 **Change in 1.9:** results of Stage 6. The application ID is fixed (D-098). A library may add permissions without a dialog (D-101). Changed rows: G-17, NFR-SEC-05.
 **Change in 2.0:** the owner asked for a second tool, the Decomposer (D-104). It turns a range of a recording into a new Project. New parts: Section 1.4, seven terms in Section 2, Section 5.16 (FR-DEC-01 to FR-DEC-24), NFR-PERF-12, NFR-RES-08, NFR-COST-05, NFR-QLT-06, NFR-QLT-07, the priority V1.1, the limits of version 1.1 in Section 8. Changed rows: FR-WS-07, FR-LIB-01, FR-AIX-18 (withdrawn), NFR-SEC-03, NFR-LEG-03, the term Session, the meaning of P2, the row about links in Section 1.3. Changed parts: Sections 7 and 9.
+**Change in 2.1:** TK-014. NFR-QLT-01 names pYIN, the choice of V-05 (D-117).
 **Companion documents:** `project_decisions.md`. It holds every assumption (`A-`), decision (`D-`), pending architectural decision (`AD-`) and open question (`Q-`) that this document cites. `technology_stack.md` holds the choices of technology from Stage 2. `architecture.md` holds the structure from Stage 3. `feature_specifications.md` and `ui_ux_specification.md` hold the behaviour and the interface from Stage 4.
 
 ---
@@ -744,7 +745,7 @@ This section is engineering guidance. It is not legal advice.
 
 | ID | Requirement | How it is verified |
 |---|---|---|
-| NFR-QLT-01 | Humming to MIDI, measured: the app uses the better of the two candidates of D-044. The comparison runs on the public singing set vocadito. It reports the F-measure of Notes without offsets, with a tolerance of 50 ms for the start and of 50 cents for the pitch. This set has no pass value: a published specialist model reaches 0.57 to 0.64 there [S29]. | Automatic evaluation on a host computer (check V-05 of `technology_stack.md`). |
+| NFR-QLT-01 | Humming to MIDI, measured: the app uses pYIN, the candidate that the check V-05 named (D-117). The comparison ran on the public singing set vocadito. It reports the F-measure of Notes without offsets, with a tolerance of 50 ms for the start and of 50 cents for the pitch. This set has no pass value: a published specialist model reaches 0.57 to 0.64 there [S29]. | Automatic evaluation on a host computer (check V-05 of `technology_stack.md`). |
 | NFR-QLT-02 | Humming to MIDI, in practice: the owner hums 10 melodies of about 10 Notes on the phone in a quiet room. On average at most 2 Notes per melody need a correction (prov.). | Manual test by the owner. |
 | NFR-QLT-03 | Extraction, measured: for the usual classes (vocals, drums, bass, other instruments), quality is measured on a public test set with reference stems. `feature_specifications.md` Section 5.8 names the test set and the thresholds (D-088). | Automatic evaluation of the Toolkit on a host computer. |
 | NFR-QLT-04 | Extraction, in practice: the owner chooses 10 real requests. At least 7 results are usable as a Sample in the owner's judgment (prov.). | Manual test by the owner. |

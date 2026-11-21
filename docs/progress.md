@@ -491,17 +491,21 @@ Notes:
 
 ```text
 TK-014  Review of the provisional values and of the Conditional decisions
-State: split into TK-014a (done) and TK-014b (next)
-Change: branch tk-014a, merged into main
+State: done (split into TK-014a and TK-014b); GATE-00 closed
+Change: branches tk-014a and tk-014b, merged into main
 Criteria:
   "Each check has its file of results": pass. docs/results/ holds build-18/, build-19/, V-02/, V-06/
     and TK-009-vocadito; docs/results/GATE-00.md lists them.
   "Each Conditional decision that rests on one of these checks has its new status": D-028, D-035,
-    D-038, D-041, D-046, D-047 and D-088 are accepted; D-040 and D-044 get new rows in TK-014b.
+    D-038, D-041, D-046, D-047 and D-088 are accepted; D-117 replaces D-044 and D-118 replaces D-040.
   "The limits and the sizes are reviewed": GATE-00.md Section 3. The limits of version 1.0 follow
     Q-21 (default: they stay until GATE-12).
-Documents: project_decisions.md 7.8, opus_implementation_guide.md 2.4
-Decisions: D-028, D-035, D-038, D-041, D-046, D-047, D-088 accepted; new D-116; questions Q-21, Q-22
+Documents: TK-014a: project_decisions.md 7.8, opus_implementation_guide.md 2.4. TK-014b:
+  requirements.md 2.1, technology_stack.md 2.13, architecture.md 2.9, feature_specifications.md 2.8,
+  ui_ux_specification.md 2.1, development_roadmap.md 2.7, risk_assessment.md 2.1,
+  opus_implementation_guide.md 2.5, project_decisions.md 7.9
+Decisions: D-028, D-035, D-038, D-041, D-046, D-047, D-088 accepted; new D-116, D-117 (replaces D-044),
+  D-118 (replaces D-040); questions Q-21, Q-22
 Owner: none. Q-21 and Q-22 have defaults.
 Notes:
   1. The owner chose pYIN (V-05) and left V-02 to the implementer. Both are recorded with the words of
@@ -509,4 +513,7 @@ Notes:
   2. docs/design/workspace-mockup/ holds the source of the mockup that the owner approved (D-116).
   3. Faults outside the task, in GATE-00.md Section 5: the label of the prototype of V-02, the exit
      code of the setup with the option "check", the place of the line of state of "Measurements".
+  4. D-118 keeps the MVP inside its scope: the calibration step is P1 (FR-REC-09), so the MVP takes
+     the gap that V-07 measured (19 ms) as the default of the offset. MT-07 checks it at GATE-07.
+  5. SwiftF0 and ONNX Runtime stay in the code and in the test build until TK-056 removes them.
 ```

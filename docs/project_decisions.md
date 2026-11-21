@@ -1,7 +1,7 @@
 # project_decisions.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 6 of 6 (handoff) · **Version:** 7.8 · **Date:** 2026-11-21
+**Stage:** 6 of 6 (handoff) · **Version:** 7.9 · **Date:** 2026-11-21
 **Change in 1.1:** feedback from the owner. The project runs no server. D-016 and D-017 are replaced. New: D-027 to D-032, A-14, A-15, AD-33, Q-13. Q-03 is answered.
 **Change in 2.0:** answers of the owner to Q-01, Q-02, Q-04, Q-12 and Q-13. Decisions of Stage 2: D-033 to D-052. Results of Stage 2 in Section 4.7. Tasks for the owner in Section 5.1.
 **Change in 2.1:** answers of the owner to Q-05 and Q-08. D-005 is replaced. New: D-053 to D-056 and Q-14. Tasks O-1 to O-3 changed.
@@ -22,6 +22,7 @@
 **Change in 7.5:** TK-002. The owner did O-7. The key for signing lies in `signing/minidaw.p12` on main, and the run "Build" publishes signed builds. Changed: O-7, the continuation point.
 **Change in 7.6:** the first results of PH-00 from build-18 lie in `docs/results/build-18/`. TK-002 is done. V-07 misses its rule; V-04 is measured again with the performance hint. Changed: the continuation point.
 **Change in 7.7:** TK-013 is done. The owner did O-1 and judged the results of V-06; they lie in `docs/results/V-06/`. Changed: O-1, the continuation point.
+**Change in 7.9:** TK-014b. D-117 replaces D-044 (pYIN, the choice of the owner); D-118 replaces D-040 (the correction of a Take that the loopback measured). GATE-00 is closed; PH-01 starts. Changed: the continuation point.
 **Change in 7.8:** TK-014a, the review of GATE-00 (`docs/results/GATE-00.md`). D-028, D-035, D-038, D-041, D-046, D-047 and D-088 are accepted. New: D-116 (the mockup of the workspace is the visual reference), Q-21, Q-22. Changed: the continuation point.
 **Companion documents:** `requirements.md` holds the requirements (`FR-`, `NFR-`), the constraints (`CON-`) and the analysis of the brief (`T-`, `U-`, `G-`). `technology_stack.md` holds the choices of technology with their reasons and the checks `V-01` to `V-08`. `architecture.md` holds the structure of the system and the details of D-057 to D-072. `ui_ux_specification.md` holds the layout and the behaviour of the interface. `feature_specifications.md` holds the behaviour of the features, the formats, the acceptance criteria (`AC-`) and the manual tests of the owner (`MT-`). `development_roadmap.md` holds the phases (`PH-`), the tasks (`TK-`) and the gates (`GATE-`). `risk_assessment.md` holds the risks (`RISK-`). `opus_implementation_guide.md` is the entry for the implementer.
 
@@ -72,11 +73,10 @@ State of the work:
 
 | Item | State |
 |---|---|
-| Phase | PH-00 in progress |
-| Last finished task | TK-014a, done: the review of GATE-00 in `docs/results/GATE-00.md`. Every check V-01 to V-07 has its files in `docs/results/`. D-028, D-035, D-038, D-041, D-046, D-047 and D-088 are accepted; D-116 makes the mockup of the workspace the visual reference. TK-001 to TK-013 are done. |
-| Next task | TK-014 |
-| Part of the next task | TK-014b: new rows for D-044 (pYIN, the choice of the owner) and D-040 (the calibration by loopback, the prepared answer of V-07), with every document that cites them; the palette of D-116 in `ui_ux_specification.md` Section 1.4; the note on the profile in MT-01; the risks; then GATE-00 closes and PH-01 starts with TK-015. |
-| Open gate | GATE-00. Conditions 1 and 3 hold; condition 2 holds when TK-014b has added the two new rows. Nothing waits for the owner; the typed values of V-01 (One UI, latency over Bluetooth, the battery saver) stay "not measured yet". |
+| Phase | PH-01 in progress. PH-00 is done: GATE-00 closed on 2026-11-21 (`docs/results/GATE-00.md`). |
+| Last finished task | TK-014, done in two parts: TK-014a reviewed every check and accepted D-028, D-035, D-038, D-041, D-046, D-047 and D-088; TK-014b replaced D-044 by D-117 (pYIN) and D-040 by D-118 (the correction of a Take) in every document, filled the palette of D-116 and renewed the risks. TK-001 to TK-014 are done. |
+| Next task | TK-015 |
+| Open gate | GATE-01, after TK-015 to TK-020. Nothing waits for the owner. Open for later gates: Q-21 (limits of version 1.0, GATE-12) and Q-22 (fidelity of the stem model, TK-068); the typed values of V-01 stay "not measured yet". |
 
 How to continue:
 
@@ -166,11 +166,11 @@ D-001 to D-032 come from Stage 1. They resolve the conflicts, unclear statements
 | D-037 | Android decodes imported files. The Library stores uncompressed WAV at 48 kHz: 16-bit for a Take, 32-bit float after processing. Short Samples stay in memory. A reader thread reads long audio ahead. | Accepted | Playback needs no decoder and no conversion of rate. The app ships no codec library. | AD-11, NFR-RES-02 |
 | D-038 | The sampler changes pitch with a windowed sinc of 8 taps and with pre-filtered copies of each instrument Sample. Cubic interpolation is the fall-back. | Accepted | V-04 (TK-014): the MVP passes with a mean load of 33.7 %. Version 1.0 misses the mean at 65.2 % because the audio thread runs on the small cores; cubic Voices would not reach the rule (question Q-21, `docs/results/GATE-00.md`). Very good quality at moderate cost. | AD-12, NFR-AUD-07 |
 | D-039 | Effects, Mixer and meters are own code after published algorithms. The project adopts no DSP framework. | Accepted | Small code. No licence risk. The rule "silence in, silence out" holds by construction. | AD-14, D-009 |
-| D-040 | A Take uses an Oboe input stream with the unprocessed preset. Timestamps of the streams correct its position. A calibration by loopback and a manual offset exist as well. | Conditional | Test: V-07. | AD-16, NFR-AUD-05 |
+| D-040 | A Take uses an Oboe input stream with the unprocessed preset. Timestamps of the streams correct its position. A calibration by loopback and a manual offset exist as well. | Replaced by D-118 | Test: V-07. It failed: the gap is 19 ms (TK-014). | AD-16, NFR-AUD-05 |
 | D-041 | The UI uses Jetpack Compose. Each editor draws on one canvas through `android.graphics.Canvas`. If V-02 fails, the shell moves to Views, and the editors keep their drawing code. | Accepted | V-02 (TK-014): the empty apps started in 166 ms (Views) and 172 ms (Compose), one start each. The owner stopped the further starts and left the choice to the implementer (`docs/results/GATE-00.md`). MT-01 measures the real app. Compose matches Views in scroll performance. Profiles reduce its cost at startup. | AD-01, NFR-PERF-01, NFR-PERF-07 |
 | D-042 | Startup tactics: one activity, no framework for dependency injection, Baseline Profile and Startup Profile, no library that starts itself, late start of the engine and of the streams. | Accepted | NFR-PERF-01 to -06. | AD-05 |
 | D-043 | A Project is one JSON document that is replaced atomically. The index of the Library is SQLite through Room. Audio files are named by the hash of their content. Settings use DataStore. | Accepted | The document equals the state in memory. A whole write is small. | AD-19, FR-PRJ-02, FR-LIB-06 |
-| D-044 | Humming: SwiftF0 through ONNX Runtime and an own pYIN in C++ are compared. Both use the same own code for Notes. The rule of V-05 picks the winner. Basic Pitch is out. Narrows D-031. | Conditional | Test: V-05. SwiftF0 leads the published benchmark. pYIN needs no runtime library. | AD-21, AD-22, NFR-QLT-01 |
+| D-044 | Humming: SwiftF0 through ONNX Runtime and an own pYIN in C++ are compared. Both use the same own code for Notes. The rule of V-05 picks the winner. Basic Pitch is out. Narrows D-031. | Replaced by D-117 | Test: V-05. The owner chose pYIN (TK-014). SwiftF0 leads the published benchmark. pYIN needs no runtime library. | AD-21, AD-22, NFR-QLT-01 |
 | D-045 | The phone calls the Claude API directly over HTTPS with OkHttp and kotlinx.serialization, behind one interface. The app uses no SDK. | Accepted | A few small calls. No SDK is confirmed for Android. A beta service must stay isolated. | AD-28, CON-18 |
 | D-046 | The Toolkit is Python: ONNX Runtime on the CPU, HTDemucs with 4 stems as an ONNX file, NumPy, SciPy and ffmpeg. The Toolkit and the model file are attached to each Session. | Accepted | V-06 (TK-014): the Toolkit runs in the Sandbox without PyTorch and gives the same stems as a host. The fidelity of the ONNX file to the original model is AC-AIX-10, rule 2 of `feature_specifications.md` Section 5.8, in TK-068 (question Q-22, `docs/results/GATE-00.md`). Small install without PyTorch. | AD-25, AD-27, D-032 |
 | D-047 | The agent has the tools shell, read and write. The Sandbox reaches only the package registries. Each Session has a budget of 0.30 USD (prov.). The small model tier is tried first. | Accepted | V-06 (TK-014): the small tier finished all its Sessions for at most 0.01 USD each, and the owner accepted the results (`docs/results/GATE-00.md`). | AD-26, NFR-COST-01, NFR-SEC-06 |
@@ -243,6 +243,8 @@ D-001 to D-032 come from Stage 1. They resolve the conflicts, unclear statements
 | D-114 | Rules of the owner for work that does not wait for answers (goal of 2026-11-21). A task that waits for the owner gets the state "blocked" or "delivered for the gate", together with the action that the owner must take. The implementer then takes the task with the smallest ID whose needed tasks are done or delivered for the gate. Each task has a branch of its own. A branch enters `main` only after a green run "Check". No push is forced, and `origin` is the only remote. A question goes into Section 5 with its default, and the work goes on. | Accepted | The owner asked for work that stops only where the owner must act. The gates of `development_roadmap.md` Section 7 still end each phase. | D-099, D-100, A-20, A-22 |
 | D-115 | A library or a tool that serves only the tests or the build may carry the licence EPL-2.0 or BSL-1.0, besides the licences of D-024. It never enters the app package, the Toolkit or the environment of the Sandbox. The list of licences marks it with the use `test` or `build`, and the script of the licences checks this. | Proposed | JUnit 5 (D-050) carries EPL-2.0. PyTorch, which runs the original model in the check V-06, includes parts under BSL-1.0. D-024 keeps a closed-source release possible; a tool that never ships does not touch it. The owner decides with Q-20. | Q-20, D-024, D-050, NFR-LEG-01 |
 | D-116 | The mockup in `docs/design/workspace-mockup/` is the visual reference of the workspace: global bar, Playlist with Piano roll, Channel Rack and the Mixer at half size, at 891 × 411 dp. Its 12 colours are the palette of `ui_ux_specification.md` Section 1.4. `ui_ux_specification.md` stays the source of sizes and behaviour; where the two differ, the specification holds. | Accepted | The owner looked at the mockup on 2026-11-21 and said: "Good it looks nice. I need that UX/UI." V-01 gave the window of 891 × 411 dp (TK-014). | D-076, D-041, FR-WS-07 |
+| D-117 | Humming uses an own pYIN in C++ with the own code for Notes. SwiftF0 and ONNX Runtime leave the app; TK-056 removes them from the code. Replaces D-044. | Accepted | The owner heard melody 1 of V-05 on build-18 and chose pYIN on 2026-11-21: "pYIN works the best, we can skip the choosing between in and the other one." pYIN had 2 wrong or extra Notes of 37 in 428 ms, SwiftF0 4 in 602 ms. On vocadito the F-measures were 0.641 and 0.659; the difference of 0.018 lies below 0.02, so rule 4 of `technology_stack.md` Section 8.2 also names pYIN. pYIN needs no runtime library of 34 MB. NFR-QLT-02 and NFR-PERF-09 are measured on the product in MT-12 (TK-014, `docs/results/GATE-00.md`). | D-044, D-031, D-087, AD-21, AD-22, NFR-QLT-01 |
+| D-118 | A Take uses an Oboe input stream with the unprocessed preset; the Reference device lacks this preset, and the stream opens all the same. The timestamps of both streams give the place of a Take (`feature_specifications.md` Section 4.2.2). The offset of the settings then has a default for each output route: the gap that the calibration by loopback measured between the timestamps and the true place. On the Reference device it is 19 ms for the speaker and for wired output; the Take moves 19 ms earlier. The calibration (P1, FR-REC-09) measures the gap again and replaces the default for its route. The manual offset stays. Bluetooth keeps its warning (NFR-AUD-05). Replaces D-040. | Accepted | V-07 on build-18: the timestamps and the loopback differ by 19.5 ms over the speaker and by 19.2 ms over wired headphones, against at most 10 ms; the gap stays between 18.8 and 19.5 ms over 16 clicks. The prepared answer of `development_roadmap.md` Section 7.3 makes the calibration by loopback the default for the speaker; the same gap over wired headphones extends it to wired output. The calibration step is P1, so the MVP takes the measured gap as its default; with it, every click of V-07 lies within 1 ms of the loopback. V-01: no preset UNPROCESSED (TK-014, `docs/results/GATE-00.md`). | D-040, D-035, D-087, AD-16, NFR-AUD-05, FR-REC-09 |
 
 ### 3.1 Notes on the decisions with the widest effect
 
@@ -504,9 +506,9 @@ Stage 2 compares the options and recommends. Stage 3 and Stage 4 fix the designs
 | Samples | AD-11 | D-037 | Layout of files and sizes of buffers: Stage 3 |
 | Sampler | AD-12 | D-038 | Exact filter and test signals: Stage 4 |
 | Effects | AD-14 | D-039 | Final catalog and parameters: Stage 4 |
-| Recording | AD-16 | D-040 | — |
+| Recording | AD-16 | D-040, replaced by D-118 | — |
 | Project on disk | AD-19 | D-043 | Schema of the document: Stage 3 |
-| Humming | AD-21, AD-22 | D-044 | Specification of the code for Notes: Stage 4 |
+| Humming | AD-21, AD-22 | D-044, replaced by D-117 | Specification of the code for Notes: Stage 4 |
 | Sources for extraction | AD-23 | D-015, D-045 | — |
 | Place of separation | AD-24 | D-028 with the test V-06 | Run of the test: first phase of development |
 | Toolkit | AD-25 | D-046 | Programs of the Toolkit in detail: Stage 4 |
@@ -708,3 +710,4 @@ No question blocks the work. Nine questions are open: Q-09, Q-10, Q-16, Q-17, Q-
 | 2026-11-21 | Development | Version 7.6. The first results of PH-00 (build-18). TK-002 is done. |
 | 2026-11-21 | Development | Version 7.7. TK-013 is done: the results of V-06. O-1 is done. |
 | 2026-11-21 | Development | Version 7.8. TK-014a: review of GATE-00. Seven Conditional decisions accepted. New: D-116, Q-21, Q-22. |
+| 2026-11-21 | Development | Version 7.9. TK-014b: D-117 replaces D-044, D-118 replaces D-040. GATE-00 is closed. |

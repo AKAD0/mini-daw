@@ -1,11 +1,12 @@
 # ui_ux_specification.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 4 of 6 (feature specifications) · **Version:** 2.0 · **Date:** 2026-11-20
+**Stage:** 4 of 6 (feature specifications) · **Version:** 2.1 · **Date:** 2026-11-21
 **Change in 1.1:** results of `feature_specifications.md`. Changed parts: Section 15.1 (entry Export), Section 15.4 (measurements), Section 16.3 (Hint for limited values).
 **Change in 1.2:** results of Stage 5. The screen "Measurements" also takes the verdicts of the owner (D-094). Changed part: Section 15.4.
 **Change in 1.3:** final check of Stage 6. Six functions of version 1.0 have their places on the screen (FR-TR-05, FR-SM-10, FR-CR-06, FR-LIB-02, FR-LIB-08, FR-H2M-13). Changed parts: Sections 3, 6.2, 7.1, 7.2, 8.1, 8.2 and 9.1.
 **Change in 2.0:** version 1.1 adds the Decomposer as a second main screen (D-104). New part: Section 19. Changed parts: convention 3, Sections 1.2, 2.2, 3 (Mode switch), 8.2, 13, 15.3, 16.2, 17 and 18.
+**Change in 2.1:** TK-014. The owner approved a mockup of the workspace; it is the visual reference (D-116), and its 12 colors fill the palette. Changed part: Section 1.4 (rules 1 and 8).
 **Companion documents:** `requirements.md`, `architecture.md`, `feature_specifications.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-` and `V-` point to them.
 
 ---
@@ -106,13 +107,14 @@ The theme is dark (NFR-UX-04).
 
 Rules:
 
-1. A palette of 12 colors serves Tracks, Mixer channels, Patterns and Sampler instruments. A new item takes the next color of the palette.
+1. A palette of 12 colors serves Tracks, Mixer channels, Patterns and Sampler instruments. A new item takes the next color of the palette. The colors, in this order (D-116): `#E8735A`, `#E0A030`, `#C9C24A`, `#6CC070`, `#3FB8A8`, `#4AA3DF`, `#6E7FE8`, `#A178E0`, `#D66BC2`, `#E0607E`, `#9C8F7A`, `#7FA0B0`.
 2. Sizes of text: 11 sp in dense places, 13 sp as the normal size, 16 sp for titles of sheets. Numbers use digits of equal width.
 3. Touch areas follow NFR-UX-02: 48 × 48 dp, or 40 × 40 dp inside dense strips.
 4. No state is shown by color alone. A muted Track also shows a crossed icon.
 5. Motion is short: at most 150 ms. Scroll and zoom have no animation. The app respects the system setting that removes animations.
 6. A light vibration marks a few events (list below).
 7. All text of the UI is English and lives in resource files (NFR-UX-05, D-026).
+8. The mockup in `docs/design/workspace-mockup/` is the visual reference of the workspace (D-116). This document stays the source of sizes and behaviour.
 
 Events with a light vibration:
 

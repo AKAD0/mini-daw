@@ -6,8 +6,9 @@ GATE-00 closes PH-00 (`development_roadmap.md` Section 7.2). Its conditions:
 2. Each Conditional decision that rests on one of these checks is confirmed or replaced (Section 7.3 there).
 3. The provisional limits and sizes are reviewed.
 
-TK-014 runs in two parts. TK-014a stores the results and gives the verdict on each decision (this file).
-TK-014b changes the documents for the two replaced decisions, renews the risks and closes the gate.
+TK-014 ran in two parts. TK-014a stored the results and gave the verdict on each decision (this file).
+TK-014b changed the documents for the two replaced decisions, renewed the risks and closed the gate
+(Section 6).
 
 Phone of every check: Samsung Galaxy A17, SM-A175F, Android 16 (API level 36).
 
@@ -31,9 +32,9 @@ Condition 1 holds: every check has its files.
 |---|---|---|---|
 | D-035: Oboe on AAudio, low latency, Exclusive with fall-back, float, 48 kHz | V-03 | Confirmed | The rule passes with and without the hint. The fall-back to Shared mode works. |
 | D-038: windowed sinc with 8 taps | V-04 | Confirmed | The MVP passes with margin. Version 1.0 misses the mean, but the prepared answer would not reach the rule: the Voices are 44 % of the kernel time, so cubic Voices at half the cost leave about 51 % (`build-19/summary.md`, finding 1). The gap comes from the small cores. The limits of version 1.0 follow question Q-21. |
-| D-040: timestamps correct a Take | V-07 | Replaced (TK-014b) | The prepared answer applies: the calibration by loopback becomes the default for the speaker. The manual offset stays. The same stable gap over wired headphones shapes the new row. |
+| D-040: timestamps correct a Take | V-07 | Replaced by D-118 | The prepared answer applies: the calibration by loopback becomes the default for the speaker. The manual offset stays. The same stable gap over wired headphones shapes the new row. |
 | D-041: Compose for the shell, editors on canvases | V-02 | Confirmed | The empty apps start 6 ms apart, against 150 ms allowed. The owner left the choice to the implementer. MT-01 measures the real app against the floor (AC-APP-01). |
-| D-044: compare SwiftF0 and pYIN by the rule of V-05 | V-05 | Replaced (TK-014b) | The owner chose pYIN. SwiftF0 and ONNX Runtime leave the app. |
+| D-044: compare SwiftF0 and pYIN by the rule of V-05 | V-05 | Replaced by D-117 | The owner chose pYIN. SwiftF0 and ONNX Runtime leave the app. |
 | D-028: a Session of Claude Managed Agents does the audio work | V-06 | Confirmed | About 1 to 1.5 min and at most 0.04 USD for a range of 40 s. |
 | D-046: Python Toolkit with HTDemucs as an ONNX file | V-06 | Confirmed, with the fidelity of the file left to AC-AIX-10 (question Q-22) | The Toolkit runs in the Sandbox without PyTorch and gives the same stems as a host. The rule on the original model failed, but its method shifts and joins the pieces otherwise and scores almost silent stems (`V-06/summary.md`, finding 2). Rule 2 of `feature_specifications.md` Section 5.8 measures the fidelity without these faults. It is AC-AIX-10 of TK-068, the first task of PH-10; no code before PH-10 depends on the file. |
 | D-047: shell, read and write; limited network; 0.30 USD; small tier first | V-06 | Confirmed | The small tier finished all its Sessions for at most 0.01 USD each, and the owner accepted the results. |
@@ -43,10 +44,10 @@ Accepted decisions that the checks also measured:
 
 1. D-062 (Snapshots): compile and load take less than 0.4 ms against 5 ms. It holds.
 2. D-067 (streams open late): the output opens in at most 70 ms. A Take waits up to 191 ms for its first input callback; the Take is placed by its timestamps and its offset, not by the moment its stream started. It holds.
-3. D-073 (builds from a download): such a build starts without its compiled profile. The prepared answer of V-02 applies to this part: the test build shows the state of the profile, and MT-01 counts only after the profile is compiled (TK-014b writes this into MT-01).
+3. D-073 (builds from a download): such a build starts without its compiled profile. The prepared answer of V-02 applies to this part: the test build shows the state of the profile, and MT-01 counts only after the profile is compiled (TK-014b wrote this into MT-01).
 4. D-001 (Reference device): the phone is the variant with 8 GB of RAM. The design keeps the weaker values of D-001; they leave room.
 
-Condition 2 holds when TK-014b has added the two new rows.
+Condition 2 holds: TK-014b added D-117 and D-118.
 
 ## 3. Limits and sizes
 
@@ -66,7 +67,7 @@ Condition 3 holds.
 The owner looked at a mockup of the workspace at 891 × 411 dp and said: "Good it looks nice. I need that
 UX/UI." It lies in `docs/design/workspace-mockup/`. D-116 makes it the visual reference of the workspace. The
 specification stays the source of sizes and behaviour. The mockup names the 12 colours of the palette that
-`ui_ux_specification.md` Section 1.4, rule 1, leaves unnamed; TK-014b writes them there.
+`ui_ux_specification.md` Section 1.4, rule 1, left unnamed; TK-014b wrote them there.
 
 ## 5. Faults found outside the task
 
@@ -75,3 +76,16 @@ specification stays the source of sizes and behaviour. The mockup names the 12 c
 3. The screen "Measurements" shows its line of state far from the buttons it reports on.
 
 None of them blocks a task of PH-01. Each is repaired when its code is next changed.
+
+## 6. Closing (TK-014b)
+
+1. D-117 replaces D-044: pYIN with the own code for Notes. SwiftF0 and ONNX Runtime leave the code in TK-056.
+2. D-118 replaces D-040. The place of a Take comes from the timestamps and a default correction for each
+   output route, the gap that the loopback measured: 19 ms on the Reference device for the speaker and for
+   wired output. The calibration (P1) measures it again. MT-07 checks the result.
+3. Documents changed: `requirements.md` 2.1, `technology_stack.md` 2.13, `architecture.md` 2.9,
+   `feature_specifications.md` 2.8, `ui_ux_specification.md` 2.1, `development_roadmap.md` 2.7,
+   `risk_assessment.md` 2.1, `opus_implementation_guide.md` 2.5, `project_decisions.md` 7.9.
+4. Risks with new ratings: RISK-08 (9 to 6), RISK-09, RISK-14, RISK-15 and RISK-22 (each to 2).
+5. All three conditions hold. GATE-00 is closed on 2026-11-21, and PH-01 starts with TK-015.
+

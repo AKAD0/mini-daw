@@ -1,7 +1,7 @@
 # architecture.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 3 of 6 (architecture) · **Version:** 2.8 · **Date:** 2026-11-21
+**Stage:** 3 of 6 (architecture) · **Version:** 2.9 · **Date:** 2026-11-21
 **Change in 1.1:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 1.1, Section 10.5, Section 15, Section 16.5.
 **Change in 1.2:** results of Stage 4. The index of the Library also holds the length of the song of each Project. Changed parts: Section 8.2 (table `project`), Section 16.4 (closing note).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: the module `:ui:decomposer`, Section 10.7, Section 16.6. Changed parts: Sections 1.1, 2.1, 2.2, 2.3, 6.1, 6.2, 6.4, 7, 11.4, 12.1, 12.3, 13.2, 14 and 15.
@@ -13,6 +13,7 @@
 **Change in 2.6:** TK-006. Section 12.2 adds the function for the check V-07.
 **Change in 2.7:** TK-007. Section 5.2 names the prototype of the bytes of a Snapshot.
 **Change in 2.8:** TK-010. Section 2.1 names the module of both pitch candidates for the test build.
+**Change in 2.9:** TK-014. pYIN is the pitch method (D-117), and a Take gets the correction that the loopback measured (D-118). Changed parts: Sections 2.1, 5.8, 9 and 12.1.
 **Companion documents:** `requirements.md`, `technology_stack.md` and `project_decisions.md` in their newest versions. `feature_specifications.md` and `ui_ux_specification.md` hold the details of Stage 4. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-`, `Q-` and `V-` point to them.
 
 ---
@@ -130,7 +131,7 @@ Rules for dependencies:
 
 The app uses no library for navigation. The shell shows the workspace or, from version 1.1 on, the Decomposer (Section 6).
 
-Apps for the checks of PH-00 (TK-004): the check V-02 needs two empty apps of its own, `:checkapps:views` and `:checkapps:compose`. They are no part of the product, use no module of the product, and share one source file in `checkapps/shared`. The second app also holds the prototype of the workspace. The script of the rules for dependencies knows both. A third module, `:checkapps:humming` (TK-010), holds both pitch candidates of V-05 with ONNX Runtime. It compiles `analysis-core` and SwiftF0 and is a dependency of the build type `measure` of `:app` only, so the release build carries no ONNX Runtime while D-044 is open.
+Apps for the checks of PH-00 (TK-004): the check V-02 needs two empty apps of its own, `:checkapps:views` and `:checkapps:compose`. They are no part of the product, use no module of the product, and share one source file in `checkapps/shared`. The second app also holds the prototype of the workspace. The script of the rules for dependencies knows both. A third module, `:checkapps:humming` (TK-010), holds both pitch candidates of V-05 with ONNX Runtime. It compiles `analysis-core` and SwiftF0 and is a dependency of the build type `measure` of `:app` only, so the release build carries no ONNX Runtime. V-05 named pYIN (D-117); TK-056 removes SwiftF0 and ONNX Runtime from this module.
 
 ### 2.2 Diagram of the modules
 
@@ -608,13 +609,13 @@ Rules at the cap for memory (NFR-RES-02):
 2. Short Audio clips then play through Streamers.
 3. A Sampler instrument whose Sample still does not fit stays silent. The app shows a message.
 
-### 5.8 Path of a Take (D-040, D-065)
+### 5.8 Path of a Take (D-118, D-065)
 
 1. The Stream manager opens the input stream when a Take starts.
 2. The input callback copies each block into the ring buffer of the Take.
 3. The writer thread moves the data into a WAV file. It flushes the file every second.
 4. The engine notes three values for the first captured frame, and again for the last one (list below).
-5. When the Take ends, `:core` computes the start of the Take on the timeline. It uses the values of the first frame and the offset from the settings.
+5. When the Take ends, `:core` computes the start of the Take on the timeline. It uses the values of the first frame and the offset from the settings. The offset has a default for each output route: the correction that the calibration by loopback measured (D-118).
 6. The import turns the file into a Sample of the Library (Section 8.4).
 
 Values that the engine notes for the first and for the last captured frame:
@@ -910,7 +911,7 @@ Steps:
 
 1. The Take ends (Section 5.8). The import turns it into a Sample (FR-H2M-06).
 2. `HummingConverter` reads the file piece by piece on a worker thread. It reduces the rate to the rate that the method needs.
-3. The detection of pitch gives pitch, confidence and loudness per frame (D-044). The result goes into the cache.
+3. The detection of pitch gives pitch, confidence and loudness per frame (D-117). The result goes into the cache.
 4. The code for Notes cuts this curve into Notes with times in seconds. It also estimates how far the singer is from standard tuning (FR-H2M-09).
 5. `:core` turns this result into Notes of the Project (list below).
 6. One Edit adds the Pattern, its Part and its Notes. One undo removes them together.
@@ -926,11 +927,11 @@ Work of `:core` in step 5:
 Rules:
 
 1. Every step runs on the phone, without a network (FR-H2M-02, NFR-SEC-03).
-2. The native library of `:analysis` loads at the first conversion. If SwiftF0 wins the check V-05, ONNX Runtime loads at the same moment.
+2. The native library of `:analysis` loads at the first conversion. It needs no runtime library, because pYIN won the check V-05 (D-117).
 3. The conversion shows progress, and the user can cancel it (NFR-PERF-08).
 4. A new run with other settings reads the pitch curve from the cache. Only steps 4 to 6 run again (FR-H2M-10).
 5. The detection of the Root note of a Sample uses step 3 as well (FR-SM-02).
-6. Both candidates of D-044 sit behind one interface, `PitchDetector`. The candidate that loses V-05 leaves the code.
+6. pYIN sits behind the interface `PitchDetector` (D-117). SwiftF0, the candidate that lost V-05, leaves the code in TK-056.
 
 ---
 
@@ -1333,7 +1334,7 @@ In words: one flow in `:core` runs the steps. The UI only starts and stops it an
 | `ProjectBuilder` | `:core`, as a function | — | Flow "Project from a result" | Build the state of a new Project from a result, the Notes of the bass and the settings of the review (version 1.1) |
 | `ClaudeApi` | `:extraction` | `:extraction`; a fake for tests | Runner | Calls of Section 10.3 |
 | `SourceReader` | `:extraction` | `:extraction` | Runner | Open a source as a local file, within limits for size and type |
-| `PitchDetector` | `:analysis`, in C++ | The two candidates of D-044 | `HummingConverter` | Pitch, confidence and loudness per frame |
+| `PitchDetector` | `:analysis`, in C++ | pYIN (D-117) | `HummingConverter` | Pitch, confidence and loudness per frame |
 
 Rules for all interfaces:
 

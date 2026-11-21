@@ -1,7 +1,7 @@
 # feature_specifications.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 4 of 6 (feature specifications) · **Version:** 2.7 · **Date:** 2026-11-21
+**Stage:** 4 of 6 (feature specifications) · **Version:** 2.8 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 5. Each criterion now belongs to one task of `development_roadmap.md`. Changed criteria: AC-TR-06, AC-TR-09, AC-MX-08, AC-MX-09, AC-FX-04, AC-FX-12, AC-AIX-03. New criterion: AC-TR-14. Changed parts: Section 9 (rules, MT-08), Section 10 (places of the checks).
 **Change in 1.2:** final check of Stage 6. Each criterion was compared with its requirements, and each task of `development_roadmap.md` with its criteria. New criteria: AC-APP-19 to AC-APP-21, AC-TR-15, AC-PL-17 to AC-PL-21, AC-PT-10, AC-PT-11, AC-LIB-10 to AC-LIB-12, AC-MX-21, AC-FX-17, AC-REC-15 to AC-REC-18, AC-H2M-16, AC-H2M-17. Changed criteria: AC-WS-10, AC-APP-01, AC-APP-05, AC-APP-16, AC-TR-08, AC-TR-12, AC-PL-09, AC-CR-10, AC-SM-01, AC-LIB-07, AC-MX-13, AC-MX-20, AC-FX-10, AC-FX-12, AC-REC-12, AC-H2M-08, AC-H2M-10, AC-H2M-12, AC-AIX-04 to AC-AIX-06, AC-AIX-13, AC-AIX-15, AC-AIX-16, AC-AIX-18, AC-FS-06. Changed manual tests: MT-01, MT-14. Changed parts: the conventions (rule for the mark "P1:", D-102), Sections 1.1, 2.2.1, 2.2.2, 2.2.6, 4.2.6 and 5.3, Section 10 (place of NFR-MNT-07), Section 11 (source F6).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: Section 12 with the criteria AC-DEC-01 to AC-DEC-33, Section 6.11, the manual test MT-21, the sources F7 to F9. Changed parts: the conventions 3, 9 and 12, Section 4.2.7 (low register), Section 5.2.8 (rule 5), Section 6.5 (version 2), Section 6.6 (schema 2), Section 9 (MT-13, MT-14), Section 10 (FR-AIX-18, FR-DEC-24).
@@ -12,6 +12,7 @@
 **Change in 2.5:** TK-011 added the details of `separate` and `quick`. Changed part: Section 5.2.5.
 **Change in 2.6:** TK-012 named the details of the setup script. Changed part: Section 5.2.8.
 **Change in 2.7:** TK-003 added values that the owner types and values without a pass rule to the file of results. Changed part: Section 6.12.
+**Change in 2.8:** TK-014. pYIN is the pitch method (D-117). A Take gets the correction that the loopback measured (D-118). MT-01 starts after the profile is compiled (V-02). Changed parts: Sections 4.2.1, 4.2.2, 4.2.4, 4.3, 6.5, 9 (MT-01, MT-07) and 12.2.6.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `ui_ux_specification.md`, `development_roadmap.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-` and `V-` point to them.
 
 ---
@@ -1007,7 +1008,7 @@ The interface is in `ui_ux_specification.md` Section 9.
 
 | Topic | Rule |
 |---|---|
-| Input | One channel at 48 kHz from the input stream with the unprocessed preset (D-040) |
+| Input | One channel at 48 kHz from the input stream with the unprocessed preset (D-118) |
 | File | WAV, 16-bit, one channel. The writer thread flushes it every second (`architecture.md` Section 5.8). |
 | Conversion to 16-bit | Rounding to the nearest value. No noise is added (NFR-SMP-01). |
 | Limits | 10 min for the target "Audio", 2 min for the target "Humming" (FR-REC-06) |
@@ -1023,7 +1024,7 @@ Place of the Audio clip for the target "Audio" (FR-REC-02):
 3. The Clip lies on the selected Track when its span is free there.
 4. Otherwise the Edit adds a new Track with a new Mixer channel.
 
-#### 4.2.2 Place of a Take in time (D-040, D-087)
+#### 4.2.2 Place of a Take in time (D-118, D-087)
 
 The streams report pairs of a frame number and a time on the same clock.
 
@@ -1033,11 +1034,11 @@ Steps:
 2. The engine takes a pair of the output stream: the frame `Fo` plays at the time `To`.
 3. The output frame that the user heard at `T0` is `F0 = Fo + (T0 − To) × 48000`.
 4. The engine knows the position of the Transport for every output frame. The position at `F0` is the start of the Take in Ticks.
-5. `:core` adds the offset from the settings. The offset is a number of milliseconds with a sign (FR-REC-09).
+5. `:core` adds the offset from the settings. The offset is a number of milliseconds with a sign (FR-REC-09). Its default for the speaker and for wired output is the correction of D-118: the Take moves 19 ms earlier on the Reference device. A calibration (P1) replaces the default for its route.
 
 Rules:
 
-1. The check V-07 compares this method with a calibration by loopback (D-040).
+1. The check V-07 compared steps 1 to 4 with a calibration by loopback. On the Reference device, steps 1 to 4 placed each click 18.8 to 19.5 ms later than the loopback, over the speaker and over wired headphones. The default of step 5 removes this gap (D-118).
 2. With Bluetooth output the app gives no promise and shows a warning (NFR-AUD-05).
 3. The engine repeats steps 1 to 3 for the last frame of the Take. The difference between the two results and the length of the Take is the drift.
 4. A drift above 10 ms is stored with the Sample, and a Hint tells the user.
@@ -1052,9 +1053,9 @@ Rules:
 
 Steps 1 to 3 run in the native library of `:analysis`. Step 4 runs in `:core`.
 
-#### 4.2.4 Pitch per frame (D-044)
+#### 4.2.4 Pitch per frame (D-117)
 
-Both candidates deliver the same three values per frame.
+Both candidates of the check V-05 deliver the same three values per frame. The app uses pYIN (D-117).
 
 | Value | Meaning |
 |---|---|
@@ -1072,8 +1073,8 @@ Both candidates deliver the same three values per frame.
 
 Rules:
 
-1. Both candidates sit behind the interface `PitchDetector`. The code for Notes does not know which one runs.
-2. The check V-05 picks one candidate and sets the final value of the lowest confidence.
+1. pYIN sits behind the interface `PitchDetector`. The code for Notes does not know which method runs. SwiftF0 leaves the code in TK-056; its column and its details below stay as the record of V-05.
+2. The check V-05 picked pYIN (D-117). The lowest confidence keeps its start value of 0.5 until TK-059 tunes the start values with the recordings.
 3. The result of this step is stored in the cache (Section 6.5). A second run with other settings reads it from there.
 4. Both candidates compute the loudness the same way: the level of the 32 ms of audio centered on the frame. Frame i lies at the time i × 16 ms.
 
@@ -1190,11 +1191,10 @@ If the user cancels the conversion, no Edit happens either. The Take stays in th
 
 | Need | Choice | Source |
 |---|---|---|
-| Input stream | Oboe on AAudio | D-035, D-040 |
+| Input stream | Oboe on AAudio | D-035, D-118 |
 | File of a Take | Own WAV code in the engine | `technology_stack.md` Section 5.6 |
-| Pitch, first candidate | SwiftF0 with ONNX Runtime for Android | D-044 |
-| Pitch, second candidate | Own pYIN in C++ with an FFT library | D-044, `technology_stack.md` Section 5.2 |
-| Code for Notes | Own C++ code in `:analysis` | D-044 |
+| Pitch | Own pYIN in C++ with an FFT library | D-117, `technology_stack.md` Section 5.2 |
+| Code for Notes | Own C++ code in `:analysis` | D-117 |
 | Mapping to the Project | Own Kotlin code in `:core` | `architecture.md` Section 9 |
 | Evaluation on a host | The public set vocadito and a public tool for the metric of NFR-QLT-01 | `technology_stack.md` Section 8 |
 
@@ -1892,7 +1892,7 @@ Rule for a copy: a low-pass filter with 63 taps removes the upper half of the sp
 
 | Part | Content |
 |---|---|
-| Header | Mark `MDF0`. Version u16. Candidate u16: 1 is SwiftF0, 2 is pYIN. Step in microseconds u32. Count of frames u32. Hash of the Sample: 32 bytes. |
+| Header | Mark `MDF0`. Version u16. Candidate u16: 2 is pYIN; 1 (SwiftF0) is no longer written (D-117). Step in microseconds u32. Count of frames u32. Hash of the Sample: 32 bytes. |
 | Frame | Frequency f32. Confidence f32. Loudness f32. |
 
 Version 1.1 raises the version of this file to 2. The header then ends with one more field: the register as u16, where 0 is normal and 1 is low (Section 12.2.6). A file of the version 1 is built again.
@@ -2318,13 +2318,13 @@ Rules:
 
 | ID | Test | Steps | Pass rule | Covers |
 |---|---|---|---|---|
-| MT-01 | Startup | Start "Startup" and follow its steps: close the app in the list of recent apps, wait 5 s and open it, 10 times. Then leave with the Back gesture and open it, 10 times. Then press Home and return, 10 times. The build records each start. | First frame of a cold start: median at most 800 ms, 9 of 10 at most 1,200 ms. This median lies at most 300 ms above the empty app of the check V-02. Usable: median at most 1,500 ms. Warm start: at most 500 ms. Return: at most 200 ms. | NFR-PERF-01, NFR-PERF-02, NFR-PERF-03 |
+| MT-01 | Startup | Start "Startup" when the build shows that its profile is compiled; a build from a download starts without it (V-02). Follow its steps: close the app in the list of recent apps, wait 5 s and open it, 10 times. Then leave with the Back gesture and open it, 10 times. Then press Home and return, 10 times. The build records each start. | First frame of a cold start: median at most 800 ms, 9 of 10 at most 1,200 ms. This median lies at most 300 ms above the empty app of the check V-02. Usable: median at most 1,500 ms. Warm start: at most 500 ms. Return: at most 200 ms. | NFR-PERF-01, NFR-PERF-02, NFR-PERF-03 |
 | MT-02 | Frame timing | Start "Frames". The build loads the standard test Project and scrolls and zooms both editors for 30 s. | At most 5 % slow frames | NFR-PERF-07 |
 | MT-03 | Load of the engine | Open the diagnostics view. Then start "Engine". The build plays the standard test Project for 10 min with the screen on. A second run lasts 30 min. | The view names the low-latency path, 48 kHz and a buffer of two Bursts. No Underrun. Mean load at most 50 %. 99 of 100 blocks at most 80 %. | NFR-AUD-01, NFR-AUD-02, NFR-AUD-08, NFR-RES-07 |
 | MT-04 | Tap to sound | Start "Tap". Tap the pad 20 times close to the microphone. The build measures the time between the tap and the sound. | At most 10 ms above the floor of the phone from the check V-01 | NFR-AUD-03 |
 | MT-05 | Edit to sound | Start "Edit". The build applies Edits during playback and measures the time until each is active. | At most 50 ms plus the latency of the output | NFR-AUD-13 |
 | MT-06 | Start of a Take | Start "Record". Tap Record 10 times. The build measures the time to the first captured frame. | 9 of 10 at most 250 ms | NFR-PERF-04 |
-| MT-07 | Place of a Take | Start "Loopback". The Project plays clicks. The microphone records them. Run it once with the speaker and once with wired headphones held to the microphone. | Each click within 10 ms of its true place. Both methods of D-040 differ by at most 10 ms. | NFR-AUD-05 |
+| MT-07 | Place of a Take | Start "Loopback". The Project plays clicks. The microphone records them. Run it once with the speaker and once with wired headphones held to the microphone. | Each click within 10 ms of its true place. The timestamps with the default correction of D-118 and the loopback differ by at most 10 ms. | NFR-AUD-05 |
 | MT-08 | Playhead, Steps and meters by eye | Play a Pattern with a hit on every beat and the metronome. Watch the playhead, the lit Step and the meters. | The playhead crosses a bar line with the click. The lit Step moves with the hits. The meters move with the sound. | FR-TR-10, FR-CR-10, FR-MX-07 |
 | MT-09 | Clicks by ear | Wear headphones. Play, stop, move the playhead. Mute, solo, move faders and pans. Switch every bypass. Turn every knob. Assign a Track to another channel. | No click and no crackle | NFR-AUD-06, FR-MX-13, FR-FX-06 |
 | MT-10 | Audio devices and audio focus | During playback: plug in and remove USB-C headphones, connect Bluetooth headphones, start music in another app, take a call. | The sound returns within 1 s. Playback pauses when headphones leave and when the focus is lost. No crash. | NFR-AUD-10, NFR-AUD-14 |
@@ -2535,7 +2535,7 @@ The phone makes the Notes of the bass. It uses the conversion of Section 4.2.3 w
 |---|---|
 | Low register | Step 1 of the conversion reduces the audio to 32 kHz and passes it on as audio of 16 kHz. Every pitch then lies one octave higher. Steps 2 and 3 run unchanged. |
 | Back to the true values | Each Note gets twice its start and twice its length. Its pitch falls by 12 semitones. |
-| Range of pitch | 23.5 to 1,047 Hz with SwiftF0. 30 to 1,047 Hz with the own pYIN (Section 4.2.4). |
+| Range of pitch | 30 to 1,047 Hz with the own pYIN (Section 4.2.4). |
 | Input | The stem of the bass, as a Sample of the Library |
 | Cache | The curve of the pitch is stored as in Section 6.5. Its header names the register. |
 | Sample of the bass | The longest Note whose pitch stays within 30 cents (prov.) on the curve of the pitch. The flow cuts it out of the stem: at most 2 s, with fades of 5 ms. |

@@ -1,8 +1,9 @@
 # risk_assessment.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 5 of 6 (roadmap) · **Version:** 2.0 · **Date:** 2026-11-20
+**Stage:** 5 of 6 (roadmap) · **Version:** 2.1 · **Date:** 2026-11-21
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: RISK-23 and RISK-24 (Sections 4.12 and 4.13), the row V-08 in Section 5. Changed parts: the conventions 3 and 4, RISK-18 (cause 5, reviews), RISK-21 (cause 1, mitigation 4), Section 6. The phases PH-16 to PH-18 watch ten of the earlier risks too.
+**Change in 2.1:** TK-014, the review of GATE-00. New ratings: RISK-08, RISK-09, RISK-14, RISK-15 and RISK-22. Notes on RISK-01 and RISK-07. Changed parts: Section 2, Sections 3.1, 3.7, 3.8, 3.9, 4.3, 4.4 and 4.11.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `development_roadmap.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-`, `V-`, `MT-`, `PH-` and `GATE-` point to them.
 
 ---
@@ -80,25 +81,25 @@ The score of a risk is its likelihood times its weight. It runs from 1 to 9.
 | RISK-05 | Memory consumption | Medium | High | 6 | V-01, MT-17 |
 | RISK-06 | Sample pitch shifting and playback quality | Medium | Medium | 4 | V-04, MT-15 |
 | RISK-07 | Accuracy of humming-to-MIDI conversion | High | High | 9 | V-05, MT-12 |
-| RISK-08 | Quality of source separation | High | High | 9 | V-06, MT-16 |
-| RISK-09 | Claude API limitations and costs | Medium | Medium | 4 | V-06, MT-16 |
+| RISK-08 | Quality of source separation | Medium | High | 6 | V-06, MT-16 |
+| RISK-09 | Claude API limitations and costs | Low | Medium | 2 | V-06, MT-16 |
 | RISK-10 | Network dependency | Medium | Low | 2 | MT-13, MT-16 |
 | RISK-11 | Android background execution restrictions | High | Low | 3 | MT-11, MT-16 |
 | RISK-12 | Size of the own engine; faults on the audio thread | Medium | High | 6 | V-04, MT-03, MT-19 |
 | RISK-13 | Two languages meet at the Snapshot | Medium | Medium | 4 | V-04, MT-05 |
-| RISK-14 | Startup time | Medium | Medium | 4 | V-02, MT-01 |
-| RISK-15 | Workflow without a computer that has the Android build tools | High | Medium | 6 | V-02 |
+| RISK-14 | Startup time | Low | Medium | 2 | V-02, MT-01 |
+| RISK-15 | Workflow without a computer that has the Android build tools | Low | Medium | 2 | V-02 |
 | RISK-16 | The implementer is an AI model | Medium | High | 6 | MT-09, MT-14 |
 | RISK-17 | Secrets and untrusted input | Medium | High | 6 | V-06, MT-16 |
 | RISK-18 | Licences and terms | Medium | Medium | 4 | V-05, V-06 |
 | RISK-19 | Loss of data | Low | High | 3 | MT-11, MT-19 |
 | RISK-20 | Small screen and touch | Medium | Medium | 4 | V-01, MT-14 |
 | RISK-21 | Size of the plan | High | Medium | 6 | MT-19 |
-| RISK-22 | Unknown facts of the phone and of its system | Medium | Medium | 4 | V-01, V-03, MT-10 |
+| RISK-22 | Unknown facts of the phone and of its system | Low | Medium | 2 | V-01, V-03, MT-10 |
 | RISK-23 | Quality of a decomposition into Notes | High | Medium | 6 | V-08, MT-21 |
 | RISK-24 | Size and time of a Decomposition job | Medium | Medium | 4 | V-08, MT-21 |
 
-The two largest risks are RISK-07 and RISK-08. Both belong to the two features that turn sound into something else. Both get a check in the first phase, before any other work depends on them.
+The two largest risks were RISK-07 and RISK-08. Both belong to the two features that turn sound into something else. Both got a check in the first phase, before any other work depends on them. After the review of GATE-00, RISK-07 stays the largest; RISK-08 fell to 6 (Section 3.8).
 
 ---
 
@@ -129,7 +130,9 @@ Mitigations in the design:
 3. The output stream opens at the first touch, not at the first sound (D-067).
 4. The targets are relative to the floor of the phone, not absolute (NFR-AUD-03).
 5. Events lie on exact frames. A program verifies it (D-081, AC-TR-01).
-6. A Take gets its place from the timestamps of both streams. A calibration and a manual offset exist as well (D-040, D-087).
+6. A Take gets its place from the timestamps of both streams and a correction for each route that the loopback measured. A calibration (P1) and a manual offset exist as well (D-118, D-087).
+
+Review of GATE-00 (TK-014, `docs/results/GATE-00.md`): V-03 passed. V-07 found a stable gap of 18.8 to 19.5 ms between the timestamps and the loopback, over the speaker and over wired headphones. D-118 removes it. The rating stays until MT-07.
 7. The telemetry carries the time at which the output plays a position. The playhead follows what is heard (`architecture.md` Section 5.10).
 
 Mitigations in the plan:
@@ -389,7 +392,9 @@ Effects:
 
 Mitigations in the design:
 
-1. Two pitch candidates with one shared code for Notes. A rule picks the winner (D-044).
+1. Two pitch candidates with one shared code for Notes. V-05 picked pYIN (D-117).
+
+Review of GATE-00 (TK-014, `docs/results/GATE-00.md`): vocadito gave an F-measure of 0.641 for pYIN; the owner hummed one melody and chose pYIN. The rating stays until MT-12.
 2. Every parameter of the code for Notes is a named constant with a start value (D-087).
 3. The result opens in the Piano roll at once. A correction costs a few taps (FR-H2M-05).
 4. The Take is kept, so a second run with other settings is possible (FR-H2M-06, FR-H2M-10).
@@ -417,7 +422,7 @@ Watched by: V-05, MT-12. Phases: PH-00, PH-08, PH-14.
 
 ### 3.8 RISK-08: quality of source separation
 
-Rating: likelihood high, weight high.
+Rating: likelihood medium, weight high. Before the review of GATE-00: likelihood high. V-06: the owner accepted the results of 10 Sessions; the fidelity of the model file waits for AC-AIX-10 (Q-22) (TK-014, `docs/results/GATE-00.md`).
 
 Causes:
 
@@ -459,7 +464,7 @@ Watched by: V-06, MT-16. Phases: PH-00, PH-10, PH-16.
 
 ### 3.9 RISK-09: Claude API limitations and costs
 
-Rating: likelihood medium, weight medium.
+Rating: likelihood low, weight medium. Before the review of GATE-00: likelihood medium. V-06: 10 of 10 Sessions within about 1.5 min, at most 0.04 USD against 0.30 USD (TK-014, `docs/results/GATE-00.md`).
 
 Causes:
 
@@ -664,7 +669,7 @@ Watched by: V-04, MT-05. Phases: PH-00, PH-01, PH-04.
 
 ### 4.3 RISK-14: startup time
 
-Rating: likelihood medium, weight medium.
+Rating: likelihood low, weight medium. Before the review of GATE-00: likelihood medium. V-02: the empty apps start in 166 ms (Views) and 172 ms (Compose), far below 800 ms (TK-014, `docs/results/GATE-00.md`).
 
 Causes:
 
@@ -702,7 +707,7 @@ Watched by: V-02, MT-01. Phases: PH-00, PH-03, PH-09, PH-18.
 
 ### 4.4 RISK-15: workflow without a computer that has the Android build tools
 
-Rating: likelihood high, weight medium.
+Rating: likelihood low, weight medium. Before the review of GATE-00: likelihood high. PH-00: the run "Build" published each build on the page of releases, and the owner installed build-18 and build-19 from there (TK-002) (TK-014, `docs/results/GATE-00.md`).
 
 Causes:
 
@@ -980,7 +985,7 @@ Watched by: MT-19. Phases: PH-09, PH-13, PH-15, PH-18.
 
 ### 4.11 RISK-22: unknown facts of the phone and of its system
 
-Rating: likelihood medium, weight medium.
+Rating: likelihood low, weight medium. Before the review of GATE-00: likelihood medium. V-01 and V-03 recorded the facts; three typed values are not measured yet (TK-014, `docs/results/GATE-00.md`).
 
 Causes:
 

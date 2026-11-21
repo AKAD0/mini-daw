@@ -1,7 +1,7 @@
 # development_roadmap.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 5 of 6 (roadmap) · **Version:** 2.6 · **Date:** 2026-11-21
+**Stage:** 5 of 6 (roadmap) · **Version:** 2.7 · **Date:** 2026-11-21
 **Change in 1.1:** final check of Stage 6. The 22 new criteria of `feature_specifications.md` 1.2 have their tasks. The pointers to `opus_implementation_guide.md` name its sections. The run "Build" checks the size of the release build. Changed parts: Sections 2.1, 2.3, 2.6, 6.1, 6.3, 6.5 to 6.10, 6.13 to 6.15, 8.2, 9.1, 9.2 and 10.
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). The implementer works on the computer of the owner (D-103). New parts: Section 3.5, the phases PH-16 to PH-18 (Sections 6.17 to 6.19) with the tasks TK-100 to TK-115, the gates GATE-16 to GATE-18, Section 7.4, the milestone M6. Changed parts: Sections 1.1, 1.2, 2.1, 2.3, 2.5, 2.7, 3.1, 3.4, 4.1, 4.2, 4.3, 6.1 (objectives, TK-014), 7.2, 8.1, 8.2, 9.1 and 10.
 **Change in 2.1:** TK-001. Section 2.1 names the list of licences and `CLAUDE.md`. Section 2.3 names the one command and its behaviour when a tool is missing.
@@ -10,6 +10,7 @@
 **Change in 2.4:** TK-012. Section 2.3 names the scripts of the setup and of the Sandbox test.
 **Change in 2.5:** TK-013. Section 2.3 names the workflow of the Sandbox test.
 **Change in 2.6:** TK-003. Section 6.1 says where each value of V-01 comes from.
+**Change in 2.7:** TK-014. The review of GATE-00 replaced D-040 by D-118 and D-044 by D-117. Changed parts: Sections 6.8 and 6.9 (technical dependencies), Section 7.3 (V-05, V-07), Section 10 (open point 5).
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `risk_assessment.md`, `opus_implementation_guide.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `D-`, `V-`, `AC-`, `MT-` and `RISK-` point to them.
 
 ---
@@ -544,7 +545,7 @@ Sources of the nine values of V-01 (`requirements.md` Section 3.2, TK-003): the 
 |---|---|
 | Objectives | The owner records a Take with one tap. The Take lies in time with the Project. No Take is lost. |
 | Features to implement | Recording (FR-REC-01 to FR-REC-07; `feature_specifications.md` Sections 4.2.1 and 4.2.2; `ui_ux_specification.md` Section 9). |
-| Technical dependencies | GATE-06. The results of V-03 and V-07 (D-040). The Streamers of TK-043. |
+| Technical dependencies | GATE-06. The results of V-03 and V-07 (D-118: the correction of a Take that the loopback measured). The Streamers of TK-043. |
 | Implementation order | TK-052 to TK-055 in the order of their IDs. |
 | Expected deliverables | A build that records. The measurements "Record" and "Loopback". |
 | Testing requirements | Tests with a fake input on the host. A kill during a Take, on the emulator. The manual tests of GATE-07. |
@@ -564,7 +565,7 @@ Sources of the nine values of V-01 (`requirements.md` Section 3.2, TK-003): the 
 |---|---|
 | Objectives | A hummed Take becomes a Pattern that the owner can play and edit at once. |
 | Features to implement | Conversion (FR-H2M-01 to FR-H2M-08; `feature_specifications.md` Sections 4.2.3 to 4.2.6). |
-| Technical dependencies | GATE-07. The winner of V-05 (D-044). The code of TK-008. |
+| Technical dependencies | GATE-07. The winner of V-05: pYIN (D-117). The code of TK-008; TK-056 removes SwiftF0 and ONNX Runtime from it. |
 | Implementation order | TK-056 to TK-059 in the order of their IDs. |
 | Expected deliverables | A build that converts humming. The measurement "Humming". |
 | Testing requirements | The code for Notes with the test melodies. The mapping to Ticks. The manual test of GATE-08. |
@@ -852,9 +853,9 @@ This table plans the answers. It claims no result.
 | V-02 | D-041 | The shell is written with Views. The editors keep their drawing code. A build from a download may also start without its compiled profile. The test build then shows the state of the profile. MT-01 counts only after the profile is compiled. |
 | V-03 | D-035, D-067 | If the path of the speaker does not run at 48 kHz, the engine keeps 48 kHz. Oboe then converts the rate (`technology_stack.md` Section 5.2). If Underruns occur, the buffer grows and the limits go down. If a stream opens slowly, it opens earlier (`architecture.md` Section 16.3). |
 | V-04 | D-038, D-062 | Cubic interpolation replaces the windowed sinc. The limits of `requirements.md` Section 8 go down. If a compile is slow, the compiler keeps compiled Patterns (`architecture.md` Section 16.3). |
-| V-05 | D-044 | The rule always names a winner. If the winner misses NFR-QLT-02, the start values of the code for Notes are tuned with the recordings. If this is not enough, two P1 functions move into the MVP: the correction of the tuning and the split of repeated tones. A gap that remains becomes a known limit, and the owner decides. If the winner misses NFR-PERF-09, the other candidate is used when it meets the time. |
+| V-05 | D-044 (replaced by D-117 in TK-014) | The rule always names a winner. If the winner misses NFR-QLT-02, the start values of the code for Notes are tuned with the recordings. If this is not enough, two P1 functions move into the MVP: the correction of the tuning and the split of repeated tones. A gap that remains becomes a known limit, and the owner decides. If the winner misses NFR-PERF-09, the other candidate is used when it meets the time. |
 | V-06 | D-028, D-046, D-047, D-088 | Three answers exist, in this order (`technology_stack.md` Section 14). First: another model tier or another model. Second: a hosted model as one more tool. Third: extraction moves behind version 1.0. If attached files load slowly, the Sandbox downloads the Toolkit instead (`technology_stack.md` Section 9.3). |
-| V-07 | D-040 | If both methods differ by more than 10 ms, the calibration by loopback becomes the default for the speaker. The manual offset stays available. |
+| V-07 | D-040 (replaced by D-118 in TK-014) | If both methods differ by more than 10 ms, the calibration by loopback becomes the default for the speaker. The manual offset stays available. |
 
 ### 7.4 Answers if the check of PH-16 fails
 
@@ -977,5 +978,5 @@ Open points:
 2. The limit for the minutes of the CI service is not known (A-21).
 3. The sizes of the tasks are estimates. `opus_implementation_guide.md` Section 4.2 says how the implementer splits a task.
 4. The plan has no calendar. The order and the gates decide. The time of the owner at the gates sets the pace (A-20).
-5. The results of PH-00 can change later phases. TK-014 updates this document then.
+5. The results of PH-00 can change later phases. TK-014 updated this document: PH-07 names D-118 and PH-08 names D-117. The limits of version 1.0 wait for GATE-12 (Q-21), the fidelity of the stem model for TK-068 (Q-22).
 6. The phases of version 1.1 rest on the check V-08. TK-105 updates this document with its results.
