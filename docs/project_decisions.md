@@ -75,7 +75,7 @@ State of the work:
 | Item | State |
 |---|---|
 | Phase | PH-01 in progress. PH-00 is done: GATE-00 closed on 2026-11-21 (`docs/results/GATE-00.md`). |
-| Last finished task | TK-015, done: the types of the engine in `:engine-api` (Live commands, telemetry, events, `AudioEngine`, `FakeAudioEngine`) and `SnapshotWriter`, which writes the bytes of `feature_specifications.md` Section 6.2. TK-001 to TK-014 are done; GATE-00 is closed (`docs/results/GATE-00.md`). |
+| Last finished task | TK-016a, done: the state of a Project, the Reducer, the invariants and the Edits of Tracks and Patterns in `:core`. TK-016 is split; TK-016b (Clips) and TK-016c (Parts, Notes, Sampler instruments) are next (`docs/progress.md`). TK-001 to TK-015 are done; GATE-00 is closed. |
 | Next task | TK-016 |
 | Open gate | GATE-01, after TK-015 to TK-020. Nothing waits for the owner. Open for later gates: Q-21 (limits of version 1.0, GATE-12) and Q-22 (fidelity of the stem model, TK-068); the typed values of V-01 stay "not measured yet". |
 

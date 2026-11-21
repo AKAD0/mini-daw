@@ -522,7 +522,7 @@ Notes:
 TK-015  Types of the engine: Live commands, telemetry, writer of a Snapshot, fake engine
 State: done
 Change: branch tk-015, merged into main
-Criteria (run "Check" of the branch tk-015, part "kotlin-tests", module :engine-api):
+Criteria (run "Check" 44938467199 of the branch tk-015, part "kotlin-tests", module :engine-api):
   "The writer gives the bytes of feature_specifications.md Section 6.2 for fixed inputs": pass
     theMinimalSnapshotHasTheBytesOfTheSpecification (all 204 bytes of the Master channel alone),
     theSmallSnapshotHasTheBytesOfTheSecondWriter (552 bytes, FNV-1a and the directory of a Project with
@@ -541,4 +541,43 @@ Notes:
   2. EngineResult codes 1 to 7 follow snapshot::Error of engine-core; PH-02 adds codes 8 and 9
      (unsorted, over a limit) to the loader.
   3. The offline render of AudioEngine comes with the export (PH-11); AudioTools with its first user.
+  4. The first run "Check" (44937941636) failed in detekt: the numbers of EngineResult (MagicNumber) and
+     the complexity of SnapshotWriter.write (15). The codes keep their numbers with a suppression that
+     names the reason; the twelve tables moved into their own function.
+```
+
+```text
+TK-016  State, Edits and Reducer of Tracks, Clips, Patterns, Parts, Notes and Sampler instruments
+State: split (size L): TK-016a done; TK-016b (Clips) and TK-016c (Parts, Notes, Steps, Sampler
+  instruments) next
+Change: branch tk-016 (TK-016a), merged into main
+Plan of the split:
+  TK-016a  the state of architecture.md Section 4.1 in :core (Model.kt), the time base, the limits in
+           one file (Limits.kt, feature_specifications.md Section 1.5), the new Project of Section 1.7,
+           the Reducer with its refusals, the invariants of architecture.md Section 4.2, the Edits of
+           Tracks and Patterns
+  TK-016b  the Edits of Clips and the rules of Section 2.2.2; a test with random Edits (AC-PL-01,
+           AC-PL-02)
+  TK-016c  Parts, Notes, Switch Step and Sampler instruments (AC-PT-02, AC-CR-01)
+Criteria so far (run "Check" of the branch tk-016, part "kotlin-tests", module :core,
+  TrackAndPatternEditsTest):
+  AC-TR-09: pass (aNewProjectHasTheContentOfSection17)
+  AC-PL-11: the states of add, rename, recolor and delete pass (aNewTrackGetsAMixerChannelWithItsNameAndColor,
+    renameRecolorAndMuteChangeOnlyTheirTrack, aDeletedTrackTakesItsClipsAndLeavesItsChannel); the part
+    "one undo restores the Track with its Clips" needs the undo of TK-017
+  AC-PT-05: the deletion removes all Pattern clips (aDeletedPatternTakesAllItsPatternClips); the part
+    "one undo restores all of them" needs TK-017
+  Also: limits of the MVP and of version 1.0, ranges of names and colors, move of a Track, lengths of
+    Patterns, duplicates, and the invariants find a loop, a missing channel and a shared ID.
+Documents: none
+Decisions: none
+Owner: none
+Notes:
+  1. Each Edit is a class with its own checks; a failed check throws EditRefused, which the Reducer
+     turns into a refusal. After each Edit the Reducer checks every invariant once more and refuses the
+     Edit if one breaks. Overlaps of Clips are no invariant: a change of the tempo may cause them (D-006).
+  2. A new Pattern of "Add Pattern" gets a first Part only when the Edit names a Sampler instrument;
+     the new Project gets its Part as Section 1.7 says.
+  3. Fault of TK-015, found here: the Live command "clear clip flag" of feature_specifications.md
+     Section 3.2.7 is missing from LiveCommand. TK-018 (Mixer in the model) adds it.
 ```

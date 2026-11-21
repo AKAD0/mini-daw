@@ -18,4 +18,15 @@ kotlin {
 
 dependencies {
     api(project(":engine-api"))
+    testImplementation(libs.kotlin.test)
+    testImplementation(platform(libs.junit.bom))
+    testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+tasks.test {
+    useJUnitPlatform()
+    // Each test names its outcome in the log of the run "Check".
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
