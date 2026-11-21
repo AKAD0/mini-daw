@@ -69,16 +69,31 @@ def test_a_turn_ends_only_with_a_final_idle_after_the_message():
     assert not st.turn_finished([message, event("session.status_idle", "end_turn"), running])
 
 
-def test_a_refused_cleanup_does_not_stop_the_test(fake, local_files, tmp_path, monkeypatch):
+def run_at_the_time_limit(fake, local_files, tmp_path, monkeypatch):
     assert sa.main(["--toolkit", local_files[0], "--model", local_files[1]], out=lambda *_: None) == 0
     monkeypatch.setattr(st, "TIME_LIMIT_S", 0)
     out_dir = tmp_path / "V-06"
     code = st.main(["--audio", song(tmp_path / "a.wav"), "--sessions", "2", "--range-s", "1", "--quiet-minutes",
                     "0", "--poll-s", "0", "--out", str(out_dir)], out=lambda *_: None)
     assert code == 0
-    rows = json.loads((out_dir / "results.json").read_text())["results"]
-    assert len(rows) == 2 and fake.refused
+    return json.loads((out_dir / "results.json").read_text())["results"]
+
+
+def test_a_refused_cleanup_does_not_stop_the_test(fake, local_files, tmp_path, monkeypatch):
+    # The Session stays in the moment after the message: it reports "idle", but a delete is refused.
+    fake.reads_until_running = 1000
+    rows = run_at_the_time_limit(fake, local_files, tmp_path, monkeypatch)
+    assert len(rows) == 2 and len(fake.refused) == 2
     assert all(r["cleanup"].startswith("not deleted") for r in rows)
+
+
+def test_a_session_at_the_time_limit_is_interrupted_and_deleted(fake, local_files, tmp_path, monkeypatch):
+    fake.reads_until_idle = 1000
+    rows = run_at_the_time_limit(fake, local_files, tmp_path, monkeypatch)
+    interrupts = [r for r in fake.requests if r["method"] == "POST" and r["path"].endswith("/events")
+                  and r["body"]["events"][0]["type"] == "user.interrupt"]
+    assert len(interrupts) == 2 and fake.refused == []
+    assert [r["cleanup"] for r in rows] == ["deleted", "deleted"] and fake.sessions == {}
 
 
 def test_the_script_stops_when_the_setup_is_missing(fake, tmp_path):
