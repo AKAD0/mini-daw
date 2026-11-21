@@ -9,8 +9,8 @@
 namespace minidaw::analysis {
 
 // The candidates of D-044. Their numbers are those of the cache of the pitch
-// (feature_specifications.md Section 6.5).
-enum class Candidate : std::uint16_t { kSwiftF0 = 1, kPyin = 2 };
+// (feature_specifications.md Section 6.5), which stores them as u16.
+enum class Candidate : std::uint8_t { kSwiftF0 = 1, kPyin = 2 };
 
 // Both candidates sit behind this interface (architecture.md Section 9, rule 6).
 // The code for Notes does not know which one runs.
