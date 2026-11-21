@@ -44,8 +44,8 @@ struct SwiftF0::Model {
         session.Run(Ort::RunOptions{nullptr}, inputNames.data(), inputs.data(), inputs.size(),
                     outputNames.data(), outputNames.size());
     const std::size_t count = outputs[1].GetTensorTypeAndShapeInfo().GetElementCount();
-    const float* pitch = outputs[0].GetTensorData<float>();
-    const float* confidence = outputs[1].GetTensorData<float>();
+    const auto* pitch = outputs[0].GetTensorData<float>();
+    const auto* confidence = outputs[1].GetTensorData<float>();
     return {std::vector<float>(pitch, pitch + count),
             std::vector<float>(confidence, confidence + count)};
   }
@@ -68,8 +68,10 @@ std::vector<Frame> SwiftF0::detect(std::span<const float> audio) {
   for (std::size_t start = 0; start < full && !audio.empty(); start += kWindowFrames) {
     const std::size_t end = std::min(start + kWindowFrames, full);
     const std::size_t left = start >= kLeftFrames ? start - kLeftFrames : 0;
-    const std::size_t stop = end < full ? std::min(audio.size(), (end + kLookaheadFrames) * kHop)
-                                        : audio.size();
+    std::size_t stop = audio.size();
+    if (end < full) {
+      stop = std::min(audio.size(), (end + kLookaheadFrames) * kHop);
+    }
     const auto [pitch, confidence] = model_->run(audio.subspan(left * kHop, stop - left * kHop));
     for (std::size_t i = start; i < end && i - left < pitch.size() && i < count; ++i) {
       frames[i].frequency = pitch[i - left];

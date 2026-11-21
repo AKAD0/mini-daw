@@ -40,9 +40,12 @@ TEST(SwiftF0, PureTonesGiveTheirFrequency) {
   for (const double f : {65.0, 110.0, 220.0, 440.0, 880.0, 1760.0, 2000.0}) {
     const auto frames = detector.detect(fixtures::sine(f, 1.0, kAnalysisRate, 0.3));
     ASSERT_EQ(frames.size(), frameCount(kAnalysisRate));
+    // The model looks 2,815 samples to each side, about 11 frames. The frames near the ends of
+    // the signal lack this context, so the check starts and ends 12 frames inside.
     double worst = 0.0;
-    for (std::size_t i = 5; i + 5 < frames.size(); ++i) {
-      ASSERT_GE(frames[i].confidence, detector.minConfidence()) << f << " Hz, frame " << i;
+    for (std::size_t i = 12; i + 12 < frames.size(); ++i) {
+      ASSERT_GE(frames[i].confidence, detector.minConfidence())
+          << f << " Hz, frame " << i << ", frequency " << frames[i].frequency;
       worst = std::fmax(worst, std::abs(1200.0 * std::log2(frames[i].frequency / f)));
     }
     EXPECT_LT(worst, 25.0) << f << " Hz";
