@@ -72,12 +72,12 @@ private const val CLIPS = 6
 private const val KEYS = 24
 private const val KEY_WIDTH = 0.08f
 private const val NOTES = 32
-private const val OCTAVE = 12
 private const val FILL = 0.8f
 private const val CLIP_INSET = 2f
 private const val NOTE_STEP = 5
 private val LABELS = listOf("Play", "Stop", "Rec", "120 BPM", "4/4", "Song", "Mixer")
-private val BLACK = setOf(1, 3, 6, 8, 10)
+// The keys of one octave from C: 1 marks a black key.
+private const val OCTAVE_KEYS = "010100101010"
 
 @Composable
 private fun Workspace(results: String, onShare: () -> Unit) {
@@ -129,7 +129,7 @@ private fun PianoRoll(modifier: Modifier) {
         val row = size.height / KEYS
         val keyWidth = size.width * KEY_WIDTH
         for (key in 0 until KEYS) {
-            val black = (KEYS - 1 - key) % OCTAVE in BLACK
+            val black = OCTAVE_KEYS[(KEYS - 1 - key) % OCTAVE_KEYS.length] == '1'
             drawRect(Color(if (black) BLACK_KEY else WHITE_KEY), Offset(0f, key * row), Size(keyWidth, row - 1f))
         }
         val step = (size.width - keyWidth) / NOTES
