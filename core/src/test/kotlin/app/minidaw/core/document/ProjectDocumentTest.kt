@@ -25,13 +25,13 @@ import app.minidaw.core.model.SetParameter
 import app.minidaw.core.model.SetTarget
 import app.minidaw.core.model.SetTempo
 import app.minidaw.core.model.SwitchStep
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
 
 class ProjectDocumentTest {
     private val start = Fixtures.newProject()

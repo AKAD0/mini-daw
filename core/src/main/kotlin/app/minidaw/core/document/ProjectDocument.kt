@@ -17,7 +17,6 @@ import app.minidaw.core.model.Part
 import app.minidaw.core.model.Pattern
 import app.minidaw.core.model.PatternClip
 import app.minidaw.core.model.Project
-import app.minidaw.core.model.SCHEMA
 import app.minidaw.core.model.SamplerInstrument
 import app.minidaw.core.model.SetTimeSignature
 import app.minidaw.core.model.TimeBase
@@ -26,13 +25,13 @@ import app.minidaw.core.model.Track
 import app.minidaw.core.model.UsedSample
 import app.minidaw.engine.api.snapshot.PlayMode
 import app.minidaw.engine.api.snapshot.SampleHash
+import java.time.DateTimeException
+import java.time.Instant
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.intOrNull
-import java.time.DateTimeException
-import java.time.Instant
 
 /**
  * Reads the document of a Project (feature_specifications.md Section 6.1, architecture.md Section 4.4). A missing
@@ -61,7 +60,7 @@ object ProjectDocument {
         val schema = root?.int("schema", 1) ?: 0
         return when {
             root == null -> Result.Broken(parsed.exceptionOrNull()?.message ?: "the document is no JSON object")
-            schema > SCHEMA -> Result.Newer(schema)
+            schema > app.minidaw.core.model.SCHEMA -> Result.Newer(schema)
             schema < 1 -> Result.Broken("the schema $schema does not exist")
             else -> open(root, schema, limits)
         }
@@ -69,7 +68,7 @@ object ProjectDocument {
 
     private fun open(root: JsonObject, schema: Int, limits: Limits): Result = try {
         var current = root
-        for (from in schema until SCHEMA) {
+        for (from in schema until app.minidaw.core.model.SCHEMA) {
             val step = requireNotNull(migrations[from]) { "no migration from schema $from" }
             current = step(current)
         }
@@ -90,6 +89,10 @@ private val PAN = -1f..1f
 private val GAIN = Limits.MIN_CLIP_DB..Limits.MAX_CLIP_DB
 private const val FINE_CENTS = 100f
 private const val NOTE_FIELDS = 4
+private const val NOTE_START = 0
+private const val NOTE_LENGTH = 1
+private const val NOTE_PITCH = 2
+private const val NOTE_VELOCITY = 3
 private val TEMPO = TimeBase.MIN_TEMPO_MILLI_BPM..TimeBase.MAX_TEMPO_MILLI_BPM
 private val NOT_NEGATIVE = 0..Int.MAX_VALUE
 
@@ -179,12 +182,11 @@ private fun notes(array: JsonArray?): List<Note> = (array ?: JsonArray(emptyList
     if (numbers == null || numbers.size != NOTE_FIELDS) {
         null
     } else {
-        val (start, length, pitch, velocity) = numbers
         Note(
-            start = start.coerceAtLeast(0),
-            length = length.coerceAtLeast(Limits.MIN_NOTE_TICKS),
-            pitch = pitch.coerceIn(MIDI),
-            velocity = velocity.coerceIn(1, Limits.MIDI_MAX)
+            start = numbers[NOTE_START].coerceAtLeast(0),
+            length = numbers[NOTE_LENGTH].coerceAtLeast(Limits.MIN_NOTE_TICKS),
+            pitch = numbers[NOTE_PITCH].coerceIn(MIDI),
+            velocity = numbers[NOTE_VELOCITY].coerceIn(1, Limits.MIDI_MAX)
         )
     }
 }.sortedWith(compareBy({ it.start }, { it.pitch })).distinctBy { it.start to it.pitch }
