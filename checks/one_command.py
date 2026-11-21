@@ -85,7 +85,7 @@ def gradle(*tasks):
         raise Skip("JDK missing (no java)")
     android_sdk()
     cmd = ["cmd", "/c", "gradlew.bat"] if os.name == "nt" else ["sh", "gradlew"]
-    code, _ = run(cmd + ["--console=plain", *tasks])
+    code, _ = run(cmd + ["--console=plain", "--continue", *tasks])
     return code == 0
 
 
