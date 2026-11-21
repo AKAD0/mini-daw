@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import app.minidaw.R
+import app.minidaw.keepClearOfSystemBars
 
 /**
  * The screen "Measurements" of a test build (ui_ux_specification.md Section 15.4). It holds the row of
@@ -88,6 +89,7 @@ class MeasurementsActivity : Activity() {
 
         val scroll = ScrollView(this)
         scroll.addView(layout)
+        scroll.keepClearOfSystemBars()
         setContentView(scroll)
         refresh()
     }

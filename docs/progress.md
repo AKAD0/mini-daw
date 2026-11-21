@@ -82,6 +82,10 @@ Notes:
   3. ktlint with the style android_studio sorts imports in plain lexicographic order and wants an
      expression body on a line of its own. Two runs "Check" (44843196965, 44843648900) failed on this.
   4. The run "Emulator" is still not set up (TK-001, note 8).
+  5. Fault found by the owner on build-16: Android 15 and later draw an app with target SDK 35 or higher
+     from edge to edge, so the title bar covered the top of the main screen and of Measurements. The
+     screens of the test build and of both check apps of V-02 now have no title bar and keep clear of
+     the system bars, the display cutout and the keyboard. The row of TK-002 now asks its question.
 ```
 
 ```text

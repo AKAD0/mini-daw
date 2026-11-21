@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -82,7 +83,7 @@ private const val OCTAVE_KEYS = "010100101010"
 
 @Composable
 private fun Workspace(results: String, onShare: () -> Unit) {
-    Column(Modifier.fillMaxSize().background(Color(BACKGROUND))) {
+    Column(Modifier.fillMaxSize().background(Color(BACKGROUND)).safeDrawingPadding()) {
         GlobalBar(onShare)
         Row(Modifier.weight(1f)) {
             Playlist(Modifier.weight(1f).fillMaxHeight())

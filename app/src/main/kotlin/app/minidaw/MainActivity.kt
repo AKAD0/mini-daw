@@ -19,7 +19,7 @@ class MainActivity : Activity() {
         val padding = (PADDING_DP * resources.displayMetrics.density).toInt()
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
-        layout.setPadding(padding, padding, padding, padding)
+        layout.keepClearOfSystemBars(padding)
 
         val title = TextView(this)
         title.text = getString(R.string.app_name)

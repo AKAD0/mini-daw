@@ -2,6 +2,7 @@ package app.minidaw.check.views
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.WindowInsets
 import android.widget.TextView
 import app.minidaw.check.StartTimes
 
@@ -11,6 +12,12 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val view = TextView(this)
+        // Android 15 and later draw from edge to edge: the text keeps clear of the bars and the cutout.
+        view.setOnApplyWindowInsetsListener { v, insets ->
+            val clear = insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
+            v.setPadding(clear.left, clear.top, clear.right, clear.bottom)
+            insets
+        }
         setContentView(view)
         StartTimes.recordFirstFrame(this, KEY) { show(view) }
     }

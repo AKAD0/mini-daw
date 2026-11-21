@@ -3,7 +3,7 @@
     <!-- Name of the test build (D-098) -->
     <string name="app_name">mini daw test</string>
     <string name="measurements_title">Measurements</string>
-    <string name="install_question">TK-002: you installed this test build from the page of releases.</string>
+    <string name="install_question">TK-002, install: did this test build install from the page of releases and open without a problem? Tap Pass if yes, Fail if not.</string>
     <string name="mark_pass">Pass</string>
     <string name="mark_fail">Fail</string>
     <string name="verdict_line">Your verdict: %1$s</string>
