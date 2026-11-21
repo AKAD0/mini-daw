@@ -14,7 +14,7 @@
 **Change in 2.5:** TK-011 attached the file with 16-bit weights and tested it. Changed part: Section 9.4 (fact 7).
 **Change in 2.6:** TK-012 named the model tiers and the library of the setup script. Changed part: Section 9.3.
 **Change in 2.7:** TK-013. Section 1 gives the licence of JUnit 5 (D-115). Section 9.6 names how step 5 compares the stems.
-**Change in 2.8:** TK-004. Section 6.1 names how the apps of V-02 measure.
+**Change in 2.8:** TK-004. Section 6.1 names how the apps of V-02 measure. Section 3.3 names the repositories of the build.
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -135,6 +135,7 @@ Parts of the build:
 3. Three build types: debug, release, and benchmark. The benchmark type equals release but allows profiling.
 4. R8 in full mode for release and benchmark.
 5. Versions since TK-001: Gradle 8.14.3, Android Gradle Plugin 8.13.2, Kotlin 2.2.21. The file `gradle/libs.versions.toml` holds them. Newer major versions exist. The build keeps these until a task needs a newer one (`opus_implementation_guide.md` Section 6.2).
+6. Repositories: Google Maven, Maven Central and Google's mirror of Maven Central, in this order, and the Gradle Plugin Portal for plugins. Three runs of the CI service got a false "not found" from Maven Central for files that exist (TK-004). The mirror holds the same files.
 
 ---
 

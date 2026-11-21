@@ -1,8 +1,11 @@
 // Modules of mini daw (architecture.md Section 2.1, D-113)
+// Google's mirror of Maven Central stands after Maven Central. Three runs "Check" got a false "not
+// found" from Maven Central for files that exist; Gradle then asks the mirror (TK-004).
 pluginManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://maven-central.storage-download.googleapis.com/maven2/")
         gradlePluginPortal()
     }
 }
@@ -12,6 +15,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://maven-central.storage-download.googleapis.com/maven2/")
     }
 }
 
