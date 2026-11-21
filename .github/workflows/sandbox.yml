@@ -1,0 +1,68 @@
+# Run "Sandbox test" (development_roadmap.md Section 2.3, check V-06, TK-013).
+# Only the owner starts it, after the run "Setup of the account". It calls the Claude API with the
+# secret ANTHROPIC_API_KEY and costs at most 0.30 USD per Session (11 Sessions).
+# The songs come as direct links to WAV files with 16-bit PCM. They are not stored in the repository.
+# The results are an artifact of the run: results.json and the candidates to listen to.
+name: Sandbox test
+
+on:
+  workflow_dispatch:
+    inputs:
+      songs:
+        description: "Direct https links to three WAV files with 16-bit PCM, separated by spaces"
+        required: true
+      sessions:
+        description: "Number of Sessions"
+        default: "10"
+      quiet_minutes:
+        description: "Minutes without polling for the last Session"
+        default: "5"
+
+permissions:
+  contents: read
+
+jobs:
+  sandbox:
+    name: Sandbox test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Python packages, with the original model
+        run: python -m pip install -r setup/requirements.txt -r toolkit/requirements.txt -r setup/requirements-original.txt
+
+      - name: Toolkit, model file and songs
+        env:
+          SONGS: ${{ inputs.songs }}
+        run: |
+          python toolkit/fetch_model.py build/models
+          mkdir -p build/songs
+          n=0
+          for url in $SONGS; do
+            n=$((n + 1))
+            case "$url" in https://*) ;; *) echo "::error::Only https links are allowed"; exit 1 ;; esac
+            curl -sSL --fail --max-filesize 100000000 -o "build/songs/song_$n.wav" "$url"
+          done
+
+      - name: Sandbox test
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SESSIONS: ${{ inputs.sessions }}
+          QUIET_MINUTES: ${{ inputs.quiet_minutes }}
+        run: |
+          python setup/sandbox_test.py --audio build/songs/*.wav --sessions "$SESSIONS" \
+            --quiet-minutes "$QUIET_MINUTES" --out build/V-06 \
+            --model build/models/htdemucs_fp16weights.onnx --original
+
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: sandbox-test
+          path: |
+            build/V-06/results.json
+            build/V-06/session_*/

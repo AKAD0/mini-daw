@@ -140,6 +140,20 @@ use = "build"
 source = "PyPI anthropic 2.6.0, field License-Expression, read on 2026-11-21. The setup script and the test script of the Sandbox; never in the app (D-045)."
 
 [[entry]]
+name = "torch"
+kind = "python"
+licence = "Apache-2.0 AND Apache-2.0 WITH LLVM-exception AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND ISC AND MIT AND Zlib"
+use = "test"
+source = "PyPI torch 2.15.0, field License-Expression, read on 2026-11-21. Only for the original model in the run Sandbox test (V-06); BSL-1.0 under D-115."
+
+[[entry]]
+name = "demucs"
+kind = "python"
+licence = "MIT"
+use = "test"
+source = "PyPI demucs 4.1.0, field License, read on 2026-11-21. The original model htdemucs for step 6 of V-06."
+
+[[entry]]
 name = "pytest"
 kind = "python"
 licence = "MIT"

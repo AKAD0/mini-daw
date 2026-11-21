@@ -251,3 +251,35 @@ Notes:
      the original model) belongs to TK-068 (AC-AIX-10).
 ```
 
+```text
+TK-013  Check V-06: Sandbox
+State: delivered for the gate (the scripts and both runs are ready; the check needs the owner)
+Change: branch tk-013, merged into main
+Criteria:
+  "The values of technology_stack.md Section 9.6 are recorded for 10 Sessions": not measured yet.
+  "The owner judged three results": not run yet.
+  The programs that the owner starts are tested against the fake of the API (setup/tests, run
+  "Check" of this change): 11 Sessions with a budget of 30 cents each, half with the middle tier;
+  the quiet last Session; step 6 compares the stems of the Sandbox with the same model on a host
+  and with the original model (package demucs 4.1.0), each stem against 30 dB.
+Documents: project_decisions.md 7.4 (Q-20, D-115), opus_implementation_guide.md 2.2 (Section 7.3),
+  technology_stack.md 2.7 (Sections 1 and 9.6), development_roadmap.md 2.5 (Section 2.3)
+Decisions: D-115 (Proposed), question Q-20
+Owner:
+  1. O-1: create a new API key in the Claude Console with a limit of spending. Enter it only as the
+     secret ANTHROPIC_API_KEY at GitHub (repository mini-daw: Settings, Secrets and variables, Actions).
+  2. Start the run "Setup of the account" (Actions) with the option "check" switched off.
+  3. Start the run "Sandbox test" (Actions) with direct https links to three WAV files with 16-bit
+     PCM that you may use. The run costs at most 0.30 USD per Session, 11 Sessions.
+  4. Download the artifact "sandbox-test", listen to three candidates, and put results.json with your
+     verdicts into docs/results/V-06/ of the local copy. The implementer then records the check.
+Notes:
+  1. Q-20 / D-115: JUnit 5 (EPL-2.0) and PyTorch (includes BSL-1.0) serve only tests. The default
+     allows them for tests and the build only; the check of the licences enforces the use.
+  2. The fault of TK-001, note 4 (the licence of JUnit in technology_stack.md Section 1), is repaired.
+  3. The run "Check" now has a Gradle cache of its own (cache-dependency-path with check.yml).
+     The run "Build" had saved a cache without ktlint and detekt under the same key, so every run
+     "Check" downloaded both; twice (44858882000, 44860008214 attempt 1) Maven Central did not
+     answer in time.
+```
+

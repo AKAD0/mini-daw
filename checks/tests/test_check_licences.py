@@ -97,6 +97,13 @@ class Licences(unittest.TestCase):
         write(self.root, "checks/licences.toml", bad)
         self.assertTrue(any("ruff" in p and "GPL-3.0" in p for p in check_licences.check(self.root)))
 
+    def test_epl_and_bsl_are_allowed_for_tests_and_the_build_only(self):
+        entry = '[[entry]]\nname = "x"\nkind = "tool"\nlicence = "Apache-2.0 AND BSL-1.0"\nuse = "test"\n'
+        write(self.root, "checks/licences.toml", LIST + entry)
+        self.assertEqual(check_licences.check(self.root), [])
+        write(self.root, "checks/licences.toml", LIST + entry.replace('use = "test"', 'use = "app"'))
+        self.assertTrue(any("BSL-1.0" in p for p in check_licences.check(self.root)))
+
     def test_lgpl_is_allowed_only_with_dynamic_linking(self):
         lgpl = '[[entry]]\nname = "x"\nkind = "tool"\nlicence = "LGPL-2.1"\nuse = "app"\n'
         write(self.root, "checks/licences.toml", LIST + lgpl)

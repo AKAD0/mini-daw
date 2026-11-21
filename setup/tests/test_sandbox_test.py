@@ -71,3 +71,52 @@ def test_the_first_message_follows_the_template():
     assert text.splitlines() == ["REQUEST", "mode: free", "input: /mnt/session/uploads/input.wav", "range_start_s: 0.0",
                                  "range_end_s: 40.0", "max_candidates: 3", "---BEGIN DESCRIPTION---", "the kick drum",
                                  "---END DESCRIPTION---"]
+
+
+def stem_bytes(array, rate=44100):
+    import numpy as np
+    from scipy.io import wavfile
+
+    buf = io.BytesIO()
+    wavfile.write(buf, rate, np.ascontiguousarray(array.T.astype(np.float32)))
+    return buf.getvalue()
+
+
+def test_step_6_compares_the_stems_of_the_sandbox(fake, local_files, tmp_path, monkeypatch):
+    import numpy as np
+
+    rng = np.random.default_rng(7)
+    stems = {name: rng.uniform(-0.3, 0.3, (2, 4410)).astype(np.float32) for name in st.STEM_NAMES}
+    fake.stem_files = {name + ".wav": stem_bytes(x) for name, x in stems.items()}
+
+    def host(folder, model_path):
+        target = tmp_path / "host"
+        target.mkdir(exist_ok=True)
+        for name, x in stems.items():
+            noisy = x + (0.001 * rng.uniform(-1, 1, x.shape) if name != "bass" else 0.5 * rng.uniform(-1, 1, x.shape))
+            (target / (name + ".wav")).write_bytes(stem_bytes(noisy.astype(np.float32)))
+        return str(target)
+
+    monkeypatch.setattr(st, "host_stems", host)
+    assert sa.main(["--toolkit", local_files[0], "--model", local_files[1]], out=lambda *_: None) == 0
+    out_dir = tmp_path / "V-06"
+    code = st.main(["--audio", song(tmp_path / "a.wav"), "--sessions", "1", "--range-s", "1", "--quiet-minutes",
+                    "0.001", "--poll-s", "0", "--out", str(out_dir), "--model", local_files[1]], out=lambda *_: None)
+    assert code == 0
+    creates = [r["body"] for r in fake.requests if r["method"] == "POST" and r["path"] == "/v1/sessions"]
+    assert creates[-1]["agent"]["system"] == st.STEMS_SYSTEM
+    result = json.loads((out_dir / "results.json").read_text())
+    values = result["stems"]["against_the_same_model_on_a_host"]
+    assert values["vocals"] > 40 and values["bass"] < 10, values
+    assert result["verdicts"]["stems_against_the_same_model_on_a_host"] == "fail"
+    assert result["verdicts"]["stems_against_the_original_model"] == "not measured yet"
+
+
+def test_sdr_follows_the_formula_of_the_specification():
+    import numpy as np
+
+    ref = np.ones((2, 100))
+    assert st.sdr_db(ref, ref * 0.9) == 20.0
+    assert st.sdr_db(np.zeros((2, 10)), ref[:, :10]) is None
+    assert st.stems_verdict({"vocals": 31.0, "drums": None, "bass": 40.0, "other": 30.0}) == "pass"
+    assert st.stems_verdict({"vocals": "missing", "drums": 40.0, "bass": 40.0, "other": 40.0}).startswith("fail")

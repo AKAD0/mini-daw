@@ -13,7 +13,8 @@ Rules:
   2. Each entry has a licence of D-024. An expression "A AND B" needs both. 0BSD and CC0-1.0 count
      as BSD and as public domain. LGPL counts only with the mark linking = "dynamic". A public set
      (kind "data", use "test") may also carry CC-BY-4.0: it is used for tests only, is downloaded
-     at run time and never ships (TK-009).
+     at run time and never ships (TK-009). An entry with the use "test" or "build" may also carry
+     EPL-2.0 or BSL-1.0: such a library or tool never enters the app or the Sandbox (D-115, Proposed).
   3. Each entry of a kind other than "tool" is declared somewhere. The list holds no stale entry.
 The check covers what the files declare. Libraries that these pull in are checked with the page
 of licences of the app (TK-065).
@@ -29,6 +30,7 @@ import tomllib
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 D024 = {"Apache-2.0", "MIT", "BSD-2-Clause", "BSD-3-Clause", "0BSD", "Zlib", "ISC", "Public-Domain", "CC0-1.0"}
 TEST_DATA = {"CC-BY-4.0"}
+TEST_ONLY = {"EPL-2.0", "BSL-1.0"}
 KINDS = {"library", "plugin", "native", "python", "action", "tool", "model", "data"}
 USES = {"app", "build", "test", "toolkit"}
 SKIP_DIRS = {"build", ".gradle", ".cxx", ".git", ".venv", "node_modules"}
@@ -89,6 +91,8 @@ def declared(root):
 
 def licence_ok(entry):
     allowed = D024 | (TEST_DATA if entry.get("kind") == "data" and entry.get("use") == "test" else set())
+    if entry.get("use") in ("test", "build"):
+        allowed |= TEST_ONLY
     parts = [p.split(" WITH ")[0].strip() for p in entry.get("licence", "").split(" AND ")]
     for base in parts:
         if base.startswith("LGPL-"):

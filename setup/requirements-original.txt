@@ -1,0 +1,6 @@
+# The original model for step 6 of V-06 (setup/sandbox_test.py --original). Only the run "Sandbox
+# test" installs these, on the runner of the CI service. They never enter the app or the Sandbox.
+# Entries in checks/licences.toml.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.15.0
+demucs==4.1.0

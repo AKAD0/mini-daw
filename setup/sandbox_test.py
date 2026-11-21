@@ -15,8 +15,10 @@ Steps of this version:
   4. The last Session runs while the script does not poll it for --quiet-minutes.
   5. It downloads the report and the candidates of each Session for the owner, who listens to
      three of them, and it deletes each Session and each uploaded cut afterwards.
-  The comparison of the stems with the original model (step 5 of Section 9.6) is not in this
-  version: a Session returns only its candidates. TK-013 adds it.
+  6. Step 5 of Section 9.6: one more Session with a fixed instruction writes the four stems of the
+     first cut. The script compares them with the stems of the same model file on this computer
+     (--model) and, with --original, with the stems of the original model (the package demucs).
+     Each stem must reach 30 dB (prov.), the threshold of rule 2 of feature_specifications.md 5.8.
 The results go to OUT/results.json, with the pass rules of Section 14.
 """
 
@@ -35,6 +37,16 @@ BUDGET_CENTS = "30"
 TIME_LIMIT_S = 600
 PASS_SECONDS = 420
 MOUNTS = {"toolkit": "/toolkit.pyz", "model": "/htdemucs.onnx"}
+STEM_NAMES = ("vocals", "drums", "bass", "other")
+STEM_THRESHOLD_DB = 30.0
+# The instruction of the Session of step 6. It replaces the system prompt for this Session only.
+STEMS_SYSTEM = (
+    "You work inside a Linux sandbox for a test of the tool mini daw. Run exactly these two commands and nothing "
+    "else, then stop:\n"
+    "python /mnt/session/uploads/toolkit.pyz convert --in /mnt/session/uploads/input.wav"
+    " --out /tmp/work/converted.wav\n"
+    "python /mnt/session/uploads/toolkit.pyz separate --in /tmp/work/converted.wav --outdir /mnt/session/outputs"
+)
 REQUESTS = (
     ("quick", "drums"),
     ("free", "the kick drum"),
@@ -139,6 +151,90 @@ def run_session(client, ids, index, cut_bytes, mode, value, length_s, out_dir, p
             "list_cost_cents": None if cost is None else int(cost), "disconnected": bool(quiet_s), "files": names}
 
 
+def stems_session(client, ids, cut_bytes, folder, poll_s):
+    """Step 6: a Session that writes the four stems of one cut. They go to FOLDER/sandbox."""
+    uploaded = client.files.upload(file=("input.wav", io.BytesIO(cut_bytes), "audio/wav"))
+    session = client.beta.sessions.create(
+        agent={"type": "agent_with_overrides", "id": ids["agent"], "system": STEMS_SYSTEM},
+        environment_id=ids["environment"], title="mini daw V-06 stems",
+        resources=[{"type": "file", "file_id": uploaded.id, "mount_path": "/input.wav"},
+                   {"type": "file", "file_id": ids["toolkit"], "mount_path": MOUNTS["toolkit"]},
+                   {"type": "file", "file_id": ids["model"], "mount_path": MOUNTS["model"]}],
+        budget={"type": "limit", "max_list_cost": {"amount": BUDGET_CENTS, "currency": "USD"}},
+    )
+    client.beta.sessions.events.send(session_id=session.id, events=[
+        {"type": "user.message", "content": [{"type": "text", "text": "Run the two commands now."}]}])
+    final, _ = wait(client, session.id, poll_s, time.monotonic() + TIME_LIMIT_S)
+    target = os.path.join(folder, "sandbox")
+    os.makedirs(target, exist_ok=True)
+    for f in client.beta.files.list(scope_id=session.id, betas=["managed-agents-2026-04-01"]):
+        if f.filename in tuple(n + ".wav" for n in STEM_NAMES):
+            client.files.download(f.id).write_to_file(os.path.join(target, f.filename))
+    if final.status == "idle":
+        client.beta.sessions.delete(session_id=session.id)
+    client.files.delete(uploaded.id)
+    with open(os.path.join(folder, "input.wav"), "wb") as f:
+        f.write(cut_bytes)
+    return final.status
+
+
+def host_stems(folder, model_path):
+    """The stems of the same model file on this computer, with the Toolkit (FOLDER/host)."""
+    sys.path.insert(0, os.path.join(sa.ROOT, "toolkit", "src"))
+    from minidaw_toolkit import separate as sp
+
+    target = os.path.join(folder, "host")
+    sp.separate(os.path.join(folder, "input.wav"), target, model_path)
+    return target
+
+
+def original_stems(folder):
+    """The stems of the original model htdemucs, with the command line of the package demucs (FOLDER/original)."""
+    import subprocess
+
+    out = os.path.join(folder, "demucs")
+    subprocess.run([sys.executable, "-m", "demucs", "-n", "htdemucs", "--float32", "-d", "cpu", "-o", out,
+                    os.path.join(folder, "input.wav")], check=True, capture_output=True)
+    return os.path.join(out, "htdemucs", "input")
+
+
+def sdr_db(reference, estimate):
+    """SDR = 10 log10(sum of reference^2 / sum of (reference - estimate)^2) (feature_specifications.md 5.8)."""
+    import numpy as np
+
+    n = min(reference.shape[-1], estimate.shape[-1])
+    ref = reference[..., :n].astype(np.float64)
+    err = ref - estimate[..., :n].astype(np.float64)
+    noise = float(np.sum(err * err))
+    signal = float(np.sum(ref * ref))
+    if signal == 0.0:
+        return None
+    return round(10.0 * np.log10(signal / noise), 2) if noise > 0 else 999.0
+
+
+def compare(sandbox_dir, reference_dir):
+    """SDR of each stem of the Sandbox against the stem of the reference, in dB. A silent reference is left out."""
+    from scipy.io import wavfile
+
+    result = {}
+    for name in STEM_NAMES:
+        a, b = os.path.join(reference_dir, name + ".wav"), os.path.join(sandbox_dir, name + ".wav")
+        if not (os.path.exists(a) and os.path.exists(b)):
+            result[name] = "missing"
+            continue
+        ra, ref = wavfile.read(a)
+        rb, est = wavfile.read(b)
+        result[name] = sdr_db(ref.T, est.T) if ra == rb else f"rates differ: {ra} and {rb}"
+    return result
+
+
+def stems_verdict(values):
+    numbers = [v for v in values.values() if isinstance(v, (int, float))]
+    if not values or len(numbers) < len([v for v in values.values() if v is not None]):
+        return "fail: a stem is missing"
+    return "pass" if all(v >= STEM_THRESHOLD_DB for v in numbers) else "fail"
+
+
 def judge(rows):
     """The pass rules of V-06 that a program can judge (technology_stack.md Section 14)."""
     finished = [r for r in rows if r["status"] == "idle" and r["seconds_to_idle"] <= PASS_SECONDS]
@@ -149,7 +245,7 @@ def judge(rows):
         "highest_cost_cents": max(costs) if costs else None,
         "cost_rule": "pass" if costs and max(costs) <= 30 else "fail or not measured",
         "disconnected_session": "pass" if quiet and quiet[0]["status"] == "idle" else "fail",
-        "stems_against_the_original_model": "not measured yet (TK-013)",
+        "stems_against_the_original_model": "not measured yet",
         "owner_listens_to_three_results": "not run yet (the owner)",
     }
 
@@ -162,6 +258,8 @@ def main(argv=None, out=print):
     ap.add_argument("--quiet-minutes", type=float, default=5.0)
     ap.add_argument("--poll-s", type=float, default=5.0)
     ap.add_argument("--out", default=os.path.join("docs", "results", "V-06"))
+    ap.add_argument("--model", help="the local model file of toolkit/models.toml, for step 6")
+    ap.add_argument("--original", action="store_true", help="also compare with the original model (package demucs)")
     args = ap.parse_args(argv)
     if not os.environ.get("ANTHROPIC_API_KEY"):
         out("The variable ANTHROPIC_API_KEY is empty. Set it to an API key of the Claude Console (task O-1).")
@@ -181,7 +279,19 @@ def main(argv=None, out=print):
         row.update({"song": os.path.basename(song), "start_s": round(real_start, 2)})
         rows.append(row)
         out(f"session {i + 1}: {row['status']} after {row['seconds_to_idle']} s, cost {row['list_cost_cents']} cents")
-    result = {"check": "V-06", "results": rows, "verdicts": judge(rows)}
+    verdicts = judge(rows)
+    stems = {}
+    if args.model:
+        folder = os.path.join(args.out, "stems")
+        data, _ = cut(args.audio[0], 0.0, args.range_s)
+        stems["status"] = stems_session(client, ids, data, folder, args.poll_s)
+        sandbox = os.path.join(folder, "sandbox")
+        stems["against_the_same_model_on_a_host"] = compare(sandbox, host_stems(folder, args.model))
+        verdicts["stems_against_the_same_model_on_a_host"] = stems_verdict(stems["against_the_same_model_on_a_host"])
+        if args.original:
+            stems["against_the_original_model"] = compare(sandbox, original_stems(folder))
+            verdicts["stems_against_the_original_model"] = stems_verdict(stems["against_the_original_model"])
+    result = {"check": "V-06", "results": rows, "stems": stems, "verdicts": verdicts}
     os.makedirs(args.out, exist_ok=True)
     with open(os.path.join(args.out, "results.json"), "w") as f:
         json.dump(result, f, indent=1)

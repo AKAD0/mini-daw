@@ -1,9 +1,10 @@
 # opus_implementation_guide.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 6 of 6 (handoff) · **Version:** 2.1 · **Date:** 2026-11-21
+**Stage:** 6 of 6 (handoff) · **Version:** 2.2 · **Date:** 2026-11-21
 **Change in 2.0:** the plan gained version 1.1 with the Decomposer (D-104), and the work moved to the computer of the owner (D-103). Changed parts: Sections 2.2, 3.1 to 3.8, 3.10 to 3.13, 4.3, 5, 6.4, 7.1, 7.3, 8.1, 8.2 and 10.
 **Change in 2.1:** first task of development. The owner wants work without waiting (D-114): steps 1 and 8 of Section 4.1, the form of Section 4.4 and rule 4 of Section 7.2 changed. Section 8.1 names the one command, the list of licences and `CLAUDE.md`. Section 7.3 names Q-19.
+**Change in 2.2:** Section 7.3 names Q-20 and D-115.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `development_roadmap.md`, `risk_assessment.md` and `project_decisions.md` in their newest versions. Every ID in this guide points to one of them.
 
 ---
@@ -482,8 +483,8 @@ These things are no evidence:
 
 | Kind | Items | What they wait for |
 |---|---|---|
-| Open questions | Q-09, Q-10, Q-16, Q-17, Q-18, Q-19 | An answer of the owner. Their defaults are in force (A-18, A-17, D-073, D-105, D-104; for Q-19 nothing changes). |
-| Proposed decisions | D-009, D-074, D-090, D-105 | A word of the owner. For the factory set: the manual test MT-15. |
+| Open questions | Q-09, Q-10, Q-16, Q-17, Q-18, Q-19, Q-20 | An answer of the owner. Their defaults are in force (A-18, A-17, D-073, D-105, D-104; for Q-19 nothing changes; D-115 for Q-20). |
+| Proposed decisions | D-009, D-074, D-090, D-105, D-115 | A word of the owner. For the factory set: the manual test MT-15. |
 | Conditional decisions | D-028, D-035, D-038, D-040, D-041, D-044, D-046, D-047, D-088, D-106, D-107, D-108, D-110 | The checks V-02 to V-07 in PH-00, and the check V-08 in PH-16 |
 | Provisional values | Every value with the mark "(prov.)" | The review of TK-014, or a later measurement |
 | Assumptions about the workflow | A-11, A-16, A-20, A-21, A-22, A-23 | The first weeks of the work |

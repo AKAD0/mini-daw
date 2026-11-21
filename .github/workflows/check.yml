@@ -28,6 +28,13 @@ jobs:
           distribution: temurin
           java-version: "17"
           cache: gradle
+          # A cache of its own: the run "Build" saves a cache without ktlint and detekt under the
+          # same files of the build, so this run would download both every time (TK-013).
+          cache-dependency-path: |
+            **/*.gradle*
+            **/gradle-wrapper.properties
+            gradle/libs.versions.toml
+            .github/workflows/check.yml
 
       - uses: actions/setup-python@v7.1.0
         with:

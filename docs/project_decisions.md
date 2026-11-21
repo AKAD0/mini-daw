@@ -1,7 +1,7 @@
 # project_decisions.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 6 of 6 (handoff) · **Version:** 7.3 · **Date:** 2026-11-21
+**Stage:** 6 of 6 (handoff) · **Version:** 7.4 · **Date:** 2026-11-21
 **Change in 1.1:** feedback from the owner. The project runs no server. D-016 and D-017 are replaced. New: D-027 to D-032, A-14, A-15, AD-33, Q-13. Q-03 is answered.
 **Change in 2.0:** answers of the owner to Q-01, Q-02, Q-04, Q-12 and Q-13. Decisions of Stage 2: D-033 to D-052. Results of Stage 2 in Section 4.7. Tasks for the owner in Section 5.1.
 **Change in 2.1:** answers of the owner to Q-05 and Q-08. D-005 is replaced. New: D-053 to D-056 and Q-14. Tasks O-1 to O-3 changed.
@@ -18,6 +18,7 @@
 **Change in 7.1:** development started with TK-001. The nine documents lie in `docs/`, the script of the checks in `checks/`. D-057 counted 13 modules, but `architecture.md` lists 14 since the change 7.0; D-113 replaces D-057. The owner set rules for work that does not wait for answers (D-114). New: D-113, D-114, Q-19. Changed: A-23, O-6, O-10, O-13, the continuation point.
 **Change in 7.2:** TK-002. The task O-7 names the places where the owner acts. Changed: O-7, the continuation point.
 **Change in 7.3:** TK-012. The task O-1 names the places where the owner enters the new key. Changed: O-1, the continuation point.
+**Change in 7.4:** TK-013. Licences of tools that serve only tests: new Q-20 and D-115 (Proposed). Changed: the continuation point.
 **Companion documents:** `requirements.md` holds the requirements (`FR-`, `NFR-`), the constraints (`CON-`) and the analysis of the brief (`T-`, `U-`, `G-`). `technology_stack.md` holds the choices of technology with their reasons and the checks `V-01` to `V-08`. `architecture.md` holds the structure of the system and the details of D-057 to D-072. `ui_ux_specification.md` holds the layout and the behaviour of the interface. `feature_specifications.md` holds the behaviour of the features, the formats, the acceptance criteria (`AC-`) and the manual tests of the owner (`MT-`). `development_roadmap.md` holds the phases (`PH-`), the tasks (`TK-`) and the gates (`GATE-`). `risk_assessment.md` holds the risks (`RISK-`). `opus_implementation_guide.md` is the entry for the implementer.
 
 ---
@@ -67,10 +68,10 @@ State of the work:
 
 | Item | State |
 |---|---|
-| Phase | PH-00 in progress |
-| Last finished task | TK-012. TK-002 is blocked: it waits for task O-7. |
-| Next task | TK-013 |
-| Open gate | None |
+| Phase | PH-00 in progress. Every task that needs no action of the owner is done or delivered for the gate. |
+| Last finished task | TK-013, delivered for the gate (it waits for O-1 and the run "Sandbox test"). TK-002 is blocked: it waits for task O-7. TK-003 to TK-007 and TK-010 need TK-002. TK-014 needs all of them. |
+| Next task | TK-002 |
+| Open gate | GATE-00 waits for the owner: O-7 (key for signing), O-1 (API key), the runs and the manual checks of PH-00 |
 
 How to continue:
 
@@ -79,7 +80,7 @@ How to continue:
 3. It follows the workflow of `opus_implementation_guide.md` Section 4.1 and the rules of D-114.
 4. The implementer renews this continuation point after every task.
 
-The documents use the defaults of the six open questions: A-18 for Q-09, A-17 for Q-10, D-073 for Q-16, D-105 for Q-17, D-104 for Q-18, and for Q-19 a repository that stays as it is.
+The documents use the defaults of the seven open questions: A-18 for Q-09, A-17 for Q-10, D-073 for Q-16, D-105 for Q-17, D-104 for Q-18, for Q-19 a repository that stays as it is, and D-115 for Q-20.
 
 ---
 
@@ -235,6 +236,7 @@ D-001 to D-032 come from Stage 1. They resolve the conflicts, unclear statements
 | D-112 | The check V-08 belongs to PH-16, not to PH-00. Its host part measures the decomposition on renders of own test Projects with a known tempo and known Notes. Its Sandbox part measures time, steps and cost of real Sessions. | Accepted | The Decomposer is version 1.1. Its check must not delay the MVP. Own test Projects have exact answers and need no outside data set (D-025). | NFR-QLT-06, D-095, D-096 |
 | D-113 | The code has 14 Gradle modules: the 13 modules of D-057 and `:ui:decomposer` of version 1.1 (`architecture.md` Section 2.1). The rest of D-057 stays in force: the layers depend in one direction, only `:extraction` uses the network, one object written by hand wires all parts, and no library serves navigation. The script `checks/check_modules.py` checks the list of modules and the rules on every change. | Accepted | D-057 named 13 modules. The change 7.0 added `:ui:decomposer` to `architecture.md` but kept the count of D-057. TK-001 found the contradiction. | D-057, D-104, AD-04, NFR-MNT-04 |
 | D-114 | Rules of the owner for work that does not wait for answers (goal of 2026-11-21). A task that waits for the owner gets the state "blocked" or "delivered for the gate", together with the action that the owner must take. The implementer then takes the task with the smallest ID whose needed tasks are done or delivered for the gate. Each task has a branch of its own. A branch enters `main` only after a green run "Check". No push is forced, and `origin` is the only remote. A question goes into Section 5 with its default, and the work goes on. | Accepted | The owner asked for work that stops only where the owner must act. The gates of `development_roadmap.md` Section 7 still end each phase. | D-099, D-100, A-20, A-22 |
+| D-115 | A library or a tool that serves only the tests or the build may carry the licence EPL-2.0 or BSL-1.0, besides the licences of D-024. It never enters the app package, the Toolkit or the environment of the Sandbox. The list of licences marks it with the use `test` or `build`, and the script of the licences checks this. | Proposed | JUnit 5 (D-050) carries EPL-2.0. PyTorch, which runs the original model in the check V-06, includes parts under BSL-1.0. D-024 keeps a closed-source release possible; a tool that never ships does not touch it. The owner decides with Q-20. | Q-20, D-024, D-050, NFR-LEG-01 |
 
 ### 3.1 Notes on the decisions with the widest effect
 
@@ -627,7 +629,7 @@ No pending decision is open. The Conditional decisions wait for the checks V-02 
 
 ## 5. Open questions for the owner
 
-No question blocks the work. Six questions are open: Q-09, Q-10, Q-16, Q-17, Q-18 and Q-19. The documents use their defaults.
+No question blocks the work. Seven questions are open: Q-09, Q-10, Q-16, Q-17, Q-18, Q-19 and Q-20. The documents use their defaults.
 
 | ID | Question | Default without an answer | Needed before | Why it matters |
 |---|---|---|---|---|
@@ -650,6 +652,7 @@ No question blocks the work. Six questions are open: Q-09, Q-10, Q-16, Q-17, Q-1
 | Q-17 | Does "a link with timestamps" include links to streaming platforms, for example YouTube? | No. The Decomposer takes direct links to audio files only (D-105). | TK-106 | D-015 keeps such links out because of the terms of the platforms. Another answer needs a new decision and a new look at RISK-18. |
 | Q-18 | Shall the Decomposer be built before the other phases of version 1.0, directly after extraction? | No. It follows version 1.0 (D-104). | GATE-10 | Only the order changes. PH-16 and PH-17 need GATE-10 and the task TK-097. |
 | Q-19 | The repository at GitHub is public, but task O-6 asked for a private one. Shall it become private? | It stays as it is. The implementer treats every file in it as public: no secret and no private data enter it (NFR-SEC-01). | O-7 | O-7 puts the file of the key for signing into the repository, protected by a password (D-094). In a public repository anyone can copy this file and try passwords, so the password must be long and random. A private repository has a monthly limit of minutes for the CI service that depends on the plan of the account (A-21). The standard runners are free for a public repository. |
+| Q-20 | May a library or a tool that serves only the tests or the build carry the licence EPL-2.0 (JUnit 5) or BSL-1.0 (a part of PyTorch)? Neither enters the app or the Sandbox. | Yes, for tests and the build only (D-115). | TK-015 | D-024 lists permissive licences for libraries. Without these two licences, the Kotlin tests need another test runner than JUnit (D-050), and the check V-06 cannot compare the stems with the original model. |
 
 ### 5.1 Tasks for the owner
 
@@ -692,3 +695,4 @@ No question blocks the work. Six questions are open: Q-09, Q-10, Q-16, Q-17, Q-1
 | 2026-11-21 | Development | Version 7.1. TK-001 started. The documents moved to `docs/` and `checks/`. New: D-113 (replaces D-057), D-114, Q-19. Changed: A-23, O-6, O-10, O-13, the continuation point. |
 | 2026-11-21 | Development | Version 7.2. TK-002: the pipeline of the builds. O-7 names the secret `SIGNING_PASSWORD` and the run "Key for signing". |
 | 2026-11-21 | Development | Version 7.3. TK-012: the setup script and the test script of the Sandbox. O-1 names the secret `ANTHROPIC_API_KEY`. |
+| 2026-11-21 | Development | Version 7.4. TK-013: Q-20 and D-115 (Proposed) about the licences of tools for tests only. |

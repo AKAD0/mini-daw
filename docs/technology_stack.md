@@ -1,7 +1,7 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.6 · **Date:** 2026-11-21
+**Stage:** 2 of 6 (technical research) · **Version:** 2.7 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
@@ -13,6 +13,7 @@
 **Change in 2.4:** TK-011. The program Convert reads WAV with SciPy and uses ffmpeg for other formats only. Changed part: Section 9.4.
 **Change in 2.5:** TK-011 attached the file with 16-bit weights and tested it. Changed part: Section 9.4 (fact 7).
 **Change in 2.6:** TK-012 named the model tiers and the library of the setup script. Changed part: Section 9.3.
+**Change in 2.7:** TK-013. Section 1 gives the licence of JUnit 5 (D-115). Section 9.6 names how step 5 compares the stems.
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -58,7 +59,7 @@ Conventions:
 | Notes of a decomposition (version 1.1) | The hits become Notes. The stem of the bass goes through the conversion of the phone, with a low register. | own code | D-108, test pending |
 | Storage of the API key | AES-GCM key from the Android Keystore | part of Android | D-048 |
 | Work in the background | Kotlin coroutines; WorkManager for the follow-up of jobs of both kinds | Apache-2.0 | D-049 |
-| Tests | JUnit, Compose tests, Macrobenchmark; GoogleTest and sanitizers on a host; pytest | Apache-2.0, BSD | D-050 |
+| Tests | JUnit, Compose tests, Macrobenchmark; GoogleTest and sanitizers on a host; pytest | Apache-2.0, BSD, MIT; JUnit 5: EPL-2.0 for tests only (D-115) | D-050 |
 | Diagnostics | On the phone only | — | D-051 |
 | MIDI files | Own writer | own code | D-052 |
 
@@ -518,7 +519,7 @@ Steps:
 2. A test script runs 10 Sessions on ranges of 40 s from three songs. Half use the small model tier and half the middle tier.
 3. The script records for each Session: time until `idle`, time until the first action of the agent, tokens, cost.
 4. One Session runs while the test script is disconnected.
-5. The script compares the stems with the stems of the original model on the same audio.
+5. The script compares the stems with the stems of the original model on the same audio. One more Session with a fixed instruction writes the four stems of the first range. The script compares them with the stems of the same model file on the host and with the stems of the original model of the package demucs 4.1.0. Each stem must reach 30 dB (prov.), the threshold of rule 2 of `feature_specifications.md` Section 5.8 (TK-013).
 6. The owner listens to three results.
 
 The pass rules are in Section 14.

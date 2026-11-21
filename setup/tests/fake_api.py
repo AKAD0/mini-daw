@@ -17,6 +17,8 @@ STAMP = "2026-11-21T00:00:00Z"
 class FakeApi:
     def __init__(self, reads_until_idle=2):
         self.requests = []
+        # Files that a Session with its own system prompt writes (the stems of step 6 of V-06).
+        self.stem_files = {}
         self.agents, self.environments, self.files, self.sessions = {}, {}, {}, {}
         self.contents, self.events = {}, {}
         self.reads_until_idle = reads_until_idle
@@ -116,6 +118,11 @@ class FakeApi:
                                     "list_cost": {"amount": "4", "currency": "USD"}}
                 self.events[session["id"]].append({"type": "agent.tool_use", "id": self.next_id("sevt"),
                                                    "name": "bash", "processed_at": STAMP})
+                agent = session["request"].get("agent")
+                if isinstance(agent, dict) and "system" in agent:
+                    for name, content in self.stem_files.items():
+                        self.add_file(name, content, scope=session["id"])
+                    return self.public(session)
                 report = {"version": 1, "toolkit": "0.1.0", "status": "done", "steps": ["quick"], "models": [],
                           "candidates": [{"file": "candidate_1.wav", "label": "Drums", "note": "n", "stem": "drums",
                                           "length_s": 1.0, "peak_db": -1.0}]}
