@@ -68,8 +68,8 @@ State of the work:
 | Item | State |
 |---|---|
 | Phase | PH-00 in progress |
-| Last finished task | TK-011. TK-002 is blocked: it waits for task O-7. |
-| Next task | TK-012 |
+| Last finished task | TK-012. TK-002 is blocked: it waits for task O-7. |
+| Next task | TK-013 |
 | Open gate | None |
 
 How to continue:

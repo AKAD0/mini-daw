@@ -221,3 +221,33 @@ Notes:
      builds (technology_stack.md 2.5, Section 9.4, fact 7).
 ```
 
+```text
+TK-012  Setup script and test script of the Sandbox
+State: done
+Change: branch tk-012, merged into main
+Criteria (run "Check" 44859287804, part "toolkit-tests", folder setup/tests, 13 tests; the real SDK
+anthropic 2.6.0 against a fake of the API on 127.0.0.1, no call of the real service):
+  AC-AIX-18: pass
+    "A second run changes nothing": test_a_second_run_changes_nothing (no POST and no DELETE in the
+      second run; the same items), test_check_reports_and_changes_nothing,
+      test_an_item_with_other_content_stops_the_setup
+    "The limited network of D-047": test_the_environment_has_the_limited_network_of_d047
+      (networking = {"type": "limited", "allow_package_managers": true}; the pip packages of
+      toolkit/requirements.txt)
+  Also: the agent has the small tier, the prompt of 5.2.4 and only bash, read and write
+    (test_the_agent_has_the_small_tier_the_prompt_and_three_tools); the key is never printed;
+    the prompt file equals the specification; 4 tests of setup/sandbox_test.py.
+Documents: feature_specifications.md 2.6 (Section 5.2.8), technology_stack.md 2.6 (Section 9.3),
+  development_roadmap.md 2.4 (Section 2.3), project_decisions.md 7.3 (O-1)
+Decisions: none
+Owner: none for TK-012. TK-013 needs the new API key of O-1.
+Notes:
+  1. The setup script and the test script use the official Python SDK; only the phone works without
+     an SDK (D-045). The real service has not been called. The owner starts every run that calls it.
+  2. A run "Check" (44858882000) failed once because Maven Central did not answer for ktlint-cli and
+     detekt-cli. Both files are there (HTTP 200); the next run passed. No change of the build.
+  3. Step 5 of V-06 (the stems of the Sandbox against the stems of a host) is open; TK-013 adds it
+     before the owner runs the check. Rule 2 of feature_specifications.md 5.8 (the ONNX file against
+     the original model) belongs to TK-068 (AC-AIX-10).
+```
+
