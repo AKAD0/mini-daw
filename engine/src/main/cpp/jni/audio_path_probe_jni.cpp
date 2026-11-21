@@ -16,8 +16,8 @@ extern "C" JNIEXPORT jstring JNICALL Java_app_minidaw_engine_AudioPathProbe_prob
   return env->NewStringUTF(json.c_str());
 }
 
-extern "C" JNIEXPORT jstring JNICALL Java_app_minidaw_engine_AudioPathProbe_probeInput(
-    JNIEnv* env, jobject /* self */) {
+extern "C" JNIEXPORT jstring JNICALL
+Java_app_minidaw_engine_AudioPathProbe_probeInput(JNIEnv* env, jobject /* self */) {
   const std::string json = probeInput();
   return env->NewStringUTF(json.c_str());
 }

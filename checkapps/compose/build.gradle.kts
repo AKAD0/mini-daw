@@ -21,6 +21,10 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = buildNumber
         versionName = "0.1.$buildNumber"
+        // 64-bit ARM only, as the release build of the product (D-034)
+        ndk {
+            abiFilters += listOf("arm64-v8a")
+        }
     }
     buildFeatures {
         compose = true

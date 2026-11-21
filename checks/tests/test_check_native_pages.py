@@ -68,6 +68,12 @@ class Packages(unittest.TestCase):
         shifted = self.package([("lib/arm64-v8a/liba.so", elf(16384))], stored_at=4096)
         self.assertEqual(len(check_native_pages.check([shifted])), 1)
 
+    def test_a_32_bit_library_is_named_as_such(self):
+        data = b"\x7fELF\x01\x01" + bytes(58)
+        problems = check_native_pages.check([self.package([("lib/x86/liba.so", data)])])
+        self.assertEqual(len(problems), 1)
+        self.assertIn("32-bit", problems[0])
+
     def test_a_package_without_native_code_passes(self):
         self.assertEqual(check_native_pages.check([self.package([("classes.dex", b"dex")])]), [])
 

@@ -2,7 +2,8 @@
 
 Run:  python3 checks/check_native_pages.py FILE [FILE ...]
 
-Each shared library `lib/<ABI>/*.so` of each package must be a 64-bit ELF file whose segments of
+The packages hold 64-bit code only (D-034). Each shared library `lib/<ABI>/*.so` of each package
+must be a 64-bit ELF file whose segments of
 type LOAD are aligned to at least 16,384 bytes. A library that the package stores uncompressed must
 also start at a multiple of 16,384 bytes in the package, so that Android can map it from there.
 A package without native code passes. The last line reads "NATIVE PAGES: OK" or
@@ -15,12 +16,14 @@ import zipfile
 
 PAGE = 16384
 PT_LOAD = 1
+ELF32 = 1
+ELF64 = 2
 LOCAL_HEADER = 30
 
 
 def load_alignments(data):
     """The alignments of the LOAD segments of a 64-bit little-endian ELF file, or None."""
-    if len(data) < 64 or data[:4] != b"\x7fELF" or data[4] != 2 or data[5] != 1:
+    if len(data) < 64 or data[:4] != b"\x7fELF" or data[4] != ELF64 or data[5] != 1:
         return None
     phoff, = struct.unpack_from("<Q", data, 32)
     phentsize, phnum = struct.unpack_from("<HH", data, 54)
@@ -52,8 +55,11 @@ def check_package(path):
                 continue
             libraries += 1
             place = f"{path}!{info.filename}"
-            alignments = load_alignments(package.read(info))
-            if alignments is None:
+            data = package.read(info)
+            alignments = load_alignments(data)
+            if alignments is None and data[:4] == b"\x7fELF" and data[4] == ELF32:
+                problems.append(f"{place} is 32-bit code; the packages hold 64-bit code only (D-034)")
+            elif alignments is None:
                 problems.append(f"{place} is no 64-bit ELF file")
             elif not alignments or min(alignments) < PAGE:
                 problems.append(f"{place}: LOAD segments aligned to {alignments}, need {PAGE}")
