@@ -67,9 +67,10 @@ Criteria:
 Documents: feature_specifications.md 2.1 (Section 6.12), development_roadmap.md 2.2, project_decisions.md 7.2
 Decisions: none
 Owner:
-  1. O-7: set the secret SIGNING_PASSWORD (GitHub, repository mini-daw: Settings, Secrets and variables,
-     Actions, New repository secret), then start the run "Key for signing" (Actions, Run workflow).
-  2. Then the implementer merges the branch signing-key. The next run "Build" publishes build-<number>.
+  1. Done on 2026-11-21: O-7. The secret SIGNING_PASSWORD is set, and the run "Key for signing"
+     44901075833 sent the branch signing-key.
+  2. Done on 2026-11-21: the implementer merged signing-key into main after the run "Check" 44901483831.
+     The run "Build" 44901885994 published build-16 with four files, each with an APK signature v2.
   3. O-8 and TK-002: on the phone, open the page releases/latest of the repository, install
      mini-daw-test-<version>.apk, open "mini daw test", tap Measurements, mark Pass or Fail, tap
      "Share results" and put the file into docs/results/ of the local copy.
