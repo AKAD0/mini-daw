@@ -68,9 +68,9 @@ State of the work:
 
 | Item | State |
 |---|---|
-| Phase | PH-00 in progress. Every task that needs no action of the owner is done or delivered for the gate. |
-| Last finished task | TK-013, delivered for the gate (it waits for O-1 and the run "Sandbox test"). TK-002 is blocked: it waits for task O-7. TK-003 to TK-007 and TK-010 need TK-002. TK-014 needs all of them. |
-| Next task | TK-002 |
+| Phase | PH-00 in progress |
+| Last finished task | TK-003, delivered for the gate. TK-002 and TK-013 are delivered for the gate too: they wait for O-7 and O-1. |
+| Next task | TK-004 |
 | Open gate | GATE-00 waits for the owner: O-7 (key for signing), O-1 (API key), the runs and the manual checks of PH-00 |
 
 How to continue:

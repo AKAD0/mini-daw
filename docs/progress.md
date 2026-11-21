@@ -56,7 +56,8 @@ Notes:
 
 ```text
 TK-002  CI service, key for signing, delivery of builds
-State: blocked (waits for the owner: task O-7, then the install and the file of results)
+State: delivered for the gate (corrected in TK-003 from "blocked": the implementer has nothing
+       left to do; only O-7, the install and the file of results remain, guide 2.3 Section 4.4)
 Change: branch tk-002, merged into main
 Criteria:
   AC-APP-20: pass (part "app-package" of the one command: app-release-unsigned.apk has 17,952 bytes
@@ -281,5 +282,32 @@ Notes:
      The run "Build" had saved a cache without ktlint and detekt under the same key, so every run
      "Check" downloaded both; twice (44858882000, 44860008214 attempt 1) Maven Central did not
      answer in time.
+```
+
+```text
+TK-003  Check V-01: facts of the phone
+State: delivered for the gate (the measurement is in the test build; the phone is needed)
+Change: branch tk-003, merged into main
+Criteria:
+  "The nine values of requirements.md Section 3.2 are recorded": not measured yet. The test build
+  holds the part "V-01: facts of the phone" of the screen Measurements:
+    read from Android: model, Android version, the system features low_latency and pro, the native
+      rate and the Burst of the output, the size of the window in dp in landscape, the insets of the
+      cutout and of the system gestures, total RAM, the memory classes, free storage, the inputs with
+      their sample rates, the preset UNPROCESSED, and the level of noise of the microphone over 2 s;
+    typed by the owner: the One UI version, the path of the output and the values of OboeTester
+      (round trip and tap to sound for three outputs, Underruns with and without battery saver),
+      the memory limit of Android 17 where a screen shows it;
+    item 6 (cold start of an empty app) comes from V-02 (TK-004).
+  The code compiles and passes ktlint and detekt in the run "Check" of this change.
+Documents: feature_specifications.md 2.7 (Section 6.12), opus_implementation_guide.md 2.3 (Section 4.4),
+  development_roadmap.md 2.6 (Section 6.1)
+Decisions: none
+Owner (O-2, after TK-002): install the test build, open Measurements, tap "Read the facts" and
+  "Measure the noise" in a quiet room, type the values from OboeTester and the settings, share the
+  file of results and put it into docs/results/.
+Notes:
+  1. The test build asks for the permission of the microphone only when the owner taps the noise
+     measurement. The release build does not have this permission.
 ```
 

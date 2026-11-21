@@ -18,14 +18,37 @@ internal object Results {
     private const val INDENT = 2
     private val STAMP = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss", Locale.ROOT).withZone(ZoneOffset.UTC)
 
-    fun collect(context: Context, installVerdict: Verdict): JSONObject {
+    fun collect(context: Context, installVerdict: Verdict, rows: List<ResultRow> = emptyList()): JSONObject {
         val json = JSONObject()
         json.put("format", FORMAT)
         json.put("formatVersion", FORMAT_VERSION)
         json.put("createdAt", Instant.now().toString())
         json.put("build", build(context))
         json.put("device", device())
-        json.put("results", JSONArray().put(installRow(installVerdict)))
+        val results = JSONArray().put(installRow(installVerdict))
+        for (row in rows) {
+            results.put(rowOf(row))
+        }
+        json.put("results", results)
+        return json
+    }
+
+    private fun rowOf(row: ResultRow): JSONObject {
+        val json = JSONObject()
+        json.put("id", row.id)
+        json.put("kind", row.kind)
+        json.put("title", row.title)
+        // A value of V-01 has no pass rule; the file records it (feature_specifications.md 6.12).
+        json.put("verdict", "recorded")
+        if (row.value != null) {
+            json.put("value", row.value)
+        }
+        if (row.unit.isNotEmpty()) {
+            json.put("unit", row.unit)
+        }
+        if (row.note.isNotEmpty()) {
+            json.put("note", row.note)
+        }
         return json
     }
 

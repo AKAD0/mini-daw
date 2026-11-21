@@ -9,4 +9,8 @@
     <string name="verdict_line">Your verdict: %1$s</string>
     <string name="share_results">Share results</string>
     <string name="shown_results">The file of results holds this text:</string>
+    <string name="v01_title">V-01: facts of the phone</string>
+    <string name="v01_facts">Read the facts that Android reports</string>
+    <string name="v01_noise">Measure the noise of the microphone (keep the room quiet for 3 s)</string>
+    <string name="v01_entries">Values from OboeTester and from the settings. Leave a field empty when you do not know the value.</string>
 </resources>

@@ -2,11 +2,16 @@
 <!-- Parts that only the test build holds (development_roadmap.md Section 2.2) -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- The level of noise of the microphone (V-01, requirements.md Section 3.2, item 9) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application>
 
+        <!-- Landscape, so that V-01 reads the size of the screen in landscape (item 7) -->
         <activity
             android:name=".measure.MeasurementsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="sensorLandscape" />
 
         <provider
             android:name=".measure.ResultsProvider"

@@ -1,7 +1,7 @@
 # development_roadmap.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 5 of 6 (roadmap) · **Version:** 2.5 · **Date:** 2026-11-21
+**Stage:** 5 of 6 (roadmap) · **Version:** 2.6 · **Date:** 2026-11-21
 **Change in 1.1:** final check of Stage 6. The 22 new criteria of `feature_specifications.md` 1.2 have their tasks. The pointers to `opus_implementation_guide.md` name its sections. The run "Build" checks the size of the release build. Changed parts: Sections 2.1, 2.3, 2.6, 6.1, 6.3, 6.5 to 6.10, 6.13 to 6.15, 8.2, 9.1, 9.2 and 10.
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). The implementer works on the computer of the owner (D-103). New parts: Section 3.5, the phases PH-16 to PH-18 (Sections 6.17 to 6.19) with the tasks TK-100 to TK-115, the gates GATE-16 to GATE-18, Section 7.4, the milestone M6. Changed parts: Sections 1.1, 1.2, 2.1, 2.3, 2.5, 2.7, 3.1, 3.4, 4.1, 4.2, 4.3, 6.1 (objectives, TK-014), 7.2, 8.1, 8.2, 9.1 and 10.
 **Change in 2.1:** TK-001. Section 2.1 names the list of licences and `CLAUDE.md`. Section 2.3 names the one command and its behaviour when a tool is missing.
@@ -9,6 +9,7 @@
 **Change in 2.3:** TK-009. Section 2.3 has the run "Humming evaluation".
 **Change in 2.4:** TK-012. Section 2.3 names the scripts of the setup and of the Sandbox test.
 **Change in 2.5:** TK-013. Section 2.3 names the workflow of the Sandbox test.
+**Change in 2.6:** TK-003. Section 6.1 says where each value of V-01 comes from.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `risk_assessment.md`, `opus_implementation_guide.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `D-`, `V-`, `AC-`, `MT-` and `RISK-` point to them.
 
 ---
@@ -401,6 +402,8 @@ How three checks can run this early (D-095):
 The recordings of the owner stay on the phone. The file of results holds numbers and verdicts. The owner decides whether to share the audio as well (NFR-SEC-03).
 
 The app for the checks is the test build of `:app` (TK-002). Each check adds its part to the screen "Measurements". The check V-02 needs two empty apps of its own (TK-004).
+
+Sources of the nine values of V-01 (`requirements.md` Section 3.2, TK-003): the test build reads items 2, 7 and 9 and parts of items 1, 3 and 8 from Android. The owner types the One UI version, the path of the output, the values of OboeTester for items 4 and 5, and a memory limit of Android 17 where a screen shows it. Item 6, the cold start of an empty app, comes from the check V-02 (TK-004).
 
 ### 6.2 PH-01: model of a Project
 

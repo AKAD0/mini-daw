@@ -1,10 +1,11 @@
 # opus_implementation_guide.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 6 of 6 (handoff) · **Version:** 2.2 · **Date:** 2026-11-21
+**Stage:** 6 of 6 (handoff) · **Version:** 2.3 · **Date:** 2026-11-21
 **Change in 2.0:** the plan gained version 1.1 with the Decomposer (D-104), and the work moved to the computer of the owner (D-103). Changed parts: Sections 2.2, 3.1 to 3.8, 3.10 to 3.13, 4.3, 5, 6.4, 7.1, 7.3, 8.1, 8.2 and 10.
 **Change in 2.1:** first task of development. The owner wants work without waiting (D-114): steps 1 and 8 of Section 4.1, the form of Section 4.4 and rule 4 of Section 7.2 changed. Section 8.1 names the one command, the list of licences and `CLAUDE.md`. Section 7.3 names Q-19.
 **Change in 2.2:** Section 7.3 names Q-20 and D-115.
+**Change in 2.3:** Section 4.4 says when a task counts as delivered for the gate.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `development_roadmap.md`, `risk_assessment.md` and `project_decisions.md` in their newest versions. Every ID in this guide points to one of them.
 
 ---
@@ -351,6 +352,8 @@ Notes: <open points, faults found outside the task>
 ```
 
 A task that waits for the owner is "blocked" or "delivered for the gate". Its line "Owner" names the action. The work goes on with the next task that step 1 allows.
+
+Choose between the two states this way. Delivered for the gate: the implementer has nothing left to do, and only steps of the owner remain, even when one of them comes before the install. Blocked: the implementer cannot finish its own part without an answer or a result of the owner.
 
 The continuation point in `project_decisions.md` Section 1 names the current phase, the last finished task and the next task. A new session starts there.
 

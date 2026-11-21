@@ -1,23 +1,26 @@
 package app.minidaw.measure
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Bundle
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import app.minidaw.R
 
 /**
- * The screen "Measurements" of a test build (ui_ux_specification.md Section 15.4). This first version
- * holds the row of TK-002 and the button that shares the results as a file (NFR-MNT-06). Later tasks add
- * one button per measurement.
+ * The screen "Measurements" of a test build (ui_ux_specification.md Section 15.4). It holds the row of
+ * TK-002, the check V-01 (TK-003) and the button that shares the results as a file (NFR-MNT-06).
  */
 class MeasurementsActivity : Activity() {
 
     private var verdict = Verdict.NOT_RUN
+    private var facts: List<ResultRow> = emptyList()
+    private var noise: ResultRow? = null
+    private val entries = Entries()
     private lateinit var verdictView: TextView
     private lateinit var resultsView: TextView
 
@@ -28,31 +31,30 @@ class MeasurementsActivity : Activity() {
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         layout.setPadding(padding, padding, padding, padding)
+        layout.text(getString(R.string.measurements_title), TITLE_SP)
 
-        val title = TextView(this)
-        title.text = getString(R.string.measurements_title)
-        title.textSize = TITLE_SP
-        layout.addView(title)
+        layout.text(getString(R.string.install_question))
+        val row = LinearLayout(this)
+        row.orientation = LinearLayout.HORIZONTAL
+        row.button(getString(R.string.mark_pass)) { mark(Verdict.PASS) }
+        row.button(getString(R.string.mark_fail)) { mark(Verdict.FAIL) }
+        layout.addView(row)
+        verdictView = layout.text("")
 
-        val question = TextView(this)
-        question.text = getString(R.string.install_question)
-        layout.addView(question)
-        layout.addView(markRow())
+        layout.text(getString(R.string.v01_title), SECTION_SP)
+        layout.button(getString(R.string.v01_facts)) {
+            facts = PhoneFacts.collect(this)
+            refresh()
+        }
+        layout.button(getString(R.string.v01_noise)) { measureNoise() }
+        layout.text(getString(R.string.v01_entries))
+        entries.addTo(layout)
+        entries.restore(savedInstanceState)
 
-        verdictView = TextView(this)
-        layout.addView(verdictView)
-
-        val share = Button(this)
-        share.text = getString(R.string.share_results)
-        share.setOnClickListener { share() }
-        layout.addView(share)
-
-        val shown = TextView(this)
-        shown.text = getString(R.string.shown_results)
-        layout.addView(shown)
-        resultsView = TextView(this)
+        layout.button(getString(R.string.share_results)) { share() }
+        layout.text(getString(R.string.shown_results))
+        resultsView = layout.text("")
         resultsView.typeface = Typeface.MONOSPACE
-        layout.addView(resultsView)
 
         val scroll = ScrollView(this)
         scroll.addView(layout)
@@ -63,20 +65,14 @@ class MeasurementsActivity : Activity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_VERDICT, verdict.name)
+        entries.save(outState)
     }
 
-    private fun markRow(): LinearLayout {
-        val row = LinearLayout(this)
-        row.orientation = LinearLayout.HORIZONTAL
-        val pass = Button(this)
-        pass.text = getString(R.string.mark_pass)
-        pass.setOnClickListener { mark(Verdict.PASS) }
-        row.addView(pass)
-        val fail = Button(this)
-        fail.text = getString(R.string.mark_fail)
-        fail.setOnClickListener { mark(Verdict.FAIL) }
-        row.addView(fail)
-        return row
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_MICROPHONE && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
+            measureNoise()
+        }
     }
 
     private fun mark(value: Verdict) {
@@ -84,13 +80,32 @@ class MeasurementsActivity : Activity() {
         refresh()
     }
 
+    private fun measureNoise() {
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_MICROPHONE)
+            return
+        }
+        val unprocessed = PhoneFacts.unprocessedInput(this)
+        Thread {
+            val level = NoiseLevel.measure(unprocessed)
+            val source = if (unprocessed) "UNPROCESSED" else "MIC"
+            val result = ResultRow("V-01", "measurement", "Level of noise of the microphone", level, "dBFS", source)
+            runOnUiThread {
+                noise = result
+                refresh()
+            }
+        }.start()
+    }
+
+    private fun rows(): List<ResultRow> = facts + listOfNotNull(noise) + entries.rows()
+
     private fun refresh() {
         verdictView.text = getString(R.string.verdict_line, verdict.word)
-        resultsView.text = Results.text(Results.collect(this, verdict))
+        resultsView.text = Results.text(Results.collect(this, verdict, rows()))
     }
 
     private fun share() {
-        val file = Results.write(this, Results.collect(this, verdict))
+        val file = Results.write(this, Results.collect(this, verdict, rows()))
         val send = Intent(Intent.ACTION_SEND)
         send.type = "application/json"
         send.putExtra(Intent.EXTRA_STREAM, ResultsProvider.uriFor(this, file.name))
@@ -101,7 +116,9 @@ class MeasurementsActivity : Activity() {
 
     private companion object {
         const val KEY_VERDICT = "verdict"
+        const val REQUEST_MICROPHONE = 1
         const val PADDING_DP = 24
         const val TITLE_SP = 24f
+        const val SECTION_SP = 20f
     }
 }
