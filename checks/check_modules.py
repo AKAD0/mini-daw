@@ -10,7 +10,8 @@ Checked rules of architecture.md Section 2.1:
   2, 3   A UI module reaches only `:ui:kit`, `:core` and `:engine-api`, also through other modules.
   4      Only `:extraction` declares a library for the network, imports classes for the network
          or asks for the permission INTERNET.
-  6      `engine-core` includes no header of Android.
+  6      `engine-core` includes no header of Android. The same holds for `analysis-core`, the portable
+         part of `:analysis`, because its tests run on a host too (feature_specifications.md 4.8).
 The last line reads "MODULE RULES: OK" or "MODULE RULES: <n> PROBLEM(S)".
 """
 
@@ -52,7 +53,10 @@ ANDROID_HEADER = re.compile(
     r')[>"]',
     re.M,
 )
-ENGINE_CORE = "engine/src/main/cpp/engine-core"
+PORTABLE = {
+    "engine-core": "engine/src/main/cpp/engine-core",
+    "analysis-core": "analysis/src/main/cpp/analysis-core",
+}
 
 
 def module_dir(module):
@@ -182,10 +186,11 @@ def check(root):
         if m in closure(m, deps):
             problems.append(f"rule 1: {m} depends on itself through other modules")
 
-    for path in source_files(root, ENGINE_CORE, (".h", ".hpp", ".cpp", ".cc", ".c")):
-        for header in ANDROID_HEADER.findall(read(path)):
-            where = os.path.relpath(path, root)
-            problems.append(f"rule 6: engine-core includes the Android header {header} in {where}")
+    for name, rel in PORTABLE.items():
+        for path in source_files(root, rel, (".h", ".hpp", ".cpp", ".cc", ".c")):
+            for header in ANDROID_HEADER.findall(read(path)):
+                where = os.path.relpath(path, root)
+                problems.append(f"rule 6: {name} includes the Android header {header} in {where}")
     return problems
 
 

@@ -11,4 +11,4 @@ Checks: >
   readability-braces-around-statements,
   readability-uppercase-literal-suffix
 WarningsAsErrors: '*'
-HeaderFilterRegex: '.*/engine-core/include/.*'
+HeaderFilterRegex: '.*/include/minidaw/.*'

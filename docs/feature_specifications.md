@@ -1,11 +1,12 @@
 # feature_specifications.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 4 of 6 (feature specifications) · **Version:** 2.1 · **Date:** 2026-11-21
+**Stage:** 4 of 6 (feature specifications) · **Version:** 2.2 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 5. Each criterion now belongs to one task of `development_roadmap.md`. Changed criteria: AC-TR-06, AC-TR-09, AC-MX-08, AC-MX-09, AC-FX-04, AC-FX-12, AC-AIX-03. New criterion: AC-TR-14. Changed parts: Section 9 (rules, MT-08), Section 10 (places of the checks).
 **Change in 1.2:** final check of Stage 6. Each criterion was compared with its requirements, and each task of `development_roadmap.md` with its criteria. New criteria: AC-APP-19 to AC-APP-21, AC-TR-15, AC-PL-17 to AC-PL-21, AC-PT-10, AC-PT-11, AC-LIB-10 to AC-LIB-12, AC-MX-21, AC-FX-17, AC-REC-15 to AC-REC-18, AC-H2M-16, AC-H2M-17. Changed criteria: AC-WS-10, AC-APP-01, AC-APP-05, AC-APP-16, AC-TR-08, AC-TR-12, AC-PL-09, AC-CR-10, AC-SM-01, AC-LIB-07, AC-MX-13, AC-MX-20, AC-FX-10, AC-FX-12, AC-REC-12, AC-H2M-08, AC-H2M-10, AC-H2M-12, AC-AIX-04 to AC-AIX-06, AC-AIX-13, AC-AIX-15, AC-AIX-16, AC-AIX-18, AC-FS-06. Changed manual tests: MT-01, MT-14. Changed parts: the conventions (rule for the mark "P1:", D-102), Sections 1.1, 2.2.1, 2.2.2, 2.2.6, 4.2.6 and 5.3, Section 10 (place of NFR-MNT-07), Section 11 (source F6).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: Section 12 with the criteria AC-DEC-01 to AC-DEC-33, Section 6.11, the manual test MT-21, the sources F7 to F9. Changed parts: the conventions 3, 9 and 12, Section 4.2.7 (low register), Section 5.2.8 (rule 5), Section 6.5 (version 2), Section 6.6 (schema 2), Section 9 (MT-13, MT-14), Section 10 (FR-AIX-18, FR-DEC-24).
 **Change in 2.1:** TK-002 fixed the format of the file of results of a test build. New: Section 6.12. Changed: rule 4 of Section 9.
+**Change in 2.2:** TK-008 named the details of the own pYIN and of the code for Notes, and two limits that its tests found. Changed parts: Sections 4.2.4, 4.2.5 and 4.6.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `ui_ux_specification.md`, `development_roadmap.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-` and `V-` point to them.
 
 ---
@@ -1069,6 +1070,18 @@ Rules:
 1. Both candidates sit behind the interface `PitchDetector`. The code for Notes does not know which one runs.
 2. The check V-05 picks one candidate and sets the final value of the lowest confidence.
 3. The result of this step is stored in the cache (Section 6.5). A second run with other settings reads it from there.
+4. Both candidates compute the loudness the same way: the level of the 32 ms of audio centered on the frame. Frame i lies at the time i × 16 ms.
+
+Details of the own pYIN (TK-008):
+
+| Part | Value |
+|---|---|
+| Difference function | The symmetric form: for each lag, the compared samples lie centered on the frame |
+| Thresholds | 0.01 to 1.00 in steps of 0.01, with a Beta prior of mean 0.1 (α = 2, β = 18). A threshold that finds no trough gives 1 % of its weight to the lowest trough. |
+| Refinement of a period | A parabola through the raw difference function |
+| Hidden Markov model | Bins of 20 cents from 60 Hz up. A jump of at most 35.92 octaves per second. A probability of 0.01 for a change between voiced and unvoiced. |
+| Confidence | The share of the prior of the thresholds that found a trough, for a frame that the model marks as voiced. 0 otherwise. |
+| Silence | A window whose peak lies below 10⁻⁴ gives no pitch |
 
 #### 4.2.5 Code for Notes (AD-22, D-087)
 
@@ -1078,7 +1091,7 @@ Steps:
 
 1. Each frequency becomes a pitch number with a fraction: `69 + 12 × log2(frequency / 440)`.
 2. A frame counts as voiced when its confidence and its loudness pass their limits.
-3. A median over 5 voiced frames smooths the pitch. It removes single wrong values, such as a jump by an octave.
+3. A median over 5 voiced frames smooths the pitch. It removes single wrong values, such as a jump by an octave. The median of a frame takes the voiced frames among this frame and the two frames on each side.
 4. A Note opens at the first voiced frame after silence.
 5. The open Note keeps the median of its pitches so far.
 6. A gap without voiced frames closes the Note when the gap is longer than 48 ms. A shorter gap is bridged.
@@ -1100,7 +1113,7 @@ Values of one Note:
 | Longest gap that is bridged | 48 ms | — |
 | Change of pitch that splits a Note | 0.8 semitones for 48 ms | — |
 | Shortest Note | 80 ms | P1: "Shortest Note" |
-| Lowest loudness of a voiced frame | −50 dBFS, and at most 30 dB below the loud parts of the Take | — |
+| Lowest loudness of a voiced frame | −50 dBFS, and at most 30 dB below the loud parts of the Take. The loud parts are the 95th percentile of the loudness of all frames with sound. | — |
 | Range of pitch for a voice | 60 to 1,047 Hz | P1: "Range of pitch" |
 | Range of pitch for a whistle | 500 to 2,094 Hz | P1: "Range of pitch" |
 | Border between a voice and a whistle | A median frequency of 800 Hz | — |
@@ -1179,7 +1192,7 @@ This feature needs no network and no service (FR-H2M-02).
 | Edit "replace Notes of Part" (P1) | Pattern, Sampler instrument, new Notes |
 | Result of the recording | Path of the file, number of frames, the values of Section 4.2.2 for the first and the last frame |
 | Settings of the conversion | Shortest Note, range of pitch, shift by octaves, quantization |
-| Result of `HummingConverter` | A list of Notes in seconds: start, end, pitch with a fraction, loudness. The measured shift of the tuning. |
+| Result of `HummingConverter` | A list of Notes in seconds: start, end, pitch with a fraction, loudness. The measured shift of the tuning. The range of pitch, voice or whistle, with the shift by octaves that `:core` applies (Section 4.2.6). |
 | Cache of the pitch | Section 6.5 |
 | Interface `HummingConverter` | `architecture.md` Section 12.1 |
 
@@ -1200,13 +1213,14 @@ This feature needs no network and no service (FR-H2M-02).
 1. The conversion handles one voice. Two voices, or a voice over music, give wrong Notes (D-014).
 2. Noise lowers the quality. The design assumes a fairly quiet place (A-08).
 3. Notes shorter than 80 ms are dropped.
-4. A slide between two pitches becomes two Notes. The place of the cut can lie early or late by a few frames.
+4. A slide between two pitches becomes two Notes. The place of the cut can lie early or late by a few frames. During a slide the own pYIN gives a low confidence. A slide longer than about 100 ms can therefore start the second Note more than 50 ms late (TK-008).
 5. A tone that the user repeats without a gap becomes one long Note in the MVP.
 6. A whistle above 2,094 Hz gives no Notes. Both candidates end at this frequency.
 7. Without the correction of the tuning, a singer who lies a quarter tone off can get Notes a semitone away. The correction comes in version 1.0.
 8. The published results give no pass value for this task. A specialist model reaches 0.57 to 0.64 on the public set (NFR-QLT-01). The user must expect to correct some Notes.
 9. With the speaker as output, the playback leaks into the microphone and can disturb the pitch. Headphones avoid this (CON-03).
 10. A Take with Bluetooth output can lie late (NFR-AUD-05).
+11. The open Note compares each frame with the median of its frames so far. At the start of a Note this median can lie off the center of a vibrato. A vibrato wider than ±0.5 semitones can therefore split a Note at its start (TK-008).
 
 ### 4.7 Performance considerations
 

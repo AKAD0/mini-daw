@@ -1,11 +1,12 @@
 # architecture.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 3 of 6 (architecture) · **Version:** 2.1 · **Date:** 2026-11-21
+**Stage:** 3 of 6 (architecture) · **Version:** 2.2 · **Date:** 2026-11-21
 **Change in 1.1:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 1.1, Section 10.5, Section 15, Section 16.5.
 **Change in 1.2:** results of Stage 4. The index of the Library also holds the length of the song of each Project. Changed parts: Section 8.2 (table `project`), Section 16.4 (closing note).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: the module `:ui:decomposer`, Section 10.7, Section 16.6. Changed parts: Sections 1.1, 2.1, 2.2, 2.3, 6.1, 6.2, 6.4, 7, 11.4, 12.1, 12.3, 13.2, 14 and 15.
 **Change in 2.1:** TK-001. The code has 14 Gradle modules (D-113). A script checks the rules for dependencies. Changed parts: the heading of Section 2 and rule 8 of Section 2.1.
+**Change in 2.2:** TK-008. The portable part of the native code of `:analysis` is the CMake target `analysis-core`. Changed part: rule 6 of Section 2.1.
 **Companion documents:** `requirements.md`, `technology_stack.md` and `project_decisions.md` in their newest versions. `feature_specifications.md` and `ui_ux_specification.md` hold the details of Stage 4. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-`, `Q-` and `V-` point to them.
 
 ---
@@ -115,7 +116,7 @@ Rules for dependencies:
 3. No UI module depends on another UI module, except on `:ui:kit`.
 4. Only `:extraction` may use the library for the network.
 5. Only `:app` names the concrete classes. One object written by hand, `AppGraph`, creates each part at its first use (D-042).
-6. `engine-core` includes no Android header. It is a CMake target that also builds on a host.
+6. `engine-core` includes no Android header. It is a CMake target that also builds on a host. The same holds for `analysis-core`, the portable part of the native code of `:analysis`.
 7. `engine-core` and the native code of `:analysis` share one small static library. It reads and writes WAV files.
 8. The script `checks/check_modules.py` checks the list of modules and rules 1 to 4 and 6 on every change. It is a part of the one command (D-113).
 

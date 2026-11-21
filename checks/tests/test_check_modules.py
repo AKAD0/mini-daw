@@ -97,6 +97,10 @@ class Rules(unittest.TestCase):
         write(self.root, "engine/src/main/cpp/engine-core/include/b.h", "#pragma once\n#include <android/log.h>\n")
         self.assertTrue(any("engine-core" in p and "android/log.h" in p for p in self.problems()))
 
+    def test_analysis_core_must_not_include_an_android_header(self):
+        write(self.root, "analysis/src/main/cpp/analysis-core/src/c.cpp", "#include <jni.h>\n")
+        self.assertTrue(any("analysis-core" in p and "jni.h" in p for p in self.problems()))
+
     def test_the_list_of_modules_equals_the_architecture(self):
         write(self.root, "settings.gradle.kts", 'include(":core")\ninclude(":extra")\n')
         found = self.problems()

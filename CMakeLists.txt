@@ -20,6 +20,7 @@ if(MINIDAW_SANITIZERS)
 endif()
 
 add_subdirectory(engine/src/main/cpp/engine-core)
+add_subdirectory(analysis/src/main/cpp/analysis-core)
 
 option(MINIDAW_TESTS "Build the tests of the native code" ON)
 if(MINIDAW_TESTS)
@@ -34,4 +35,5 @@ if(MINIDAW_TESTS)
   FetchContent_MakeAvailable(googletest)
   include(GoogleTest)
   add_subdirectory(engine/src/test/cpp)
+  add_subdirectory(analysis/src/test/cpp)
 endif()
