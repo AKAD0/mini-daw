@@ -22,12 +22,13 @@ import urllib.request
 import zipfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+DATASETS = os.path.join(HERE, "datasets.toml")
 ONSET_TOLERANCE = 0.05
 PITCH_TOLERANCE_CENTS = 50.0
 CANDIDATES = ("pyin", "swiftf0")
 
 
-def dataset(name="vocadito", path=os.path.join(HERE, "datasets.toml")):
+def dataset(name="vocadito", path=DATASETS):
     with open(path, "rb") as f:
         sets = tomllib.load(f)["dataset"]
     return next(s for s in sets if s["name"] == name)

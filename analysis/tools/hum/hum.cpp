@@ -39,10 +39,10 @@ std::string jsonText(std::string_view text) {
 }
 
 void printResult(const std::string& file, const NotesResult& r, double seconds, double length) {
-  std::printf("{\"file\": %s, \"range\": \"%s\", \"octaveShift\": %d, \"seconds\": %.4f, "
-              "\"audioSeconds\": %.4f, \"notes\": [",
-              jsonText(file).c_str(), r.range == Range::kWhistle ? "whistle" : "voice",
-              r.octaveShift, seconds, length);
+  std::printf("{\"file\": %s, ", jsonText(file).c_str());
+  std::printf("\"range\": \"%s\", ", r.range == Range::kWhistle ? "whistle" : "voice");
+  std::printf("\"octaveShift\": %d, \"seconds\": %.4f, ", r.octaveShift, seconds);
+  std::printf("\"audioSeconds\": %.4f, \"notes\": [", length);
   for (std::size_t k = 0; k < r.notes.size(); ++k) {
     std::printf("%s[%.6f, %.6f, %.6f]", k == 0 ? "" : ", ", r.notes[k].start, r.notes[k].end,
                 r.notes[k].pitch);

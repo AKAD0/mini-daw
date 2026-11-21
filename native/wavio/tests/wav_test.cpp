@@ -1,12 +1,12 @@
 // Tests of the shared WAV library (architecture.md Section 2.1, rule 7).
+#include "minidaw/wav/wav.h"
+
 #include <gtest/gtest.h>
 
 #include <cstdint>
 #include <stdexcept>
 #include <string>
 #include <vector>
-
-#include "minidaw/wav/wav.h"
 
 namespace minidaw::wav {
 namespace {

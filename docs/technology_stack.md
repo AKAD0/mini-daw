@@ -1,7 +1,7 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.2 · **Date:** 2026-11-21
+**Stage:** 2 of 6 (technical research) · **Version:** 2.3 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
@@ -9,6 +9,7 @@
 **Change in 2.0:** the owner asked for the decomposition of a recording into a Project (D-104). The tools of the owner's note are examined (D-111). New parts: Sections 9.7 and 9.8, the check V-08 in Section 14, the sources R19 to R30. Changed parts: Section 1 (three rows), Section 9.4 (facts 4 and 6, fall-back models), Section 10 (one row), Section 13, Section 14 (answers), Section 15 (items 10 to 12).
 **Change in 2.1:** TK-001 fixed the versions of the build and the place of the list of licences. Changed parts: Section 3.2 (compile SDK), Section 3.3 (item 5), Section 12 (closing notes).
 **Change in 2.2:** TK-008 confirmed the input of SwiftF0 and the source of ONNX Runtime. Changed parts: Section 8.2 (notes below the table), Section 15 (item 4).
+**Change in 2.3:** TK-009 confirmed the licence of vocadito and added the tools of the evaluation. Changed part: Section 15 (item 5).
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -689,7 +690,7 @@ V-08 belongs to version 1.1. It runs after extraction works (D-112). If V-08 fai
 2. The version of Oboe and its support for performance hints.
 3. The size of ONNX Runtime for `arm64-v8a` inside the app.
 4. Whether the ONNX file of SwiftF0 expects audio or a spectrogram as input. Answered in TK-008: audio at 16 kHz (Section 8.2).
-5. The licence of the vocadito test set for use in tests.
+5. The licence of the vocadito test set for use in tests. Answered in TK-009: CC BY 4.0 (Zenodo record 5578807). It allows use with a credit to the authors. The evaluation downloads the set at run time, names it in its report and never stores or ships it, so the use is allowed. The evaluation uses NumPy, SciPy and mir_eval, all under permissive licences (`checks/licences.toml`).
 6. The terms of the HTDemucs weights.
 7. Whether the read tool of the agent shows pictures to the model.
 8. The limits that the Claude Console offers for spending (NFR-COST-03).

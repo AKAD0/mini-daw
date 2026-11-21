@@ -66,9 +66,7 @@ void append32(std::vector<std::uint8_t>& b, std::uint32_t v) {
   append16(b, static_cast<std::uint16_t>(v >> 16U));
 }
 
-void appendTag(std::vector<std::uint8_t>& b, const char* tag) {
-  b.insert(b.end(), tag, tag + 4);
-}
+void appendTag(std::vector<std::uint8_t>& b, const char* tag) { b.insert(b.end(), tag, tag + 4); }
 
 }  // namespace
 
