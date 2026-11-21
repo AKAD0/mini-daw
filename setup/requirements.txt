@@ -1,0 +1,2 @@
+# Python packages of the setup script and of the test script of the Sandbox. Entries in checks/licences.toml.
+anthropic==2.6.0

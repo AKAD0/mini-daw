@@ -1,7 +1,7 @@
 # project_decisions.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 6 of 6 (handoff) · **Version:** 7.2 · **Date:** 2026-11-21
+**Stage:** 6 of 6 (handoff) · **Version:** 7.3 · **Date:** 2026-11-21
 **Change in 1.1:** feedback from the owner. The project runs no server. D-016 and D-017 are replaced. New: D-027 to D-032, A-14, A-15, AD-33, Q-13. Q-03 is answered.
 **Change in 2.0:** answers of the owner to Q-01, Q-02, Q-04, Q-12 and Q-13. Decisions of Stage 2: D-033 to D-052. Results of Stage 2 in Section 4.7. Tasks for the owner in Section 5.1.
 **Change in 2.1:** answers of the owner to Q-05 and Q-08. D-005 is replaced. New: D-053 to D-056 and Q-14. Tasks O-1 to O-3 changed.
@@ -17,6 +17,7 @@
 **Change in 7.0:** two requests of the owner after Stage 6. Version 1.1 adds the Decomposer: a second main screen that turns a range of a recording into a new Project. The implementer works on the computer of the owner. New: D-103 to D-112, A-23 to A-25, Q-16 to Q-18, the tasks O-11 to O-13, Section 4.12. Changed: A-11, O-6, the continuation point. All nine documents changed.
 **Change in 7.1:** development started with TK-001. The nine documents lie in `docs/`, the script of the checks in `checks/`. D-057 counted 13 modules, but `architecture.md` lists 14 since the change 7.0; D-113 replaces D-057. The owner set rules for work that does not wait for answers (D-114). New: D-113, D-114, Q-19. Changed: A-23, O-6, O-10, O-13, the continuation point.
 **Change in 7.2:** TK-002. The task O-7 names the places where the owner acts. Changed: O-7, the continuation point.
+**Change in 7.3:** TK-012. The task O-1 names the places where the owner enters the new key. Changed: O-1, the continuation point.
 **Companion documents:** `requirements.md` holds the requirements (`FR-`, `NFR-`), the constraints (`CON-`) and the analysis of the brief (`T-`, `U-`, `G-`). `technology_stack.md` holds the choices of technology with their reasons and the checks `V-01` to `V-08`. `architecture.md` holds the structure of the system and the details of D-057 to D-072. `ui_ux_specification.md` holds the layout and the behaviour of the interface. `feature_specifications.md` holds the behaviour of the features, the formats, the acceptance criteria (`AC-`) and the manual tests of the owner (`MT-`). `development_roadmap.md` holds the phases (`PH-`), the tasks (`TK-`) and the gates (`GATE-`). `risk_assessment.md` holds the risks (`RISK-`). `opus_implementation_guide.md` is the entry for the implementer.
 
 ---
@@ -654,7 +655,7 @@ No question blocks the work. Six questions are open: Q-09, Q-10, Q-16, Q-17, Q-1
 
 | ID | Task | Needed |
 |---|---|---|
-| O-1 | Delete the API key that was pasted into the chat on 2026-11-20. Create a new key when the check V-06 starts. Keep it out of chats and documents. Set a spending limit if the Console offers one. | Now (delete); before the check V-06 (new key) |
+| O-1 | Delete the API key that was pasted into the chat on 2026-11-20. Create a new key when the check V-06 starts. Keep it out of chats and documents. Set a spending limit if the Console offers one. Enter the new key only as the secret `ANTHROPIC_API_KEY` at GitHub (repository mini-daw: Settings, Secrets and variables, Actions), or as the variable `ANTHROPIC_API_KEY` in the shell where you run `setup/sandbox_test.py`. Then start the run "Setup of the account" without the option "check". | Now (delete); before the check V-06 (new key) |
 | O-2 | Run the measurements of V-01 on the phone (`requirements.md` Section 3.2). A quick part needs no computer: the values from the settings, and the device report and the latency test of the app OboeTester. The rest needs test builds. | Before development starts. Earlier results help Stage 4 and Stage 5. |
 | O-3 | Done on 2026-11-20: Q-14 is answered. | — |
 | O-4 | Done on 2026-11-20: Q-06 is answered. | — |
@@ -690,3 +691,4 @@ No question blocks the work. Six questions are open: Q-09, Q-10, Q-16, Q-17, Q-1
 | 2026-11-20 | After 6 | Version 7.0. Two requests of the owner. Version 1.1 with the Decomposer (D-104 to D-112). Work of the implementer on the computer of the owner (D-103). New: A-23 to A-25, Q-16 to Q-18, O-11 to O-13, Section 4.12. Eight documents at version 2.0. `checks/check_docs.py` extended. The continuation point still names the task TK-001. |
 | 2026-11-21 | Development | Version 7.1. TK-001 started. The documents moved to `docs/` and `checks/`. New: D-113 (replaces D-057), D-114, Q-19. Changed: A-23, O-6, O-10, O-13, the continuation point. |
 | 2026-11-21 | Development | Version 7.2. TK-002: the pipeline of the builds. O-7 names the secret `SIGNING_PASSWORD` and the run "Key for signing". |
+| 2026-11-21 | Development | Version 7.3. TK-012: the setup script and the test script of the Sandbox. O-1 names the secret `ANTHROPIC_API_KEY`. |

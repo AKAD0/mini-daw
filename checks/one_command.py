@@ -126,12 +126,15 @@ def part_python_static():
 
 
 def part_toolkit_tests(strict):
-    if not glob.glob(os.path.join(ROOT, "toolkit", "tests", "test_*.py")):
+    folders = [d for d in ("toolkit/tests", "setup/tests") if glob.glob(os.path.join(ROOT, d, "test_*.py"))]
+    if not folders:
         raise NotApplicable("no Toolkit yet (TK-011)")
     need("pytest")
     # In the CI service the tests with the real stem model must run (toolkit/fetch_model.py).
     env = {"MINIDAW_REQUIRE_MODEL": "1"} if strict else {}
-    return run([PY, "-m", "pytest", "-q", "-p", "no:cacheprovider", "toolkit/tests"], env=env)[0] == 0
+    # Each folder has its own conftest.py, so each runs in its own process.
+    codes = [run([PY, "-m", "pytest", "-q", "-p", "no:cacheprovider", d], env=env)[0] for d in folders]
+    return all(c == 0 for c in codes)
 
 
 def part_cpp_tests(strict):
@@ -224,7 +227,7 @@ PARTS = [
     ("licences", "list of licences (NFR-LEG-01)", lambda s: part_licences()),
     ("gradle-wrapper", "checksum of the Gradle wrapper", lambda s: part_gradle_wrapper()),
     ("python-static", "static analysis of Python (ruff)", lambda s: part_python_static()),
-    ("toolkit-tests", "tests of the Toolkit (pytest)", part_toolkit_tests),
+    ("toolkit-tests", "tests of the Toolkit and of the setup (pytest)", part_toolkit_tests),
     ("cpp-tests", "C++ tests with sanitizers (NFR-MNT-01)", part_cpp_tests),
     ("cpp-static", "static analysis of C++ (clang-format, clang-tidy)", part_cpp_static),
     ("kotlin-tests", "tests of the Kotlin code", lambda s: part_kotlin_tests()),

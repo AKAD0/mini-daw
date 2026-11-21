@@ -1,12 +1,13 @@
 # development_roadmap.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 5 of 6 (roadmap) · **Version:** 2.3 · **Date:** 2026-11-21
+**Stage:** 5 of 6 (roadmap) · **Version:** 2.4 · **Date:** 2026-11-21
 **Change in 1.1:** final check of Stage 6. The 22 new criteria of `feature_specifications.md` 1.2 have their tasks. The pointers to `opus_implementation_guide.md` name its sections. The run "Build" checks the size of the release build. Changed parts: Sections 2.1, 2.3, 2.6, 6.1, 6.3, 6.5 to 6.10, 6.13 to 6.15, 8.2, 9.1, 9.2 and 10.
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). The implementer works on the computer of the owner (D-103). New parts: Section 3.5, the phases PH-16 to PH-18 (Sections 6.17 to 6.19) with the tasks TK-100 to TK-115, the gates GATE-16 to GATE-18, Section 7.4, the milestone M6. Changed parts: Sections 1.1, 1.2, 2.1, 2.3, 2.5, 2.7, 3.1, 3.4, 4.1, 4.2, 4.3, 6.1 (objectives, TK-014), 7.2, 8.1, 8.2, 9.1 and 10.
 **Change in 2.1:** TK-001. Section 2.1 names the list of licences and `CLAUDE.md`. Section 2.3 names the one command and its behaviour when a tool is missing.
 **Change in 2.2:** TK-002. Section 2.2 names the build type of the test build, the file of the key, the secret and the branch of the key. Sections 2.3 and 2.4 name the releases. Section 6.1 names the app for the checks.
 **Change in 2.3:** TK-009. Section 2.3 has the run "Humming evaluation".
+**Change in 2.4:** TK-012. Section 2.3 names the scripts of the setup and of the Sandbox test.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `risk_assessment.md`, `opus_implementation_guide.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `D-`, `V-`, `AC-`, `MT-` and `RISK-` point to them.
 
 ---
@@ -117,8 +118,8 @@ Rules:
 | Build | By every change of the main branch | Test build and release build. Both go to the page of releases as the release `build-<number>`. The run fails when the file of the release build is larger than 50 MB (AC-APP-20). Without the key for signing, it builds and checks unsigned files and publishes nothing. |
 | Emulator | By every change of the main branch (prov.) | Tests that need Android: import, stores, screens. Macrobenchmark, which also produces the profiles. |
 | Key for signing | By the owner, once | Section 2.2 |
-| Setup of the account | By the owner | The setup script, with the API key as an encrypted secret |
-| Sandbox test | By the owner | The check V-06 |
+| Setup of the account | By the owner | The setup script `setup/setup_account.py`, with the API key as the encrypted secret `ANTHROPIC_API_KEY` (workflow `setup.yml`; the option "check" only reports) |
+| Sandbox test | By the owner | The check V-06 with `setup/sandbox_test.py`, on a computer with Python and the package `anthropic`, because it needs the songs of the owner (TK-013) |
 | Quality of the separation | By hand, after a change of the model file or of the program `separate` | `feature_specifications.md` Section 5.8 |
 | Humming evaluation | By every change of the code of `:analysis` or of `native/wavio`, and by hand | Both pitch candidates on the public set vocadito (TK-009, NFR-QLT-01). The report goes to `docs/results/`. |
 | Decomposition test | By the owner | The Sandbox part of the check V-08 |

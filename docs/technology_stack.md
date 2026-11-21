@@ -1,7 +1,7 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.5 · **Date:** 2026-11-21
+**Stage:** 2 of 6 (technical research) · **Version:** 2.6 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
@@ -12,6 +12,7 @@
 **Change in 2.3:** TK-009 confirmed the licence of vocadito and added the tools of the evaluation. Changed part: Section 15 (item 5).
 **Change in 2.4:** TK-011. The program Convert reads WAV with SciPy and uses ffmpeg for other formats only. Changed part: Section 9.4.
 **Change in 2.5:** TK-011 attached the file with 16-bit weights and tested it. Changed part: Section 9.4 (fact 7).
+**Change in 2.6:** TK-012 named the model tiers and the library of the setup script. Changed part: Section 9.3.
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -461,6 +462,12 @@ Delivery of the Toolkit and of the model file:
 | Download from a release page of the project's code host | The allowed hosts already include the common code hosts [R11]. | One more download per job. | Fall-back |
 
 A setup script creates the agent and the environment and uploads the files. It needs only Python. It runs once on any computer, or as a manual task of the CI service (D-073, FR-AIX-20).
+
+Facts from TK-012:
+
+1. The small tier is Claude Haiku 5.5 (`claude-haiku-5-5`), the middle tier Claude Sonnet 5.5 (`claude-sonnet-5-5`).
+2. The setup script and the test script of the Sandbox use the official Python SDK `anthropic` 2.6.0 (Apache-2.0). The phone keeps its own direct calls (D-045); the SDK never enters the app.
+3. The tests of both scripts run against a fake of the API, a local HTTP server. No test calls the paid service.
 
 ### 9.4 Toolkit (AD-25)
 

@@ -34,7 +34,7 @@ jobs:
           python-version: "3.12"
 
       - name: Python tools of the checks
-        run: python -m pip install -r checks/requirements-ci.txt -r toolkit/requirements.txt
+        run: python -m pip install -r checks/requirements-ci.txt -r toolkit/requirements.txt -r setup/requirements.txt
 
       - name: Cache of the stem model of the Toolkit
         uses: actions/cache@v6.1.0

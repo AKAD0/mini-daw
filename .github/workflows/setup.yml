@@ -1,0 +1,47 @@
+# Run "Setup of the account" (development_roadmap.md Section 2.3, FR-AIX-20, TK-012).
+# Only the owner starts it, with the API key as the encrypted secret ANTHROPIC_API_KEY (task O-1).
+# It calls the Claude API of the owner: it uploads the Toolkit and the model file and creates the
+# environment and the agent. A second run changes nothing. The option "check" only reports.
+name: Setup of the account
+
+on:
+  workflow_dispatch:
+    inputs:
+      check:
+        description: "Only report what exists on the account; make no change"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    name: Setup of the account
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Python packages of the setup
+        run: python -m pip install -r setup/requirements.txt
+
+      - name: Toolkit and model file
+        run: |
+          python toolkit/build.py build/toolkit/toolkit.pyz
+          python toolkit/fetch_model.py build/models
+
+      - name: Setup
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ "${{ inputs.check }}" = "true" ]; then
+            python setup/setup_account.py --check
+          else
+            python setup/setup_account.py --toolkit build/toolkit/toolkit.pyz \
+              --model build/models/htdemucs_fp16weights.onnx
+          fi

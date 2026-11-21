@@ -133,6 +133,13 @@ use = "toolkit"
 source = "PyPI onnxruntime 1.31.1, field license, read on 2026-11-21. Runs the stem model in the Sandbox (D-046)."
 
 [[entry]]
+name = "anthropic"
+kind = "python"
+licence = "Apache-2.0"
+use = "build"
+source = "PyPI anthropic 2.6.0, field License-Expression, read on 2026-11-21. The setup script and the test script of the Sandbox; never in the app (D-045)."
+
+[[entry]]
 name = "pytest"
 kind = "python"
 licence = "MIT"

@@ -1,7 +1,7 @@
 # feature_specifications.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 4 of 6 (feature specifications) · **Version:** 2.5 · **Date:** 2026-11-21
+**Stage:** 4 of 6 (feature specifications) · **Version:** 2.6 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 5. Each criterion now belongs to one task of `development_roadmap.md`. Changed criteria: AC-TR-06, AC-TR-09, AC-MX-08, AC-MX-09, AC-FX-04, AC-FX-12, AC-AIX-03. New criterion: AC-TR-14. Changed parts: Section 9 (rules, MT-08), Section 10 (places of the checks).
 **Change in 1.2:** final check of Stage 6. Each criterion was compared with its requirements, and each task of `development_roadmap.md` with its criteria. New criteria: AC-APP-19 to AC-APP-21, AC-TR-15, AC-PL-17 to AC-PL-21, AC-PT-10, AC-PT-11, AC-LIB-10 to AC-LIB-12, AC-MX-21, AC-FX-17, AC-REC-15 to AC-REC-18, AC-H2M-16, AC-H2M-17. Changed criteria: AC-WS-10, AC-APP-01, AC-APP-05, AC-APP-16, AC-TR-08, AC-TR-12, AC-PL-09, AC-CR-10, AC-SM-01, AC-LIB-07, AC-MX-13, AC-MX-20, AC-FX-10, AC-FX-12, AC-REC-12, AC-H2M-08, AC-H2M-10, AC-H2M-12, AC-AIX-04 to AC-AIX-06, AC-AIX-13, AC-AIX-15, AC-AIX-16, AC-AIX-18, AC-FS-06. Changed manual tests: MT-01, MT-14. Changed parts: the conventions (rule for the mark "P1:", D-102), Sections 1.1, 2.2.1, 2.2.2, 2.2.6, 4.2.6 and 5.3, Section 10 (place of NFR-MNT-07), Section 11 (source F6).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: Section 12 with the criteria AC-DEC-01 to AC-DEC-33, Section 6.11, the manual test MT-21, the sources F7 to F9. Changed parts: the conventions 3, 9 and 12, Section 4.2.7 (low register), Section 5.2.8 (rule 5), Section 6.5 (version 2), Section 6.6 (schema 2), Section 9 (MT-13, MT-14), Section 10 (FR-AIX-18, FR-DEC-24).
@@ -10,6 +10,7 @@
 **Change in 2.3:** TK-008 built the candidate SwiftF0. Its start value of the lowest confidence is now 0.5, because SwiftF0 0.2.0 calibrated its confidence to this value (evidence in Section 4.2.4). Changed part: Section 4.2.4.
 **Change in 2.4:** TK-011 named the details of the first version of the Toolkit. Changed part: Section 5.2.5.
 **Change in 2.5:** TK-011 added the details of `separate` and `quick`. Changed part: Section 5.2.5.
+**Change in 2.6:** TK-012 named the details of the setup script. Changed part: Section 5.2.8.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `ui_ux_specification.md`, `development_roadmap.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-` and `V-` point to them.
 
 ---
@@ -1541,6 +1542,20 @@ Section 6.7 lists the fields. The program `report` writes them. The phone reads 
 | Environment | `minidaw-env-v1` |
 | Toolkit | `minidaw-toolkit-v1.pyz` |
 | Model file | `minidaw-htdemucs-v1.onnx` |
+
+Details of the setup script (TK-012, `setup/setup_account.py`):
+
+| Part | Value |
+|---|---|
+| Network of the environment | `limited` with `allow_package_managers: true`. No other host and no MCP server is allowed (D-047, NFR-SEC-06). |
+| Packages of the environment | The pip packages of `toolkit/requirements.txt`, with their versions, so the Sandbox and the tests of the Toolkit use the same versions |
+| Tools of the agent | The agent toolset with all tools off, then `bash`, `read` and `write` on with the policy `always_allow`. The web tools stay off. The Session runs unattended, and the phone of version 1 answers no confirmation. The limited network and the absence of secrets in the Sandbox bound the risk. |
+| Model tier | The small tier is Claude Haiku 5.5 (`claude-haiku-5-5`). The middle tier for V-06 is Claude Sonnet 5.5 (`claude-sonnet-5-5`), set per Session. |
+| Files in the Session | The Session mounts the three files as `/input.wav`, `/toolkit.pyz` and `/htdemucs.onnx`, so they lie in `/mnt/session/uploads/` (Section 5.2.2) |
+| System prompt | The file `setup/system_prompt_v1.txt`. A test keeps it equal to the text of Section 5.2.4. |
+| An item with other content | When an item with a fixed name exists but differs (another size of a file, another model or prompt of the agent, another network), the script changes nothing and names the difference. A changed setup needs the next version and with it new fixed names. |
+| Option `--check` | Reports what exists and what is missing. It changes nothing. |
+| Exit code | 0 when every item exists as expected, 1 with a problem, 2 without the API key |
 
 Rules:
 
