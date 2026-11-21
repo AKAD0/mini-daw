@@ -221,7 +221,7 @@ std::vector<uint8_t> writeStandard(const TestCounts& counts) {
     w.u8(at + 12, 1);
     for (uint32_t s = 0; s < kSlots; ++s) {
       const Slot slot = standardSlot(static_cast<int>(s * channels + i), counts);
-      const size_t slotAt = at + kChannelHead + s * kSlotSize;
+      const size_t slotAt = at + kChannelHead + size_t{s} * kSlotSize;
       w.u8(slotAt, slot.kind);
       for (size_t v = 0; v < kParameters; ++v) {
         w.f32(slotAt + 4 + v * 4, slot.values[v]);

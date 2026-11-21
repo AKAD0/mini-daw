@@ -103,9 +103,7 @@ LoadBench::LoadBench(const TestCounts& counts, const std::vector<float>& sample)
   assign(counts.reverbs, kKindReverb);
 }
 
-size_t LoadBench::effects() const {
-  return equalizers_.size() + delays_.size() + reverbs_.size();
-}
+size_t LoadBench::effects() const { return equalizers_.size() + delays_.size() + reverbs_.size(); }
 
 void LoadBench::render(float* left, float* right, int frames) {
   for (int done = 0; done < frames; done += kBlock) {

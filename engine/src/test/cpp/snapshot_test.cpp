@@ -11,7 +11,7 @@
 namespace minidaw::engine::snapshot {
 namespace {
 
-// The same numbers stand in the test of the writer of :engine-api: both writers give the same bytes.
+// The same numbers stand in the test of the writer of :engine-api: both writers give these bytes.
 constexpr uint64_t kMvpFingerprint = 0xD87D14E4F99FE61CULL;
 constexpr uint64_t kVersion10Fingerprint = 0xC27A518E15BABED3ULL;
 
