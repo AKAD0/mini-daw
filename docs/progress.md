@@ -173,8 +173,8 @@ Notes:
 
 ```text
 TK-011  Toolkit, first version
-State: split into TK-011a (done) and TK-011b (open: separate with the stem model, quick)
-Change: branch tk-011, TK-011a merged into main
+State: done (split into TK-011a and TK-011b)
+Change: branch tk-011, merged into main
 Steps of TK-011a:
   1. The package toolkit/src/minidaw_toolkit and the build of toolkit.pyz (toolkit/build.py).
   2. The command line of the system prompt (feature_specifications.md 5.2.4): one line of JSON
@@ -193,8 +193,15 @@ Criteria (run "Check" 44855116556, part "toolkit-tests", 12 tests):
      test_report_names_every_problem_of_a_wrong_draft)
   Rules 1 and 3 of Section 5.2.5: pass (test_every_program_answers_with_one_line_of_json,
      test_the_same_input_gives_the_same_output)
-  AC-AIX-09 for separate and quick: open until TK-011b.
-Documents: feature_specifications.md 2.4 (Section 5.2.5), technology_stack.md 2.4 (Section 9.4)
+TK-011b (run "Check" 44856820284, part "toolkit-tests", 20 tests in all, with the real model):
+  AC-AIX-09 for separate and quick: pass
+    (test_the_pieces_overlap_by_a_quarter_and_join_without_a_seam,
+     test_separate_writes_four_stems_with_their_fields, test_quick_writes_the_candidate_and_the_report,
+     test_quick_finds_nothing_in_a_silent_stem, test_separate_without_the_model_file_answers_with_an_error,
+     test_the_model_puts_hits_into_drums, test_the_model_puts_a_low_tone_into_bass,
+     test_the_model_gives_the_same_stems_twice)
+Documents: feature_specifications.md 2.4 and 2.5 (Section 5.2.5), technology_stack.md 2.4 and 2.5
+  (Section 9.4)
 Decisions: none
 Owner: none
 Notes:
@@ -204,5 +211,13 @@ Notes:
      quarter and a triangular window.
   2. NumPy and pytest are missing on the computer of the owner; the tests of the Toolkit run only in
      the CI service. The program itself answers with JSON there ("No module named 'numpy'").
+  3. TK-011b: the model file is htdemucs_fp16weights.onnx (166 MB), pinned in toolkit/models.toml.
+     The run "Check" caches it (actions/cache) and downloads it with its checksum otherwise.
+  4. TK-011b: the fake model found a fault that the reference code of the ONNX file has too: the
+     window of the pieces gave the first sample of a file the weight 0. The outer edges of the first
+     and the last piece now get the full weight.
+  5. Rule 2 of feature_specifications.md 5.8 (fidelity of the ONNX file) and rule 1 (quality on
+     MUSDB18) have not run. They need the run "Quality of the separation", which no task of PH-00
+     builds (technology_stack.md 2.5, Section 9.4, fact 7).
 ```
 

@@ -1,7 +1,7 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.4 · **Date:** 2026-11-21
+**Stage:** 2 of 6 (technical research) · **Version:** 2.5 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
@@ -11,6 +11,7 @@
 **Change in 2.2:** TK-008 confirmed the input of SwiftF0 and the source of ONNX Runtime. Changed parts: Section 8.2 (notes below the table), Section 15 (item 4).
 **Change in 2.3:** TK-009 confirmed the licence of vocadito and added the tools of the evaluation. Changed part: Section 15 (item 5).
 **Change in 2.4:** TK-011. The program Convert reads WAV with SciPy and uses ffmpeg for other formats only. Changed part: Section 9.4.
+**Change in 2.5:** TK-011 attached the file with 16-bit weights and tested it. Changed part: Section 9.4 (fact 7).
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -479,6 +480,7 @@ Facts about the separation model:
 4. A version of the model for ONNX Runtime exists. Its package is under the MIT licence and needs no PyTorch. The list of its files states the MIT licence for the ONNX files [R10], [R19]. The terms of the data behind the weights stay a point to confirm (Section 15).
 5. The author of Demucs no longer develops it actively [R9].
 6. Each ONNX file also exists with weights in 16-bit form. The file of the model with 4 stems then has 166 MB in place of 316 MB. It runs at the same speed [R19]. The smaller file is the candidate for the attached model file. The implementer decides this when the Toolkit is finished, with rule 2 of `feature_specifications.md` Section 5.8.
+7. TK-011 uses the smaller file (`toolkit/models.toml`). In its tests it puts hits into the stem of the drums and a low tone into the stem of the bass, and it gives the same stems twice. Rule 2 has not run yet: it needs the original model on a host, in the run "Quality of the separation", which no task has built so far.
 
 Open points of the model:
 

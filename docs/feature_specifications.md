@@ -1,7 +1,7 @@
 # feature_specifications.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 4 of 6 (feature specifications) · **Version:** 2.4 · **Date:** 2026-11-21
+**Stage:** 4 of 6 (feature specifications) · **Version:** 2.5 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 5. Each criterion now belongs to one task of `development_roadmap.md`. Changed criteria: AC-TR-06, AC-TR-09, AC-MX-08, AC-MX-09, AC-FX-04, AC-FX-12, AC-AIX-03. New criterion: AC-TR-14. Changed parts: Section 9 (rules, MT-08), Section 10 (places of the checks).
 **Change in 1.2:** final check of Stage 6. Each criterion was compared with its requirements, and each task of `development_roadmap.md` with its criteria. New criteria: AC-APP-19 to AC-APP-21, AC-TR-15, AC-PL-17 to AC-PL-21, AC-PT-10, AC-PT-11, AC-LIB-10 to AC-LIB-12, AC-MX-21, AC-FX-17, AC-REC-15 to AC-REC-18, AC-H2M-16, AC-H2M-17. Changed criteria: AC-WS-10, AC-APP-01, AC-APP-05, AC-APP-16, AC-TR-08, AC-TR-12, AC-PL-09, AC-CR-10, AC-SM-01, AC-LIB-07, AC-MX-13, AC-MX-20, AC-FX-10, AC-FX-12, AC-REC-12, AC-H2M-08, AC-H2M-10, AC-H2M-12, AC-AIX-04 to AC-AIX-06, AC-AIX-13, AC-AIX-15, AC-AIX-16, AC-AIX-18, AC-FS-06. Changed manual tests: MT-01, MT-14. Changed parts: the conventions (rule for the mark "P1:", D-102), Sections 1.1, 2.2.1, 2.2.2, 2.2.6, 4.2.6 and 5.3, Section 10 (place of NFR-MNT-07), Section 11 (source F6).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: Section 12 with the criteria AC-DEC-01 to AC-DEC-33, Section 6.11, the manual test MT-21, the sources F7 to F9. Changed parts: the conventions 3, 9 and 12, Section 4.2.7 (low register), Section 5.2.8 (rule 5), Section 6.5 (version 2), Section 6.6 (schema 2), Section 9 (MT-13, MT-14), Section 10 (FR-AIX-18, FR-DEC-24).
@@ -9,6 +9,7 @@
 **Change in 2.2:** TK-008 named the details of the own pYIN and of the code for Notes, and two limits that its tests found. Changed parts: Sections 4.2.4, 4.2.5 and 4.6.
 **Change in 2.3:** TK-008 built the candidate SwiftF0. Its start value of the lowest confidence is now 0.5, because SwiftF0 0.2.0 calibrated its confidence to this value (evidence in Section 4.2.4). Changed part: Section 4.2.4.
 **Change in 2.4:** TK-011 named the details of the first version of the Toolkit. Changed part: Section 5.2.5.
+**Change in 2.5:** TK-011 added the details of `separate` and `quick`. Changed part: Section 5.2.5.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `ui_ux_specification.md`, `development_roadmap.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-` and `V-` point to them.
 
 ---
@@ -1493,6 +1494,8 @@ Details of the first version of the Toolkit (TK-011):
 | `finish` | The level of the silence is the RMS of windows of 10 ms. The fades are half cosines. The rate changes to 48 kHz before the peak is set, so the file ends at exactly −1 dBFS. A file of silence gives an error. |
 | `report` | It writes `report.json` only for a draft without problems. Otherwise it lists every problem and writes nothing. It names the model by the first 16 characters of the SHA-256 of `htdemucs.onnx`. |
 | Errors | A program also answers with JSON when a package of Python is missing (rule 1). |
+| `separate` | The model file of `toolkit/models.toml`: HTDemucs with 4 stems and 16-bit weights, 166 MB, pinned by its revision and its checksum. Pieces of 343,980 samples. The first piece starts and the last piece ends without a fade, so no sample at an edge of the file is lost. One WAV file per stem: 44.1 kHz, two channels, floating point. |
+| `quick` | Works in a new folder inside `/tmp/work`. The candidate is the stem of the class, cut to the range and finished. A stem that is silent in the range gives the status `nothing_found`. |
 
 Rules:
 

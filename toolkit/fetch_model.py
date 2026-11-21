@@ -13,9 +13,10 @@ import tomllib
 import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+MODELS = os.path.join(HERE, "models.toml")
 
 
-def models(path=os.path.join(HERE, "models.toml")):
+def models(path=MODELS):
     with open(path, "rb") as f:
         return tomllib.load(f)["model"]
 
