@@ -66,6 +66,48 @@ licence = "Apache-2.0"
 use = "build"
 source = "github.com/detekt/detekt, read on 2026-11-21"
 
+[[entry]]
+name = "org.jetbrains.kotlin.plugin.compose"
+kind = "plugin"
+licence = "Apache-2.0"
+use = "build"
+source = "github.com/JetBrains/kotlin, file license/LICENSE.txt. The apps of the check V-02 (TK-004)."
+
+[[entry]]
+name = "androidx.compose:compose-bom"
+kind = "library"
+licence = "Apache-2.0"
+use = "app"
+source = "AndroidX, Android Open Source Project. Compose 1.9.4 for the apps of the check V-02 (TK-004)."
+
+[[entry]]
+name = "androidx.compose.ui:ui"
+kind = "library"
+licence = "Apache-2.0"
+use = "app"
+source = "AndroidX, Android Open Source Project. The apps of the check V-02 (TK-004)."
+
+[[entry]]
+name = "androidx.compose.foundation:foundation"
+kind = "library"
+licence = "Apache-2.0"
+use = "app"
+source = "AndroidX, Android Open Source Project. The apps of the check V-02 (TK-004)."
+
+[[entry]]
+name = "androidx.activity:activity-compose"
+kind = "library"
+licence = "Apache-2.0"
+use = "app"
+source = "AndroidX, Android Open Source Project. The apps of the check V-02 (TK-004)."
+
+[[entry]]
+name = "androidx.profileinstaller:profileinstaller"
+kind = "library"
+licence = "Apache-2.0"
+use = "app"
+source = "AndroidX, Android Open Source Project. Installs and checks the Baseline Profile (V-02)."
+
 # --- Native code
 [[entry]]
 name = "googletest"

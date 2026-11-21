@@ -1,13 +1,14 @@
 # architecture.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 3 of 6 (architecture) · **Version:** 2.3 · **Date:** 2026-11-21
+**Stage:** 3 of 6 (architecture) · **Version:** 2.4 · **Date:** 2026-11-21
 **Change in 1.1:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 1.1, Section 10.5, Section 15, Section 16.5.
 **Change in 1.2:** results of Stage 4. The index of the Library also holds the length of the song of each Project. Changed parts: Section 8.2 (table `project`), Section 16.4 (closing note).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: the module `:ui:decomposer`, Section 10.7, Section 16.6. Changed parts: Sections 1.1, 2.1, 2.2, 2.3, 6.1, 6.2, 6.4, 7, 11.4, 12.1, 12.3, 13.2, 14 and 15.
 **Change in 2.1:** TK-001. The code has 14 Gradle modules (D-113). A script checks the rules for dependencies. Changed parts: the heading of Section 2 and rule 8 of Section 2.1.
 **Change in 2.2:** TK-008. The portable part of the native code of `:analysis` is the CMake target `analysis-core`. Changed part: rule 6 of Section 2.1.
 **Change in 2.3:** TK-009. The shared WAV library is the CMake target `wavio` in the folder `native/wavio`. Changed part: rule 7 of Section 2.1.
+**Change in 2.4:** TK-004. Section 2.1 names the apps for the checks of PH-00.
 **Companion documents:** `requirements.md`, `technology_stack.md` and `project_decisions.md` in their newest versions. `feature_specifications.md` and `ui_ux_specification.md` hold the details of Stage 4. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-`, `Q-` and `V-` point to them.
 
 ---
@@ -124,6 +125,8 @@ Rules for dependencies:
 `:extraction`, `toolkit/` and `setup/` belong to version 1.0. `:ui:decomposer` belongs to version 1.1 (D-104). All other modules belong to the MVP (D-022).
 
 The app uses no library for navigation. The shell shows the workspace or, from version 1.1 on, the Decomposer (Section 6).
+
+Apps for the checks of PH-00 (TK-004): the check V-02 needs two empty apps of its own, `:checkapps:views` and `:checkapps:compose`. They are no part of the product, use no module of the product, and share one source file in `checkapps/shared`. The second app also holds the prototype of the workspace. The script of the rules for dependencies knows both.
 
 ### 2.2 Diagram of the modules
 

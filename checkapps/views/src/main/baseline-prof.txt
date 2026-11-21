@@ -1,0 +1,5 @@
+# Baseline Profile of the empty app with Views (technology_stack.md Section 6.1). Rules for the own classes.
+HSPLapp/minidaw/check/views/MainActivity;->**(**)**
+HSPLapp/minidaw/check/StartTimes;->**(**)**
+Lapp/minidaw/check/views/MainActivity;
+Lapp/minidaw/check/StartTimes;

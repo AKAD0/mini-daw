@@ -34,6 +34,9 @@ RULES = {
     **{m: {":ui:kit"} for m in UI},
     ":app": {":engine-api", ":core", ":engine", ":analysis", ":data", ":extraction", ":ui:kit", *UI},
     ":benchmark": {":app"},
+    # The apps for the check V-02 (TK-004). They use no module of the product.
+    ":checkapps:views": set(),
+    ":checkapps:compose": set(),
 }
 KOTLIN_WITHOUT_ANDROID = {":engine-api", ":core"}
 UI_REACH = {":ui:kit", ":core", ":engine-api"}

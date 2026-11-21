@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">mini daw V-02 Compose</string>
+    <string name="workspace_name">mini daw V-02 workspace</string>
+    <string name="tap_to_share">Tap the text to share the results.</string>
+</resources>

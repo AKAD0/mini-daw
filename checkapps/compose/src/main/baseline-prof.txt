@@ -1,0 +1,9 @@
+# Baseline Profile of the app with Compose (technology_stack.md Section 6.1). Rules for the own classes.
+# The libraries of Compose bring their own rules.
+HSPLapp/minidaw/check/compose/MainActivity;->**(**)**
+HSPLapp/minidaw/check/compose/WorkspaceActivity;->**(**)**
+HSPLapp/minidaw/check/compose/WorkspaceActivityKt;->**(**)**
+HSPLapp/minidaw/check/StartTimes;->**(**)**
+Lapp/minidaw/check/compose/MainActivity;
+Lapp/minidaw/check/compose/WorkspaceActivity;
+Lapp/minidaw/check/StartTimes;

@@ -311,3 +311,29 @@ Notes:
      measurement. The release build does not have this permission.
 ```
 
+```text
+TK-004  Check V-02: floor of the startup
+State: delivered for the gate (three apps are in the run "Build"; the phone is needed)
+Change: branch tk-004, merged into main
+Criteria:
+  "The values of technology_stack.md Section 6.1 are recorded. The file also says whether a build
+  from a download runs with its profile": not measured yet. The apps:
+    checkapps/views    "mini daw V-02 Views": empty app with Views
+    checkapps/compose  "mini daw V-02 Compose": empty app with Compose 1.9.4, and the second icon
+                       "mini daw V-02 workspace": the prototype of the drawn workspace
+  Each records its cold starts, shows the median and the state of its Baseline Profile, and shares
+  the results as text in the format of feature_specifications.md 6.12.
+  The apps compile and pass ktlint and detekt in the run "Check" of this change.
+Documents: architecture.md 2.4 (Section 2.1), technology_stack.md 2.8 (Section 6.1)
+Decisions: none
+Owner (after TK-002): install both apps from the page of releases. For each of the three icons:
+  close it in the list of recent apps, wait 5 s, open it; 10 times. Then tap the text, share it, and
+  put the files into docs/results/. The pass rules: Compose at most 150 ms slower than Views
+  (medians); the prototype meets AC-APP-01 (median 800 ms, 9 of 10 within 1,200 ms).
+Notes:
+  1. The Baseline Profiles hold the rules of the libraries and of the own classes. A profile from
+     Macrobenchmark needs the run "Emulator", which TK-031 sets up with the shell.
+  2. The first start after an install may run before the profile is compiled; the apps report the
+     state of the profile with each file of results.
+```
+

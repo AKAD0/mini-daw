@@ -31,3 +31,7 @@ include(":ui:library")
 include(":ui:decomposer")
 include(":app")
 include(":benchmark")
+
+// Apps for the check V-02 of PH-00. They are no part of the product (architecture.md Section 2.1).
+include(":checkapps:views")
+include(":checkapps:compose")

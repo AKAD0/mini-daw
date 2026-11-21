@@ -49,7 +49,9 @@ jobs:
         env:
           MINIDAW_SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           MINIDAW_VERSION_CODE: ${{ github.run_number }}
-        run: sh gradlew --console=plain :app:assembleRelease :app:assembleMeasure
+        run: |
+          sh gradlew --console=plain :app:assembleRelease :app:assembleMeasure \
+            :checkapps:views:assembleRelease :checkapps:compose:assembleRelease
 
       - name: Size of the release build (AC-APP-20)
         run: python checks/check_package_size.py app/build/outputs/apk/release/*.apk
@@ -57,7 +59,9 @@ jobs:
       - name: Scan of both packages for secrets (AC-APP-18)
         run: |
           args=""
-          for f in app/build/outputs/apk/release/*.apk app/build/outputs/apk/measure/*.apk; do args="$args --package $f"; done
+          for f in app/build/outputs/apk/release/*.apk app/build/outputs/apk/measure/*.apk checkapps/*/build/outputs/apk/release/*.apk; do
+            args="$args --package $f"
+          done
           python checks/scan_secrets.py $args
 
       - name: Publish on the page of releases
@@ -68,12 +72,16 @@ jobs:
           n="${{ github.run_number }}"
           cp app/build/outputs/apk/release/app-release.apk "mini-daw-0.1.$n.apk"
           cp app/build/outputs/apk/measure/app-measure.apk "mini-daw-test-0.1.$n.apk"
+          cp checkapps/views/build/outputs/apk/release/views-release.apk "mini-daw-check-v02-views-0.1.$n.apk"
+          cp checkapps/compose/build/outputs/apk/release/compose-release.apk "mini-daw-check-v02-compose-0.1.$n.apk"
           {
             echo "Build $n of the change $GITHUB_SHA."
             echo
             echo "- mini-daw-test-0.1.$n.apk: the test build \"mini daw test\" (app.minidaw.test), with the screen Measurements."
             echo "- mini-daw-0.1.$n.apk: the release build \"mini daw\" (app.minidaw)."
+            echo "- mini-daw-check-v02-views-0.1.$n.apk and mini-daw-check-v02-compose-0.1.$n.apk: the apps of the check V-02."
           } > notes.md
           gh release create "build-$n" --target "$GITHUB_SHA" --title "Build $n" --notes-file notes.md --latest \
-            "mini-daw-test-0.1.$n.apk" "mini-daw-0.1.$n.apk"
+            "mini-daw-test-0.1.$n.apk" "mini-daw-0.1.$n.apk" \
+            "mini-daw-check-v02-views-0.1.$n.apk" "mini-daw-check-v02-compose-0.1.$n.apk"
           echo "Published: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/build-$n" >> "$GITHUB_STEP_SUMMARY"

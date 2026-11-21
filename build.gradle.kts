@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.test) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.compose) apply false
 }
 
 // Static analysis of Kotlin (technology_stack.md Section 12). Both tools run as programs of their own,

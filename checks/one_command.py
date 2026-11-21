@@ -198,14 +198,19 @@ def part_kotlin_static():
 
 
 def part_app_package():
-    if not gradle(":app:assembleDebug", ":app:assembleRelease", ":app:assembleMeasure"):
+    tasks = (":app:assembleDebug", ":app:assembleRelease", ":app:assembleMeasure",
+             ":checkapps:views:assembleRelease", ":checkapps:compose:assembleRelease")
+    if not gradle(*tasks):
         return False
     release = sorted(glob.glob(os.path.join(ROOT, "app", "build", "outputs", "apk", "release", "*.apk")))
     return run([PY, "checks/check_package_size.py", *release])[0] == 0
 
 
 def app_packages():
-    return sorted(glob.glob(os.path.join(ROOT, "app", "build", "outputs", "apk", "**", "*.apk"), recursive=True))
+    found = []
+    for folder in ("app", "checkapps/views", "checkapps/compose"):
+        found += glob.glob(os.path.join(ROOT, folder, "build", "outputs", "apk", "**", "*.apk"), recursive=True)
+    return sorted(found)
 
 
 def part_secrets(strict):
