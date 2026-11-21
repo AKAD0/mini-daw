@@ -548,9 +548,9 @@ Notes:
 
 ```text
 TK-016  State, Edits and Reducer of Tracks, Clips, Patterns, Parts, Notes and Sampler instruments
-State: split (size L): TK-016a and TK-016b done; TK-016c (Parts, Notes, Steps, Sampler instruments)
-  next
-Change: branches tk-016 (TK-016a, run "Check" 44940457594) and tk-016b, merged into main
+State: done (split into TK-016a, TK-016b and TK-016c, size L)
+Change: branches tk-016 (TK-016a, run "Check" 44940457594), tk-016b (run "Check" 44941262637) and
+  tk-016c, merged into main
 Plan of the split:
   TK-016a  the state of architecture.md Section 4.1 in :core (Model.kt), the time base, the limits in
            one file (Limits.kt, feature_specifications.md Section 1.5), the new Project of Section 1.7,
@@ -569,7 +569,7 @@ Criteria so far (run "Check" of the branch tk-016, part "kotlin-tests", module :
     "one undo restores all of them" needs TK-017
   Also: limits of the MVP and of version 1.0, ranges of names and colors, move of a Track, lengths of
     Patterns, duplicates, and the invariants find a loop, a missing channel and a shared ID.
-  TK-016b (run "Check" of the branch tk-016b, ClipEditsTest):
+  TK-016b (run "Check" 44941262637, ClipEditsTest):
   AC-PL-01: pass (noSequenceOfEditsMakesTwoClipsOfOneTrackOverlap: 3,000 random Edits of Clips with a
     fixed seed on three Tracks; after each one no two Clips of a Track overlap and every invariant holds)
   AC-PL-02, the rows of Clips: pass (anAudioClipHasItsLengthInTicksByTheTempo,
@@ -577,9 +577,19 @@ Criteria so far (run "Check" of the branch tk-016, part "kotlin-tests", module :
     clipsOfOneTrackDoNotOverlap, aPatternClipHasALengthAndAnOffsetInsideThePattern,
     aMovedClipKeepsItsOrderAndMayChangeItsTrack, aTrimOfTheStartMovesOffsetAndLengthByTheSameTime,
     aDuplicateStandsRightAfterItsClip, aDeletedClipLeavesItsTrack, makeUniqueGivesOneClipItsOwnPattern,
-    aClipEndsInsideTheLengthLimitOfTheProject); the rows of Notes and Sampler instruments follow in
-    TK-016c
-Documents: none
+    aClipEndsInsideTheLengthLimitOfTheProject)
+  TK-016c (run "Check" of the branch tk-016c, NoteAndInstrumentEditsTest):
+  AC-PT-02: pass (aNoteOutsideItsRangesOrBehindTheEndIsRefused)
+  AC-CR-01: pass (aStepButtonAddsAndRemovesANoteAtTheRootNote)
+  AC-PL-02, the rows of Parts, Notes, Sampler instruments, tempo and time signature: pass
+    (notesStaySortedByStartAndPitch, aPartHoldsOneNotePerStartAndPitch,
+    moveResizeAndDeleteNameTheNoteByStartAndPitch, aPatternHoldsOnePartPerSamplerInstrument,
+    aReplacedInstrumentKeepsTheNotes, theMvpHoldsAtMostEightSamplerInstrumentsInAPattern,
+    aDeletedSamplerInstrumentTakesItsPartsInAllPatterns, theValuesOfASamplerInstrumentKeepTheirRanges,
+    theTempoLiesBetween30And300Bpm, theTimeSignatureIsOneOfTheList). The rows of the Mixer belong to
+    TK-018.
+  The undo parts of AC-PL-11 and AC-PT-05 are checked with the undo of TK-017.
+Documents: feature_specifications.md 2.9 (Section 1.5: the range of the fine tuning)
 Decisions: none
 Owner: none
 Notes:
@@ -590,4 +600,9 @@ Notes:
      the new Project gets its Part as Section 1.7 says.
   3. Fault of TK-015, found here: the Live command "clear clip flag" of feature_specifications.md
      Section 3.2.7 is missing from LiveCommand. TK-018 (Mixer in the model) adds it.
+  4. A gap of the documents: no section gave the range of the fine tuning (FR-SM-10, P1). Section 1.5
+     now says −100 to +100 cents (prov.).
+  5. The P1 Edits that cost little are in: solo and move of a Track, the time signature, pan, solo and
+     fine tuning of a Sampler instrument. Split, gain and the Edits of several Clips or Notes wait for
+     version 1.0.
 ```

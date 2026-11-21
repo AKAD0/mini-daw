@@ -1,7 +1,7 @@
 # feature_specifications.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 4 of 6 (feature specifications) · **Version:** 2.8 · **Date:** 2026-11-21
+**Stage:** 4 of 6 (feature specifications) · **Version:** 2.9 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 5. Each criterion now belongs to one task of `development_roadmap.md`. Changed criteria: AC-TR-06, AC-TR-09, AC-MX-08, AC-MX-09, AC-FX-04, AC-FX-12, AC-AIX-03. New criterion: AC-TR-14. Changed parts: Section 9 (rules, MT-08), Section 10 (places of the checks).
 **Change in 1.2:** final check of Stage 6. Each criterion was compared with its requirements, and each task of `development_roadmap.md` with its criteria. New criteria: AC-APP-19 to AC-APP-21, AC-TR-15, AC-PL-17 to AC-PL-21, AC-PT-10, AC-PT-11, AC-LIB-10 to AC-LIB-12, AC-MX-21, AC-FX-17, AC-REC-15 to AC-REC-18, AC-H2M-16, AC-H2M-17. Changed criteria: AC-WS-10, AC-APP-01, AC-APP-05, AC-APP-16, AC-TR-08, AC-TR-12, AC-PL-09, AC-CR-10, AC-SM-01, AC-LIB-07, AC-MX-13, AC-MX-20, AC-FX-10, AC-FX-12, AC-REC-12, AC-H2M-08, AC-H2M-10, AC-H2M-12, AC-AIX-04 to AC-AIX-06, AC-AIX-13, AC-AIX-15, AC-AIX-16, AC-AIX-18, AC-FS-06. Changed manual tests: MT-01, MT-14. Changed parts: the conventions (rule for the mark "P1:", D-102), Sections 1.1, 2.2.1, 2.2.2, 2.2.6, 4.2.6 and 5.3, Section 10 (place of NFR-MNT-07), Section 11 (source F6).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: Section 12 with the criteria AC-DEC-01 to AC-DEC-33, Section 6.11, the manual test MT-21, the sources F7 to F9. Changed parts: the conventions 3, 9 and 12, Section 4.2.7 (low register), Section 5.2.8 (rule 5), Section 6.5 (version 2), Section 6.6 (schema 2), Section 9 (MT-13, MT-14), Section 10 (FR-AIX-18, FR-DEC-24).
@@ -13,6 +13,7 @@
 **Change in 2.6:** TK-012 named the details of the setup script. Changed part: Section 5.2.8.
 **Change in 2.7:** TK-003 added values that the owner types and values without a pass rule to the file of results. Changed part: Section 6.12.
 **Change in 2.8:** TK-014. pYIN is the pitch method (D-117). A Take gets the correction that the loopback measured (D-118). MT-01 starts after the profile is compiled (V-02). Changed parts: Sections 4.2.1, 4.2.2, 4.2.4, 4.3, 6.5, 9 (MT-01, MT-07) and 12.2.6.
+**Change in 2.9:** TK-016c. Section 1.5 names the range of the fine tuning of a Sampler instrument, which no section gave.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `ui_ux_specification.md`, `development_roadmap.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-` and `V-` point to them.
 
 ---
@@ -155,6 +156,7 @@ Further limits of this document (prov.):
 | Length of an imported file | 20 min |
 | Voices per Sampler instrument | 8 (FR-SM-07) |
 | Length of a name | 40 characters |
+| Fine tuning of a Sampler instrument (P1) | −100 to +100 cents |
 
 ### 1.6 Audio focus
 
