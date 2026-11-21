@@ -129,7 +129,7 @@ def part_toolkit_tests():
     if not glob.glob(os.path.join(ROOT, "toolkit", "tests", "test_*.py")):
         raise NotApplicable("no Toolkit yet (TK-011)")
     need("pytest")
-    return run([PY, "-m", "pytest", "-q", "toolkit"])[0] == 0
+    return run([PY, "-m", "pytest", "-q", "-p", "no:cacheprovider", "toolkit/tests"])[0] == 0
 
 
 def part_cpp_tests(strict):

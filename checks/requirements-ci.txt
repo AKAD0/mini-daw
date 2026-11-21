@@ -1,2 +1,3 @@
 # Python tools of the one command in the CI service (checks/one_command.py). Entries in checks/licences.toml.
 ruff==0.17.2
+pytest==9.2.0

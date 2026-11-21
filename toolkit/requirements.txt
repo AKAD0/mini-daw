@@ -1,0 +1,4 @@
+# Python packages of the Toolkit (D-046). The environment of the Sandbox installs them (TK-012).
+# The tests of the one command use the same list. Entries in checks/licences.toml.
+numpy==2.5.4
+scipy==1.18.1

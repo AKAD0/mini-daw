@@ -118,6 +118,13 @@ licence = "MIT"
 use = "test"
 source = "github.com/mir-evaluation/mir_eval, read on 2026-11-21. The metric of NFR-QLT-01 (TK-009)."
 
+[[entry]]
+name = "pytest"
+kind = "python"
+licence = "MIT"
+use = "test"
+source = "PyPI pytest 9.2.0, read on 2026-11-21. Tests of the Toolkit (D-050)."
+
 # --- Public sets for tests (analysis/tools/datasets.toml)
 [[entry]]
 name = "vocadito"
