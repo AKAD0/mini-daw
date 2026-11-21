@@ -517,3 +517,28 @@ Notes:
      the gap that V-07 measured (19 ms) as the default of the offset. MT-07 checks it at GATE-07.
   5. SwiftF0 and ONNX Runtime stay in the code and in the test build until TK-056 removes them.
 ```
+
+```text
+TK-015  Types of the engine: Live commands, telemetry, writer of a Snapshot, fake engine
+State: done
+Change: branch tk-015, merged into main
+Criteria (run "Check" of the branch tk-015, part "kotlin-tests", module :engine-api):
+  "The writer gives the bytes of feature_specifications.md Section 6.2 for fixed inputs": pass
+    theMinimalSnapshotHasTheBytesOfTheSpecification (all 204 bytes of the Master channel alone),
+    theSmallSnapshotHasTheBytesOfTheSecondWriter (552 bytes, FNV-1a and the directory of a Project with
+    every table), aFieldOutsideItsRangeIsRefused, theCheckAcceptsTheBytesOfTheWriter,
+    theCheckRefusesChangedBytes, aHashKeepsItsBytes. The expected bytes come from a second writer of
+    the format, written apart in Python with the module struct.
+  Also: FakeAudioEngineTest (Live commands in order, Snapshots checked or refused on request, previews
+    need a registered Sample, one Take at a time, events read once, codes of the results, checks of
+    the Live commands).
+Documents: architecture.md 2.10 (Sections 5.2 and 12.1), project_decisions.md 7.10 (D-114), CLAUDE.md
+Decisions: D-114 takes the second goal of the owner (40 turns per session, a report in five parts)
+Owner: none
+Notes:
+  1. The test build keeps SnapshotPrototype and the layout of TK-007 until engine-core reads the format
+     of Section 6.2 (PH-02). Both writers live side by side in :engine-api until then.
+  2. EngineResult codes 1 to 7 follow snapshot::Error of engine-core; PH-02 adds codes 8 and 9
+     (unsorted, over a limit) to the loader.
+  3. The offline render of AudioEngine comes with the export (PH-11); AudioTools with its first user.
+```

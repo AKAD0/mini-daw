@@ -23,7 +23,7 @@ Project: mini daw, a compact DAW for Android phones. All sound comes from sample
 9. Do not wait for answers. Where the guide says to ask the owner, record the question with its default in `docs/project_decisions.md` Section 5 and go on (guide Section 7.2).
 10. A task that waits for the owner does not stop the work. Record it as "blocked" or "delivered for the gate" with the action of the owner. Then take the task with the smallest ID whose needed tasks are done or delivered for the gate. The rules for phases and gates still hold.
 11. Do one task per turn. A task may take several turns. End every turn with the number of the turn and the ID of its task.
-12. Stop after 20 turns in any case and report what is left.
+12. Stop after 40 turns per session in any case, or earlier when only actions of the owner are left, and report what is left (second goal of 2026-11-21: finish TK-015 to TK-115). The report has the parts A to E of D-114.
 13. Where a goal of the owner adds a rule or a fact that the documents lack, add it to the documents (guide Section 9).
 
 ## Facts of the computer of the owner
