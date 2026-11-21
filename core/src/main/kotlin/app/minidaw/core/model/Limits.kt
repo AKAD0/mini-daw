@@ -9,11 +9,24 @@ data class Limits(
     val channels: Int,
     val instrumentsPerPattern: Int,
     val activeEffects: Int,
+    val effectKinds: Set<String>,
     val projectMinutes: Int = 10
 ) {
     companion object {
-        val MVP = Limits(tracks = 8, channels = 8, instrumentsPerPattern = 8, activeEffects = 8)
-        val VERSION_1_0 = Limits(tracks = 16, channels = 16, instrumentsPerPattern = 16, activeEffects = 16)
+        val MVP = Limits(
+            tracks = 8,
+            channels = 8,
+            instrumentsPerPattern = 8,
+            activeEffects = 8,
+            effectKinds = EffectCatalog.MVP_KINDS
+        )
+        val VERSION_1_0 = Limits(
+            tracks = 16,
+            channels = 16,
+            instrumentsPerPattern = 16,
+            activeEffects = 16,
+            effectKinds = EffectCatalog.KINDS.map { it.name }.toSet()
+        )
 
         const val MIN_PATTERN_BARS = 1
         const val MAX_PATTERN_BARS = 256

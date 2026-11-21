@@ -1,7 +1,7 @@
 # architecture.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 3 of 6 (architecture) · **Version:** 2.10 · **Date:** 2026-11-21
+**Stage:** 3 of 6 (architecture) · **Version:** 2.11 · **Date:** 2026-11-21
 **Change in 1.1:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 1.1, Section 10.5, Section 15, Section 16.5.
 **Change in 1.2:** results of Stage 4. The index of the Library also holds the length of the song of each Project. Changed parts: Section 8.2 (table `project`), Section 16.4 (closing note).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: the module `:ui:decomposer`, Section 10.7, Section 16.6. Changed parts: Sections 1.1, 2.1, 2.2, 2.3, 6.1, 6.2, 6.4, 7, 11.4, 12.1, 12.3, 13.2, 14 and 15.
@@ -15,6 +15,7 @@
 **Change in 2.8:** TK-010. Section 2.1 names the module of both pitch candidates for the test build.
 **Change in 2.9:** TK-014. pYIN is the pitch method (D-117), and a Take gets the correction that the loopback measured (D-118). Changed parts: Sections 2.1, 5.8, 9 and 12.1.
 **Change in 2.10:** TK-015. Section 5.2 names the writer of the format and its check; Section 12.1 names the fake engine and the codes of the results.
+**Change in 2.11:** TK-018. Section 5.3 names the Live command that clears a clip indicator; TK-015 had left it out.
 **Companion documents:** `requirements.md`, `technology_stack.md` and `project_decisions.md` in their newest versions. `feature_specifications.md` and `ui_ux_specification.md` hold the details of Stage 4. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-`, `Q-` and `V-` point to them.
 
 ---
@@ -442,6 +443,7 @@ Live commands go from the main thread to the audio thread. They change running v
 | Note on, Note off | Sampler instrument, pitch, velocity, Track | Keys of the Piano roll, step buttons, a new Note (FR-PT-05) |
 | Stop preview | — | Ends the preview of a Sample |
 | Metronome | on or off | FR-TR-09 |
+| Clear clip flag | a Mixer channel, the Master channel or the output | Clears its clip indicator (FR-MX-08, `feature_specifications.md` Section 3.2.7) |
 
 A Live command names its target by ID. The engine drops a command for an ID that the current Snapshot does not hold. The diagnostics count such drops.
 

@@ -611,7 +611,7 @@ Notes:
 TK-017  Undo, redo and ProjectSession
 State: done
 Change: branch tk-017, merged into main
-Criteria (run "Check" of the branch tk-017, part "kotlin-tests", module :core, ProjectSessionTest):
+Criteria (run "Check" 44943108857, part "kotlin-tests", module :core, ProjectSessionTest):
   AC-PL-06: pass (undoRestoresTheExactEarlierStateAndRedoTheLaterOne: after each of 15 Edits of every
     kind, undo gives the exact state before and redo the state after; then all the way back and forth)
   AC-PRJ-07: pass (atLeastFiftyStepsAreKeptAndANewEditDropsRedo: 60 Edits, 50 steps of undo, a new
@@ -628,4 +628,28 @@ Notes:
      Kotlin coroutines (technology_stack.md Section 1).
   2. The compile of a Snapshot on the Control thread and the save 500 ms after the last Edit join
      ProjectSession with the compiler (TK-020) and the store (:data).
+```
+
+```text
+TK-018  Mixer in the model: channels, assignment, volume, pan, mute, solo, Effect slots, flags "audible"
+State: done
+Change: branch tk-018, merged into main
+Criteria (run "Check" of the branch tk-018, part "kotlin-tests", module :core, MixerEditsTest):
+  AC-MX-04: pass (theFlagsAudibleFollowSection323ForEveryCombinationOfThreeChannels: all 64
+    combinations of mute and solo of three channels; theRowsOfTheTableOfSection323: the six rows)
+  Also: the solo path of version 1.0 through a bus, a target that closes a loop is refused, the mute of
+    Tracks and of Sampler instruments, add, rename, recolor and delete of channels (refused while
+    something sends to them), assignment to another or a new channel, the ranges of Section 1.4, effects
+    with the defaults of Section 3.10 whose values are held in range, the three kinds of the MVP, replace,
+    bypass, move and remove, the Master channel, at most 8 active effects, an own channel of a Sampler
+    instrument, and an effect outside the catalog breaks an invariant.
+Documents: architecture.md 2.11 (Section 5.3: the Live command that clears a clip indicator)
+Decisions: none
+Owner: none
+Notes:
+  1. EffectCatalog holds the names of Section 6.1 and the ranges and defaults of Section 3.10 for all
+     eight kinds. The limits name the kinds of each version: eq3, delay and reverb in the MVP.
+  2. The fault of TK-015 (note 3 of TK-016) is repaired: LiveCommand.ClearClipFlag names a channel, the
+     Master channel (0) or the output (-2).
+  3. The Mixer channel of a new channel gets the default name "Channel N"; no section names one.
 ```

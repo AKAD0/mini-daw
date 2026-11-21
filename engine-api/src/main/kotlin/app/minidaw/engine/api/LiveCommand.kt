@@ -90,8 +90,20 @@ sealed interface LiveCommand {
     /** The metronome (FR-TR-09). */
     data class Metronome(val on: Boolean) : LiveCommand
 
+    /**
+     * Clears a clip indicator (feature_specifications.md Section 3.2.7, FR-MX-08): of the Mixer channel with this ID,
+     * of the Master channel ([MASTER_CHANNEL]) or of the output ([OUTPUT]).
+     */
+    data class ClearClipFlag(val target: Int) : LiveCommand
+
     companion object {
         /** No Pattern or no Track. */
         const val NO_ID = -1
+
+        /** The Master channel has the ID 0 in a Snapshot. */
+        const val MASTER_CHANNEL = 0
+
+        /** The clip indicator of the output, behind the last line of Section 3.2.6. */
+        const val OUTPUT = -2
     }
 }

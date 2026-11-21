@@ -139,6 +139,10 @@ object Invariants {
         val pans = state.mixer.channels.map { it.pan } + state.instruments.map { it.pan }
         expect(pans.all { it in -1f..1f }) { "A pan lies outside −1 to +1" }
         expect(state.instruments.all { it.rootNote in 0..Limits.MIDI_MAX }) { "A Root note lies outside 0 to 127" }
+        val effects = state.mixer.channels.flatMap { it.slots } + state.mixer.master.slots
+        expect(effects.filterNotNull().all { EffectCatalog.isValid(it) }) {
+            "An effect has an unknown kind, a missing parameter or a value outside its range"
+        }
     }
 
     private fun MutableList<String>.ids(state: Project) {
