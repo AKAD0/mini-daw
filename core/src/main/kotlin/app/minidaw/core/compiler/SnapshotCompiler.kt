@@ -128,17 +128,15 @@ private fun tracks(
         val channel = channelIndex.getValue(track.channel)
         tracks += TrackRecord(track.id, channel, clips.size, sorted.size, audible.getValue(track.id))
         sorted.mapTo(clips) { c ->
-            when (c) {
-                is AudioClip -> ClipRecord(
-                    c.id, ClipKind.AUDIO, c.start, sampleIndex.getValue(c.sample), c.offset, c.length,
-                    SnapshotCompiler.gain(c.gainDb)
-                )
-
-                is PatternClip -> ClipRecord(
-                    c.id, ClipKind.PATTERN, c.start, patternIndex.getValue(c.pattern), c.offset, c.length,
-                    SnapshotCompiler.gain(c.gainDb)
-                )
+            val (kind, source) = when (c) {
+                is AudioClip -> ClipKind.AUDIO to sampleIndex.getValue(c.sample)
+                is PatternClip -> ClipKind.PATTERN to patternIndex.getValue(c.pattern)
             }
+            val (offset, length) = when (c) {
+                is AudioClip -> c.offset to c.length
+                is PatternClip -> c.offset to c.length
+            }
+            ClipRecord(c.id, kind, c.start, source, offset, length, SnapshotCompiler.gain(c.gainDb))
         }
     }
     return tracks to clips
