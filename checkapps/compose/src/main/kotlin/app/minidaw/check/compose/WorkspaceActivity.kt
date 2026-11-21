@@ -76,6 +76,7 @@ private const val FILL = 0.8f
 private const val CLIP_INSET = 2f
 private const val NOTE_STEP = 5
 private val LABELS = listOf("Play", "Stop", "Rec", "120 BPM", "4/4", "Song", "Mixer")
+
 // The keys of one octave from C: 1 marks a black key.
 private const val OCTAVE_KEYS = "010100101010"
 
