@@ -1,7 +1,7 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.8 · **Date:** 2026-11-21
+**Stage:** 2 of 6 (technical research) · **Version:** 2.9 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
@@ -15,6 +15,7 @@
 **Change in 2.6:** TK-012 named the model tiers and the library of the setup script. Changed part: Section 9.3.
 **Change in 2.7:** TK-013. Section 1 gives the licence of JUnit 5 (D-115). Section 9.6 names how step 5 compares the stems.
 **Change in 2.8:** TK-004. Section 6.1 names how the apps of V-02 measure. Section 3.3 names the repositories of the build.
+**Change in 2.9:** TK-005. Section 4 names the native build of Oboe.
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -166,6 +167,13 @@ Costs of the choice:
 
 1. One more native library in the app.
 2. A fixed rate of 48 kHz adds a conversion when an output device runs at another rate. V-03 checks that the speaker path of the phone runs at 48 kHz.
+
+Native build since TK-005:
+
+1. Oboe 1.10.0 comes as a prefab package from Maven Central (`com.google.oboe:oboe`, Apache-2.0). It needs the shared C++ library (`c++_shared`).
+2. The build uses the NDK 29.0.14206865 and the CMake 3.31.5 of the Android SDK, as the runner of the CI service has them.
+3. The NDK r29 aligns native code for pages of 16 KB by default. `checks/check_native_pages.py` checks every library in every package of the build: its LOAD segments and, for a library stored uncompressed, its place in the package (CON-11). The one command and the run "Build" run it.
+4. Release builds hold `arm64-v8a`. The debug build adds `x86_64` for an emulator.
 
 ---
 

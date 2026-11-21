@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -13,15 +14,19 @@ import app.minidaw.R
 
 /**
  * The screen "Measurements" of a test build (ui_ux_specification.md Section 15.4). It holds the row of
- * TK-002, the check V-01 (TK-003) and the button that shares the results as a file (NFR-MNT-06).
+ * TK-002, the checks V-01 (TK-003) and V-03 (TK-005), and the button that shares the results as a file
+ * (NFR-MNT-06).
  */
 class MeasurementsActivity : Activity() {
 
     private var verdict = Verdict.NOT_RUN
     private var facts: List<ResultRow> = emptyList()
     private var noise: ResultRow? = null
+    private var audio: List<ResultRow> = emptyList()
+    private var running = false
     private val entries = Entries()
     private lateinit var verdictView: TextView
+    private lateinit var statusView: TextView
     private lateinit var resultsView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +56,12 @@ class MeasurementsActivity : Activity() {
         entries.addTo(layout)
         entries.restore(savedInstanceState)
 
+        layout.text(getString(R.string.v03_title), SECTION_SP)
+        layout.button(getString(R.string.v03_streams)) { measureAudio(STREAMS) }
+        layout.button(getString(R.string.v03_run_hint)) { measureAudio(RUN_WITH_HINT) }
+        layout.button(getString(R.string.v03_run_plain)) { measureAudio(RUN_WITHOUT_HINT) }
+        statusView = layout.text("")
+
         layout.button(getString(R.string.share_results)) { share() }
         layout.text(getString(R.string.shown_results))
         resultsView = layout.text("")
@@ -70,8 +81,12 @@ class MeasurementsActivity : Activity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_MICROPHONE && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
+        val granted = grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED
+        if (granted && requestCode == REQUEST_MICROPHONE) {
             measureNoise()
+        }
+        if (granted && requestCode == REQUEST_STREAMS) {
+            measureAudio(STREAMS)
         }
     }
 
@@ -97,7 +112,31 @@ class MeasurementsActivity : Activity() {
         }.start()
     }
 
-    private fun rows(): List<ResultRow> = facts + listOfNotNull(noise) + entries.rows()
+    private fun measureAudio(kind: Int) {
+        val microphone = checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (kind == STREAMS && !microphone) {
+            requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_STREAMS)
+            return
+        }
+        if (running) {
+            return
+        }
+        running = true
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        statusView.text = getString(R.string.v03_running)
+        Thread {
+            val rows = if (kind == STREAMS) AudioPath.streams() else AudioPath.run(kind == RUN_WITH_HINT)
+            runOnUiThread {
+                audio = audio + rows
+                running = false
+                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                statusView.text = ""
+                refresh()
+            }
+        }.start()
+    }
+
+    private fun rows(): List<ResultRow> = facts + listOfNotNull(noise) + audio + entries.rows()
 
     private fun refresh() {
         verdictView.text = getString(R.string.verdict_line, verdict.word)
@@ -117,6 +156,10 @@ class MeasurementsActivity : Activity() {
     private companion object {
         const val KEY_VERDICT = "verdict"
         const val REQUEST_MICROPHONE = 1
+        const val REQUEST_STREAMS = 2
+        const val STREAMS = 0
+        const val RUN_WITH_HINT = 1
+        const val RUN_WITHOUT_HINT = 2
         const val PADDING_DP = 24
         const val TITLE_SP = 24f
         const val SECTION_SP = 20f

@@ -67,6 +67,13 @@ use = "build"
 source = "github.com/detekt/detekt, read on 2026-11-21"
 
 [[entry]]
+name = "com.google.oboe:oboe"
+kind = "library"
+licence = "Apache-2.0"
+use = "app"
+source = "github.com/google/oboe, read on 2026-11-21. Audio input and output (D-035)."
+
+[[entry]]
 name = "org.jetbrains.kotlin.plugin.compose"
 kind = "plugin"
 licence = "Apache-2.0"

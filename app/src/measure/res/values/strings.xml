@@ -12,5 +12,10 @@
     <string name="v01_title">V-01: facts of the phone</string>
     <string name="v01_facts">Read the facts that Android reports</string>
     <string name="v01_noise">Measure the noise of the microphone (keep the room quiet for 3 s)</string>
+    <string name="v03_title">V-03: audio path</string>
+    <string name="v03_streams">Open both streams once (rate, Burst, path, times to open)</string>
+    <string name="v03_run_hint">Run the output for 10 min with performance hints. Leave the phone alone.</string>
+    <string name="v03_run_plain">Run the output for 10 min without performance hints. Leave the phone alone.</string>
+    <string name="v03_running">Running. The screen stays on. Wait until this line disappears.</string>
     <string name="v01_entries">Values from OboeTester and from the settings. Leave a field empty when you do not know the value.</string>
 </resources>

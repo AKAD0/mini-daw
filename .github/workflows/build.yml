@@ -56,6 +56,11 @@ jobs:
       - name: Size of the release build (AC-APP-20)
         run: python checks/check_package_size.py app/build/outputs/apk/release/*.apk
 
+      - name: Native code for pages of 16 KB (CON-11)
+        run: |
+          python checks/check_native_pages.py app/build/outputs/apk/release/*.apk \
+            app/build/outputs/apk/measure/*.apk checkapps/*/build/outputs/apk/release/*.apk
+
       - name: Scan of both packages for secrets (AC-APP-18)
         run: |
           args=""

@@ -45,6 +45,10 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.findByName("minidaw")
+            // Release builds hold 64-bit ARM only (D-034). The debug build also holds x86_64.
+            ndk {
+                abiFilters += listOf("arm64-v8a")
+            }
         }
         // The test build (development_roadmap.md Section 2.2): optimized like the release build, with the
         // screen "Measurements", its own application ID and its own name (D-098).

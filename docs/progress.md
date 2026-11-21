@@ -337,3 +337,29 @@ Notes:
      state of the profile with each file of results.
 ```
 
+```text
+TK-005  Check V-03: audio path
+State: delivered for the gate (the part "V-03" of the test build is in the run "Build"; the phone is needed)
+Change: branch tk-005, merged into main
+Criteria:
+  "Rate, Burst, kind of path, Underruns over 10 min, and both times to open are recorded":
+  not measured yet. The screen "Measurements" has three buttons for V-03:
+    1. Open both streams once: output (low latency, exclusive, float, stereo, 48 kHz) and input
+       (preset UNPROCESSED, mono). Records rate, Burst, buffer, performance and sharing mode, API,
+       MMAP yes or no, the time to open and the time to the first callback.
+    2. and 3. Run the output for 10 min with a buffer of 2 Bursts, with and without performance
+       hints, and record the Underruns and the estimate of the output latency of Oboe.
+  The native code (engine/src/main/cpp/glue, jni) builds with the NDK r29 in the run "Check" of
+  this change. checks/check_native_pages.py checks every native library of every package for
+  pages of 16 KB (CON-11); it passes on all four packages.
+Documents: architecture.md 2.5 (Section 12.2), technology_stack.md 2.9 (Section 4)
+Decisions: none
+Owner (after TK-002): on the phone, open the test build, section "V-03". Tap button 1 and allow the
+  microphone. Then tap button 2 and leave the phone alone for 10 min, then button 3, another 10 min.
+  Share the results and put the file into docs/results/. The pass rule of technology_stack.md
+  Section 14: the speaker path at 48 kHz, no Underrun in 10 min at 2 to 4 Bursts.
+Notes:
+  1. Oboe 1.10.0 from Maven Central (Apache-2.0). The release builds hold arm64-v8a only.
+  2. The probe writes silence, so the runs of 10 min make no sound.
+```
+

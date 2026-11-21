@@ -5,6 +5,11 @@ kotlin = "2.2.21"
 compileSdk = "36"
 targetSdk = "36"
 minSdk = "31"
+# The NDK and the CMake of the Android SDK on the runner of the CI service (TK-005). The NDK r28 and
+# later align native code for pages of 16 KB by default (CON-11).
+ndk = "29.0.14206865"
+cmake = "3.31.5"
+oboe = "1.10.0"
 ktlint = "1.8.0"
 detekt = "1.23.8"
 composeBom = "2025.10.01"
@@ -14,6 +19,7 @@ profileinstaller = "1.4.1"
 [libraries]
 ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint" }
 detekt-cli = { module = "io.gitlab.arturbosch.detekt:detekt-cli", version.ref = "detekt" }
+oboe = { module = "com.google.oboe:oboe", version.ref = "oboe" }
 # The apps for the check V-02 (checkapps/). D-041 decides later whether the product uses Compose.
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 compose-ui = { module = "androidx.compose.ui:ui" }

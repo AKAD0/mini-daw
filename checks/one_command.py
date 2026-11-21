@@ -16,6 +16,7 @@ The last line reads one of:
 import argparse
 import glob
 import hashlib
+import json
 import os
 import re
 import shutil
@@ -185,7 +186,12 @@ def part_cpp_static(strict):
             return False
         print("no compile database: only clang-format ran")
         return ok
-    sources = [f for f in files if f.endswith((".cpp", ".cc")) and "/src/test/" not in f and "/tests/" not in f]
+    # clang-tidy checks the files of the host build. The glue for Oboe and the JNI bridge build only
+    # for Android; clang-format checks them.
+    with open(database, encoding="utf-8") as f:
+        compiled = {os.path.normpath(e["file"]) for e in json.load(f)}
+    sources = [f for f in files if f.endswith((".cpp", ".cc")) and "/src/test/" not in f and "/tests/" not in f
+               and os.path.normpath(os.path.join(ROOT, f)) in compiled]
     return run([tidy, "-p", HOST_BUILD, "--quiet", *sources])[0] == 0 and ok
 
 
@@ -203,7 +209,9 @@ def part_app_package():
     if not gradle(*tasks):
         return False
     release = sorted(glob.glob(os.path.join(ROOT, "app", "build", "outputs", "apk", "release", "*.apk")))
-    return run([PY, "checks/check_package_size.py", *release])[0] == 0
+    size = run([PY, "checks/check_package_size.py", *release])[0] == 0
+    pages = run([PY, "checks/check_native_pages.py", *app_packages()])[0] == 0
+    return size and pages
 
 
 def app_packages():
