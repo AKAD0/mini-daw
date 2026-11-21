@@ -53,3 +53,32 @@ Notes:
      compile SDK 36; technology_stack.md 2.1 Sections 3.2 and 3.3 give the reason.
   8. The run "Emulator" is not set up yet. The first task with tests on an emulator adds it.
 ```
+
+```text
+TK-002  CI service, key for signing, delivery of builds
+State: blocked (waits for the owner: task O-7, then the install and the file of results)
+Change: branch tk-002, merged into main
+Criteria:
+  AC-APP-20: pass (part "app-package" of the one command: app-release-unsigned.apk has 17,952 bytes
+             of at most 50,000,000; run "Check" 44844006613. The run "Build" repeats the check.)
+  NFR-MNT-06, install from a download and file of results: delivered for the gate as soon as the run
+             "Build" publishes a signed test build. Not passed: it needs the phone of the owner.
+Documents: feature_specifications.md 2.1 (Section 6.12), development_roadmap.md 2.2, project_decisions.md 7.2
+Decisions: none
+Owner:
+  1. O-7: set the secret SIGNING_PASSWORD (GitHub, repository mini-daw: Settings, Secrets and variables,
+     Actions, New repository secret), then start the run "Key for signing" (Actions, Run workflow).
+  2. Then the implementer merges the branch signing-key. The next run "Build" publishes build-<number>.
+  3. O-8 and TK-002: on the phone, open the page releases/latest of the repository, install
+     mini-daw-test-<version>.apk, open "mini daw test", tap Measurements, mark Pass or Fail, tap
+     "Share results" and put the file into docs/results/ of the local copy.
+Notes:
+  1. The test build is the build type measure. Its code (screen Measurements, ResultsProvider) lies in
+     app/src/measure and does not enter the release build.
+  2. The screens use the Views of the platform without AndroidX. The check V-02 decides the toolkit of
+     the real shell (D-041), so no task before it adds Compose.
+  3. ktlint with the style android_studio sorts imports in plain lexicographic order and wants an
+     expression body on a line of its own. Two runs "Check" (44843196965, 44843648900) failed on this.
+  4. The run "Emulator" is still not set up (TK-001, note 8).
+```
+
