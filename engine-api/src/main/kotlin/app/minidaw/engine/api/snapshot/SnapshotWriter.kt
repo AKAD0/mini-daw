@@ -34,21 +34,26 @@ object SnapshotWriter {
             out.putU32(offsets[table])
             out.putU32(counts[table])
         }
-        content.samples.forEach { out.put(it.toBytes()) }
-        content.instruments.forEach { out.putInstrument(it) }
-        content.envelopes.forEach { out.putEnvelope(it) }
-        content.patterns.forEach { out.putPattern(it) }
-        content.parts.forEach { out.putPart(it) }
-        content.notes.forEach { out.putNote(it) }
-        content.tracks.forEach { out.putTrack(it) }
-        content.clips.forEach { out.putClip(it) }
-        content.channels.forEach { out.putChannel(it) }
-        content.slots.forEach { out.putSlot(it) }
-        content.parameters.forEach { out.putFloat(it) }
-        content.order.forEach { out.putU32(it) }
+        out.putTables(content)
         check(out.position() == end) { "the tables end at ${out.position()}, not at $end" }
         return out.array()
     }
+}
+
+/** The twelve tables in the order of the directory. */
+private fun ByteBuffer.putTables(content: SnapshotContent) {
+    content.samples.forEach { put(it.toBytes()) }
+    content.instruments.forEach { putInstrument(it) }
+    content.envelopes.forEach { putEnvelope(it) }
+    content.patterns.forEach { putPattern(it) }
+    content.parts.forEach { putPart(it) }
+    content.notes.forEach { putNote(it) }
+    content.tracks.forEach { putTrack(it) }
+    content.clips.forEach { putClip(it) }
+    content.channels.forEach { putChannel(it) }
+    content.slots.forEach { putSlot(it) }
+    content.parameters.forEach { putFloat(it) }
+    content.order.forEach { putU32(it) }
 }
 
 private fun ByteBuffer.putInstrument(r: InstrumentRecord) {

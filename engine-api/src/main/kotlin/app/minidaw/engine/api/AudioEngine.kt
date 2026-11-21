@@ -7,6 +7,7 @@ import app.minidaw.engine.api.snapshot.SampleHash
  * (architecture.md Section 12.2). Codes 1 to 7 follow `snapshot::Error` of engine-core; codes 1 to 9 are the
  * checks before a swap (feature_specifications.md Section 6.2).
  */
+@Suppress("MagicNumber") // The codes are the numbers that cross the border; the native library uses the same.
 enum class EngineResult(val code: Int) {
     OK(0),
     TOO_SHORT(1),
