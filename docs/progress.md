@@ -139,3 +139,35 @@ Notes:
      the changelog of SwiftF0 0.2.0).
 ```
 
+```text
+TK-009  Evaluation of both candidates on the public set
+State: done
+Change: branch tk-009, merged into main
+Criteria:
+  Done when "A report gives the F-measure of both candidates (NFR-QLT-01)": pass. Report
+  docs/results/TK-009-vocadito.md and .json, from the run "Humming evaluation" 44853107495 on the
+  change eaf135448f62. Notes without offsets, 50 ms, 50 cents, mir_eval 0.8.2, 40 tracks:
+    pYIN:    F 0.653 (annotator A1), 0.628 (A2), mean 0.641
+    SwiftF0: F 0.685 (A1), 0.632 (A2), mean 0.659
+    Difference of the means: +0.018 for SwiftF0. This is below 0.02, so on vocadito alone the
+    rule of V-05 would pick pYIN. The rule also needs the 10 melodies of the owner (TK-010).
+    No winner is named yet.
+  AC-H2M-03 belongs to TK-056. Its first half, the report, now exists.
+  Also: 4 tests of wavio (run "Check" 44853107468), 4 tests of the parts of the driver without
+  NumPy (checks/tests/test_evaluate_vocadito.py).
+Documents: technology_stack.md 2.3 (Section 15 item 5), architecture.md 2.3 (rule 7),
+  development_roadmap.md 2.3 (Section 2.3, run "Humming evaluation")
+Decisions: none
+Owner: none
+Notes:
+  1. vocadito has the licence CC BY 4.0 (Zenodo record 5578807). The evaluation downloads it with a
+     fixed checksum (analysis/tools/datasets.toml) and never stores it in the repository.
+  2. The shared WAV library of architecture.md rule 7 exists now as native/wavio. engine-core does
+     not use it yet; TK-007 and TK-021 will.
+  3. Both candidates reach the range of the published specialist model (0.57 to 0.64). The test
+     melodies of TK-008 are easier than real singing; this report is the first measurement on
+     real voices.
+  4. The time per second of audio on the host of the CI service: 0.011 for pYIN, 0.007 for
+     SwiftF0. This is no measurement of the phone (NFR-PERF-09 needs TK-010).
+```
+
