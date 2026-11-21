@@ -548,9 +548,9 @@ Notes:
 
 ```text
 TK-016  State, Edits and Reducer of Tracks, Clips, Patterns, Parts, Notes and Sampler instruments
-State: split (size L): TK-016a done; TK-016b (Clips) and TK-016c (Parts, Notes, Steps, Sampler
-  instruments) next
-Change: branch tk-016 (TK-016a), merged into main
+State: split (size L): TK-016a and TK-016b done; TK-016c (Parts, Notes, Steps, Sampler instruments)
+  next
+Change: branches tk-016 (TK-016a, run "Check" 44940457594) and tk-016b, merged into main
 Plan of the split:
   TK-016a  the state of architecture.md Section 4.1 in :core (Model.kt), the time base, the limits in
            one file (Limits.kt, feature_specifications.md Section 1.5), the new Project of Section 1.7,
@@ -569,6 +569,16 @@ Criteria so far (run "Check" of the branch tk-016, part "kotlin-tests", module :
     "one undo restores all of them" needs TK-017
   Also: limits of the MVP and of version 1.0, ranges of names and colors, move of a Track, lengths of
     Patterns, duplicates, and the invariants find a loop, a missing channel and a shared ID.
+  TK-016b (run "Check" of the branch tk-016b, ClipEditsTest):
+  AC-PL-01: pass (noSequenceOfEditsMakesTwoClipsOfOneTrackOverlap: 3,000 random Edits of Clips with a
+    fixed seed on three Tracks; after each one no two Clips of a Track overlap and every invariant holds)
+  AC-PL-02, the rows of Clips: pass (anAudioClipHasItsLengthInTicksByTheTempo,
+    aNewSampleEntersTheTableOfUsedSamples, theRegionOfAnAudioClipLiesInsideItsSample,
+    clipsOfOneTrackDoNotOverlap, aPatternClipHasALengthAndAnOffsetInsideThePattern,
+    aMovedClipKeepsItsOrderAndMayChangeItsTrack, aTrimOfTheStartMovesOffsetAndLengthByTheSameTime,
+    aDuplicateStandsRightAfterItsClip, aDeletedClipLeavesItsTrack, makeUniqueGivesOneClipItsOwnPattern,
+    aClipEndsInsideTheLengthLimitOfTheProject); the rows of Notes and Sampler instruments follow in
+    TK-016c
 Documents: none
 Decisions: none
 Owner: none

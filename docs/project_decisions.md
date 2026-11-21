@@ -75,7 +75,7 @@ State of the work:
 | Item | State |
 |---|---|
 | Phase | PH-01 in progress. PH-00 is done: GATE-00 closed on 2026-11-21 (`docs/results/GATE-00.md`). |
-| Last finished task | TK-016a, done: the state of a Project, the Reducer, the invariants and the Edits of Tracks and Patterns in `:core`. TK-016 is split; TK-016b (Clips) and TK-016c (Parts, Notes, Sampler instruments) are next (`docs/progress.md`). TK-001 to TK-015 are done; GATE-00 is closed. |
+| Last finished task | TK-016b, done: the Edits of Clips and the rules of `feature_specifications.md` Section 2.2.2 in `:core`, with a test of random Edits (AC-PL-01). TK-016a (state, Reducer, Tracks, Patterns) is done; TK-016c (Parts, Notes, Sampler instruments) is next. TK-001 to TK-015 are done; GATE-00 is closed. |
 | Next task | TK-016 |
 | Open gate | GATE-01, after TK-015 to TK-020. Nothing waits for the owner. Open for later gates: Q-21 (limits of version 1.0, GATE-12) and Q-22 (fidelity of the stem model, TK-068); the typed values of V-01 stay "not measured yet". |
 
