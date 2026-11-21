@@ -84,7 +84,7 @@ Notes:
 
 ```text
 TK-008  Pitch candidates and code for Notes
-State: split into TK-008a (done) and TK-008b (open: SwiftF0 through ONNX Runtime)
+State: done (split into TK-008a, pYIN and the code for Notes, and TK-008b, SwiftF0)
 Change: branch tk-008, merged into main
 Steps of TK-008a:
   1. analysis-core, the portable C++ of :analysis (architecture.md 2.2, rule 6).
@@ -97,11 +97,16 @@ Criteria (run "Check" 44847330125, Clang 18 with ASan and UBSan, test target ana
              starts between -12 ms and +38 ms of the true start)
   AC-H2M-10: pass for pYIN (MelodiesPyin.TwoConversionsGiveTheSameNotes)
   AC-H2M-13: pass for pYIN (MelodiesPyin.VoiceKeepsItsPitchAndWhistleGoesTwoOctavesDown)
-  For SwiftF0 the three criteria are open until TK-008b.
+TK-008b (run "Check" 44850654789, test target analysis-swiftf0-tests):
+  AC-H2M-01: pass for SwiftF0 (MelodiesSwiftF0.EveryNoteIsFound)
+  AC-H2M-10: pass for SwiftF0 (MelodiesSwiftF0.TwoConversionsGiveTheSameNotes)
+  AC-H2M-13: pass for SwiftF0 (MelodiesSwiftF0.VoiceKeepsItsPitchAndWhistleGoesTwoOctavesDown)
+  Also: MelodiesSwiftF0.SilenceAndNoiseGiveNoNotes, SwiftF0.PureTonesGiveTheirFrequency.
   Also: AC-H2M-02, the part of :analysis (MelodiesPyin.SilenceAndNoiseGiveNoNotes); 9 tests of the
   code for Notes on exact frames; 3 tests of the preparation; 3 tests of pYIN (error at most
   1.04 cents for pure tones from 65 Hz to 2,000 Hz).
-Documents: feature_specifications.md 2.2 (Sections 4.2.4, 4.2.5, 4.4, 4.6), architecture.md 2.2
+Documents: feature_specifications.md 2.2 and 2.3 (Sections 4.2.4, 4.2.5, 4.4, 4.6), architecture.md 2.2,
+  technology_stack.md 2.2 (Sections 8.2 and 15)
 Decisions: none
 Owner: none
 Notes:
@@ -119,5 +124,18 @@ Notes:
   4. The Android build of the native code of :analysis comes with the app for the checks (TK-010).
   5. On the computer of the owner the tests ran with a small stand-in for GoogleTest in the
      scratchpad of the session, with g++ and the sanitizers. The run "Check" is the validation.
+  6. TK-008b: the page of ONNX Runtime at GitHub answers 404. The host build takes the official
+     NuGet package Microsoft.ML.OnnxRuntime 1.31.1 (MIT, checksum in CMakeLists.txt).
+  7. TK-008b: the computer of the owner refused to run the downloaded ONNX Runtime ("Permission for
+     this action was denied by the Claude Code auto mode classifier. Reason: [Undermining
+     Oversight]"). Locally only a syntax check against its headers ran. The run "Check" validated it.
+  8. TK-008b: the model gives its pitch as float64 and its confidence as float32. The first runs
+     read both as float32 and found no Notes (run 44849496558); the code now reads the type.
+  9. TK-008b: for pure tones below the range of a whistle, SwiftF0 often stays below the
+     confidence 0.5: near 0.42 at 65 Hz, a voiced share of 0.82 at 220 Hz. Its pitch is right
+     within 25 cents. Tones with overtones, as of a voice, pass. The check V-05 with real humming
+     decides between the candidates.
+ 10. TK-008b: the start value of SwiftF0 is 0.5, not 0.9 (feature_specifications.md 2.3, evidence:
+     the changelog of SwiftF0 0.2.0).
 ```
 
