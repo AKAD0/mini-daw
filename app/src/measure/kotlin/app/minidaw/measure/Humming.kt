@@ -12,6 +12,7 @@ import android.text.InputType
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import app.minidaw.R
 import app.minidaw.check.humming.HumProbe
 import app.minidaw.engine.TonePlayer
 import java.io.File
