@@ -3,9 +3,8 @@ package app.minidaw.core.model
 // The Edits of Parts and Notes (feature_specifications.md Section 2.2.1). A Note is identified inside its Part by
 // its start and its pitch. Edits of several Notes are P1 and come with version 1.0.
 
-private fun Pattern.part(instrument: Int): Part =
-    parts.firstOrNull { it.instrument == instrument }
-        ?: refuse(Reason.NOT_FOUND, "Pattern $id has no Part of Sampler instrument $instrument")
+private fun Pattern.part(instrument: Int): Part = parts.firstOrNull { it.instrument == instrument }
+    ?: refuse(Reason.NOT_FOUND, "Pattern $id has no Part of Sampler instrument $instrument")
 
 private fun Pattern.withPart(part: Part): Pattern =
     copy(parts = parts.map { if (it.instrument == part.instrument) part else it })
