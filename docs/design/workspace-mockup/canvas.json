@@ -1,0 +1,18 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-11-21T16:30:00Z"},
+  "title": "mini daw workspace",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 931, "h": 451, "title": "Workspace: Playlist and Piano roll", "is_interactive": true},
+    "Rack.dc.html": {"x": 1011, "y": 0, "w": 931, "h": 451, "title": "Workspace: Playlist and Channel Rack", "is_interactive": true},
+    "Mixer.dc.html": {"x": 0, "y": 571, "w": 931, "h": 451, "title": "Mixer at half size over the editing panel", "is_interactive": true}
+  },
+  "order": ["Main.dc.html", "Rack.dc.html", "Mixer.dc.html"],
+  "notes": {
+    "heading": {"x": 0, "y": -260, "text": "mini daw: the landscape workspace of the MVP", "kind": "title1", "maxW": 1942},
+    "scale": {"x": 1011, "y": 571, "w": 420, "size": "m", "fill": "gray", "text": "1 px = 1 dp. Screen of the Galaxy A17 as measured in V-01: 891 × 411 dp, camera cutout 38 dp on the left; the app hides the system bars.\n\nSizes and colours follow ui_ux_specification.md Sections 1 to 10. Play the screens: the Module strip switches Piano roll and Channel Rack, the Mixer button opens and closes the Mixer, Play toggles."}
+  },
+  "designSystems": []
+}

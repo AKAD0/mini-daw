@@ -1,0 +1,144 @@
+{
+  "format": "minidaw-results",
+  "formatVersion": 1,
+  "createdAt": "2026-11-21T15:05:14.332439Z",
+  "build": {
+    "applicationId": "app.minidaw.test",
+    "versionName": "0.1.19",
+    "versionCode": 19,
+    "change": "039765c6f2b1",
+    "buildType": "measure",
+    "installingPackage": "com.google.android.packageinstaller",
+    "initiatingPackage": "com.google.android.packageinstaller"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-A175F",
+    "device": "a17",
+    "androidRelease": "16",
+    "sdkInt": 36
+  },
+  "results": [
+    {
+      "id": "TK-002",
+      "kind": "verdict",
+      "title": "The test build was installed from a download",
+      "passRule": "The owner installed this build from the page of releases and opened it",
+      "verdict": "pass"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: performanceHint",
+      "verdict": "recorded",
+      "value": "on"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: seconds",
+      "verdict": "recorded",
+      "value": 600,
+      "unit": "s"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: openMicros",
+      "verdict": "recorded",
+      "value": 35680,
+      "unit": "µs"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: open",
+      "verdict": "recorded",
+      "value": "OK"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: firstCallbackMicros",
+      "verdict": "recorded",
+      "value": 51618,
+      "unit": "µs"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: sampleRate",
+      "verdict": "recorded",
+      "value": 48000,
+      "unit": "Hz"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: framesPerBurst",
+      "verdict": "recorded",
+      "value": 256,
+      "unit": "frames"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: bufferCapacityInFrames",
+      "verdict": "recorded",
+      "value": 2048,
+      "unit": "frames"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: performanceMode",
+      "verdict": "recorded",
+      "value": "LowLatency"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: sharingMode",
+      "verdict": "recorded",
+      "value": "Shared"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: audioApi",
+      "verdict": "recorded",
+      "value": "AAudio"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: mmap",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: bufferSizeInFrames",
+      "verdict": "recorded",
+      "value": 512,
+      "unit": "frames"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: underruns",
+      "verdict": "recorded",
+      "value": 0,
+      "unit": "count"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: latencyMicros",
+      "verdict": "recorded",
+      "value": 23396,
+      "unit": "µs"
+    }
+  ]
+}

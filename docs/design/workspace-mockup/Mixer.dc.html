@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mixer at half size</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;cursor:pointer}
+a{color:#4FC3F7;text-decoration:none}a:hover{color:#81D4FA}
+</style>
+</helmet>
+<div style="width: 931px; height: 451px; box-sizing: border-box; padding: 20px; background: #08090A; border-radius: 40px; font-family: Inter, system-ui, sans-serif; color: #E6E8EB">
+<div style="width: 891px; height: 411px; border-radius: 20px; overflow: hidden; display: flex; background: #101214">
+
+<div style="width: 38px; height: 411px; background: #000000; display: flex; align-items: center; justify-content: center">
+<div style="width: 11px; height: 11px; border-radius: 50%; background: #15171A; box-shadow: 0 0 0 2px #0A0B0C"></div>
+</div>
+
+<div style="width: 853px; height: 411px; display: flex; flex-direction: column">
+
+<div style="height: 44px; display: flex; align-items: stretch; background: #1B1E22; border-bottom: 1px solid #2A2F36; box-sizing: border-box">
+<button aria-label="{{playLabel}}" onClick="{{togglePlay}}" style="width: 48px; display: flex; align-items: center; justify-content: center">
+<sc-if value="{{stopped}}" hint-placeholder-val="{{false}}"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="#E6E8EB"></path></svg></sc-if>
+<sc-if value="{{playing}}" hint-placeholder-val="{{true}}"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z" fill="#4FC3F7"></path></svg></sc-if>
+</button>
+<button aria-label="Record" style="width: 48px; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.5" fill="#EF5350"></circle></svg>
+</button>
+<button aria-label="Mode: Song" style="width: 76px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: #E6E8EB">SONG</button>
+<div style="width: 72px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums">3.1.2</div>
+<button aria-label="Tempo 120 BPM" style="width: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1">
+<span style="font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums">120</span>
+<span style="font-size: 11px; color: #9AA3AD">BPM</span>
+</button>
+<button aria-label="Metronome" style="width: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA3AD" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6l3.5 18h-13z"></path><path d="M12 16l5-8"></path></svg>
+</button>
+<button aria-label="Project menu" style="flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 0 12px; font-size: 13px; color: #E6E8EB">
+<span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">Untitled 1</span>
+<span style="font-size: 11px; color: #9AA3AD">▾</span>
+</button>
+<button aria-label="Undo" style="width: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E6E8EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"></path><path d="M4 9h10a6 6 0 0 1 0 12h-3"></path></svg>
+</button>
+<button aria-label="Redo" style="width: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C646E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14l5-5-5-5"></path><path d="M20 9H10a6 6 0 0 0 0 12h3"></path></svg>
+</button>
+<button aria-label="Swap the panels" style="width: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E6E8EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h15l-3-3"></path><path d="M20 16H5l3 3"></path></svg>
+</button>
+<a href="Main.dc.html" aria-label="Close the Mixer" style="width: 48px; display: flex; align-items: center; justify-content: center; background: rgba(79, 195, 247, 0.16)">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4FC3F7" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 4v16"></path><path d="M12 4v16"></path><path d="M18 4v16"></path><path d="M3.5 14h5"></path><path d="M9.5 8h5"></path><path d="M15.5 12h5"></path></svg>
+</a>
+<button aria-label="Menu" style="width: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E6E8EB" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg>
+</button>
+</div>
+
+<div style="height: 367px; display: flex">
+
+<div style="width: 463px; display: flex; flex-direction: column; background: #1B1E22">
+<div style="height: 40px; display: flex; border-bottom: 1px solid #2A2F36; box-sizing: border-box">
+<button aria-label="Playlist menu, grid 1/4" style="width: 88px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; border-right: 1px solid #2A2F36; box-sizing: border-box">1/4 <span style="font-size: 11px; color: #9AA3AD">▾</span></button>
+<div style="width: 375px; position: relative; overflow: hidden; background: #1B1E22">
+<sc-for list="{{ruler}}" as="r" hint-placeholder-count="16">
+<div style="position: absolute; left: {{r.x}}px; bottom: 0; width: 1px; height: {{r.h}}px; background: #3A414B"></div>
+</sc-for>
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="4">
+<div style="position: absolute; left: {{b.x}}px; top: 7px; font-size: 12px; color: #9AA3AD; font-variant-numeric: tabular-nums">{{b.label}}</div>
+</sc-for>
+<div style="position: absolute; left: 202px; top: 0; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid #4FC3F7"></div>
+<div style="position: absolute; left: 207px; top: 8px; bottom: 0; width: 2px; background: #4FC3F7"></div>
+</div>
+</div>
+<div style="height: 327px; display: flex">
+<div style="width: 88px; border-right: 1px solid #2A2F36; box-sizing: border-box">
+<sc-for list="{{tracks}}" as="t" hint-placeholder-count="8">
+<div style="height: 40px; box-sizing: border-box; border-bottom: 1px solid #2A2F36; display: flex; align-items: center; background: {{t.bg}}">
+<div style="width: 4px; height: 100%; background: {{t.color}}"></div>
+<div style="flex: 1; min-width: 0; padding-left: 6px; display: flex; flex-direction: column; line-height: 1.15">
+<span style="font-size: 12px; font-weight: 500; color: {{t.nameColor}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.name}}</span>
+<span style="font-size: 11px; color: #9AA3AD; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.ch}}</span>
+</div>
+<button aria-label="{{t.muteLabel}}" style="width: 30px; height: 40px; display: flex; align-items: center; justify-content: center">
+<sc-if value="{{t.audible}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA3AD" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 9a4 4 0 0 1 0 6"></path></svg></sc-if>
+<sc-if value="{{t.muted}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFB300" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9l5 6"></path><path d="M21 9l-5 6"></path></svg></sc-if>
+</button>
+</div>
+</sc-for>
+</div>
+<div style="width: 375px; position: relative; overflow: hidden; background: #181B1F">
+<sc-for list="{{laneLines}}" as="g" hint-placeholder-count="16">
+<div style="position: absolute; left: {{g.x}}px; top: 0; bottom: 0; width: 1px; background: {{g.color}}"></div>
+</sc-for>
+<sc-for list="{{rows}}" as="w" hint-placeholder-count="8">
+<div style="position: absolute; left: 0; right: 0; top: {{w.y}}px; height: 1px; background: #2A2F36"></div>
+</sc-for>
+<sc-for list="{{clips}}" as="c" hint-placeholder-count="10">
+<div style="position: absolute; left: {{c.x}}px; top: {{c.y}}px; width: {{c.w}}px; height: 32px; border-radius: 5px; background: {{c.color}}; opacity: {{c.opacity}}; box-sizing: border-box">
+<div style="position: absolute; left: 6px; top: 2px; right: 4px; font-size: 11px; font-weight: 600; color: #101214; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.name}}</div>
+<div style="position: absolute; left: 4px; right: 4px; top: 15px; bottom: 3px; display: flex; align-items: center; gap: 1px; overflow: hidden">
+<sc-for list="{{c.wave}}" as="v" hint-placeholder-count="0">
+<div style="width: 2px; flex: none; height: {{v.h}}px; background: rgba(16, 18, 20, 0.45); border-radius: 1px"></div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+<div style="position: absolute; left: 207px; top: 0; bottom: 0; width: 2px; background: #4FC3F7"></div>
+</div>
+</div>
+</div>
+
+<div style="width: 12px; background: #101214; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px">
+<div style="width: 4px; height: 4px; border-radius: 50%; background: #5C646E"></div>
+<div style="width: 4px; height: 4px; border-radius: 50%; background: #5C646E"></div>
+<div style="width: 4px; height: 4px; border-radius: 50%; background: #5C646E"></div>
+</div>
+
+<div style="width: 378px; display: flex; background: #16181B">
+<div style="width: 270px; display: flex; overflow: hidden">
+<sc-for list="{{strips}}" as="s" hint-placeholder-count="5">
+<div style="width: 56px; flex: none; height: 367px; box-sizing: border-box; border-right: 1px solid #24282E; background: {{s.bg}}; position: relative; {{s.mark}}">
+<div style="height: 44px; box-sizing: border-box; border-top: 3px solid {{s.color}}; padding: 3px 5px 0; display: flex; flex-direction: column; gap: 3px">
+<span style="font-size: 12px; font-weight: 600; line-height: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.name}}</span>
+<div style="display: flex; gap: 3px">
+<sc-for list="{{s.slots}}" as="d" hint-placeholder-count="4">
+<span style="width: 6px; height: 6px; border-radius: 50%; box-sizing: border-box; background: {{d.fill}}; border: 1px solid {{d.edge}}"></span>
+</sc-for>
+</div>
+<span style="font-size: 11px; line-height: 12px; color: #9AA3AD; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.tracks}}</span>
+</div>
+<div style="height: 44px; display: flex; align-items: center; justify-content: center">
+<div aria-label="Pan {{s.panText}}" role="img" style="width: 28px; height: 28px; border-radius: 50%; background: #262A30; border: 1px solid #3A414B; box-sizing: border-box; position: relative">
+<div style="position: absolute; left: 12px; top: 2px; width: 2px; height: 11px; border-radius: 1px; background: #E6E8EB; transform-origin: 1px 11px; transform: rotate({{s.panDeg}}deg)"></div>
+</div>
+</div>
+<div style="height: 188px; position: relative">
+<div style="position: absolute; left: 7px; top: 4px; width: 7px; height: 6px; border-radius: 1px; background: {{s.clip}}"></div>
+<div style="position: absolute; left: 7px; top: 14px; width: 3px; height: 166px; background: #2A2F36; overflow: hidden">
+<div style="position: absolute; left: 0; bottom: 0; width: 3px; height: {{s.left}}px; background: linear-gradient(to top, #66BB6A 0px, #66BB6A 110px, #FFCA28 110px, #FFCA28 146px, #EF5350 146px); background-size: 3px 166px; background-position: bottom"></div>
+</div>
+<div style="position: absolute; left: 11px; top: 14px; width: 3px; height: 166px; background: #2A2F36; overflow: hidden">
+<div style="position: absolute; left: 0; bottom: 0; width: 3px; height: {{s.right}}px; background: linear-gradient(to top, #66BB6A 0px, #66BB6A 110px, #FFCA28 110px, #FFCA28 146px, #EF5350 146px); background-size: 3px 166px; background-position: bottom"></div>
+</div>
+<div style="position: absolute; left: 7px; top: {{s.peak}}px; width: 7px; height: 1px; background: #E6E8EB"></div>
+<sc-for list="{{ticks}}" as="k" hint-placeholder-count="6">
+<div style="position: absolute; left: 22px; top: {{k.y}}px; width: {{k.w}}px; height: 1px; background: #5C646E"></div>
+</sc-for>
+<div style="position: absolute; left: 34px; top: 8px; width: 2px; height: 172px; border-radius: 1px; background: #3A414B"></div>
+<button aria-label="Volume of {{s.name}}, {{s.dbText}}" style="position: absolute; left: 23px; top: {{s.cap}}px; width: 24px; height: 12px; border-radius: 3px; background: #D5D9DE; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6)">
+<span style="display: block; margin: 5px auto 0; width: 16px; height: 2px; background: #101214"></span>
+</button>
+</div>
+<div style="height: 40px; display: flex; align-items: center; justify-content: center">
+<button aria-label="Mute {{s.name}}" style="width: 40px; height: 32px; border-radius: 6px; background: #262A30; font-size: 12px; font-weight: 700; color: #9AA3AD">M</button>
+</div>
+<div style="height: 40px; display: flex; align-items: center; justify-content: center">
+<button aria-label="Solo {{s.name}}" style="width: 40px; height: 32px; border-radius: 6px; background: #262A30; font-size: 12px; font-weight: 700; color: #9AA3AD">S</button>
+</div>
+</div>
+</sc-for>
+</div>
+
+<div style="width: 64px; height: 367px; box-sizing: border-box; border-left: 1px solid #2A2F36; background: #1B1E22">
+<button aria-label="Master channel, open its Channel page" style="width: 63px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">Master</button>
+<div style="height: 44px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; color: #E6E8EB">−3.2 dB</div>
+<div style="height: 188px; position: relative">
+<div style="position: absolute; left: 9px; top: 4px; width: 9px; height: 6px; border-radius: 1px; background: #2A2F36"></div>
+<div style="position: absolute; left: 9px; top: 14px; width: 4px; height: 166px; background: #2A2F36; overflow: hidden">
+<div style="position: absolute; left: 0; bottom: 0; width: 4px; height: 138px; background: linear-gradient(to top, #66BB6A 0px, #66BB6A 110px, #FFCA28 110px, #FFCA28 146px, #EF5350 146px); background-size: 4px 166px; background-position: bottom"></div>
+</div>
+<div style="position: absolute; left: 14px; top: 14px; width: 4px; height: 166px; background: #2A2F36; overflow: hidden">
+<div style="position: absolute; left: 0; bottom: 0; width: 4px; height: 134px; background: linear-gradient(to top, #66BB6A 0px, #66BB6A 110px, #FFCA28 110px, #FFCA28 146px, #EF5350 146px); background-size: 4px 166px; background-position: bottom"></div>
+</div>
+<div style="position: absolute; left: 9px; top: 36px; width: 9px; height: 1px; background: #E6E8EB"></div>
+<sc-for list="{{ticks}}" as="k" hint-placeholder-count="6">
+<div style="position: absolute; left: 27px; top: {{k.y}}px; width: {{k.w}}px; height: 1px; background: #5C646E"></div>
+</sc-for>
+<div style="position: absolute; left: 41px; top: 8px; width: 2px; height: 172px; border-radius: 1px; background: #3A414B"></div>
+<button aria-label="Volume of the Master channel, 0 dB" style="position: absolute; left: 30px; top: 28px; width: 24px; height: 12px; border-radius: 3px; background: #D5D9DE; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6)">
+<span style="display: block; margin: 5px auto 0; width: 16px; height: 2px; background: #101214"></span>
+</button>
+</div>
+</div>
+
+<div style="width: 44px; height: 367px; box-sizing: border-box; border-left: 1px solid #2A2F36; background: #1B1E22; display: flex; flex-direction: column">
+<button aria-label="Full size" style="width: 43px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E6E8EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10V4h6"></path><path d="M20 14v6h-6"></path><path d="M14 4h6v6"></path><path d="M10 20H4v-6"></path></svg>
+</button>
+<button aria-label="New Mixer channel" style="width: 43px; height: 44px; display: flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E6E8EB" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+</button>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":931,"height":451}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const playing = !(this.state && this.state.stopped);
+    const C = ['#E8735A', '#E0A030', '#C9C24A', '#6CC070', '#3FB8A8', '#4AA3DF', '#6E7FE8', '#A178E0', '#D66BC2', '#E0607E', '#9C8F7A', '#7FA0B0'];
+    const trackDefs = [
+      { name: 'Drums', ch: 'Drums', c: 0 },
+      { name: 'Bass', ch: 'Bass', c: 1 },
+      { name: 'Keys', ch: 'Keys', c: 5, selected: true },
+      { name: 'Vocal', ch: 'Vocal', c: 9 },
+      { name: 'Guitar', ch: 'Guitar', c: 3 },
+      { name: 'Pad', ch: 'Pad', c: 7, muted: true },
+      { name: 'Riser', ch: 'FX', c: 4 },
+      { name: 'Shaker', ch: 'Drums', c: 2 }
+    ];
+    const tracks = trackDefs.map((t) => ({
+      name: t.name,
+      ch: t.ch,
+      color: C[t.c],
+      muted: !!t.muted,
+      audible: !t.muted,
+      muteLabel: (t.muted ? 'Unmute ' : 'Mute ') + t.name,
+      bg: t.selected ? '#262A30' : '#1B1E22',
+      nameColor: t.muted ? '#9AA3AD' : '#E6E8EB'
+    }));
+    const clipDefs = [
+      [0, 'Beat A', 0, 8, false], [0, 'Beat B', 8, 8, false],
+      [1, 'Bass 1', 0, 16, false],
+      [2, 'Hummed 1', 4, 8, false],
+      [3, 'Take 3', 6, 9, true],
+      [4, 'Riff', 8, 6, true],
+      [5, 'Pad', 0, 16, false],
+      [6, 'Riser', 12, 4, true],
+      [7, 'Shaker', 4, 4, false], [7, 'Shaker', 12, 4, false]
+    ];
+    const clips = clipDefs.map(([t, name, s, l, audio]) => {
+      const w = l * 24 - 2;
+      const wave = [];
+      if (audio) {
+        const n = Math.floor((w - 8) / 3);
+        for (let i = 0; i < n; i++) {
+          wave.push({ h: Math.round(3 + Math.abs(Math.sin(i * 0.9 + s) * Math.cos(i * 0.31 + t)) * 11) });
+        }
+      }
+      return { name, x: s * 24 + 1, y: t * 40 + 4, w, color: C[trackDefs[t].c], opacity: trackDefs[t].muted ? 0.38 : 1, wave };
+    });
+    const ruler = [];
+    const laneLines = [];
+    const bars = [];
+    for (let i = 0; i < 16; i++) {
+      ruler.push({ x: i * 24, h: i % 4 === 0 ? 14 : 5 });
+      laneLines.push({ x: i * 24, color: i % 4 === 0 ? '#3A414B' : '#252A30' });
+      if (i % 4 === 0) bars.push({ x: i * 24 + 4, label: String(i / 4 + 1) });
+    }
+    const rows = [];
+    for (let i = 1; i <= 8; i++) rows.push({ y: i * 40 - 1 });
+    // Marks of the fader scale: +6, 0, -6, -12, -24 and -48 dB, from the top of the fader area.
+    const ticks = [[10, 5], [34, 8], [60, 5], [86, 5], [122, 5], [164, 5]].map(([y, w]) => ({ y, w }));
+    const dbToY = (db) => {
+      const marks = [[6, 10], [0, 34], [-6, 60], [-12, 86], [-24, 122], [-48, 164]];
+      for (let i = 0; i < marks.length - 1; i++) {
+        const [d0, y0] = marks[i];
+        const [d1, y1] = marks[i + 1];
+        if (db <= d0 && db >= d1) return y0 + (d0 - db) / (d0 - d1) * (y1 - y0);
+      }
+      return 164;
+    };
+    const stripDefs = [
+      { name: 'Drums', tracks: 'Drums, Shaker', c: 0, db: 0, pan: 0, l: 120, r: 116, slots: 2 },
+      { name: 'Bass', tracks: 'Bass', c: 1, db: -3, pan: 0, l: 98, r: 98, slots: 1 },
+      { name: 'Keys', tracks: 'Keys', c: 5, db: -6, pan: -20, l: 84, r: 92, slots: 3, selected: true },
+      { name: 'Vocal', tracks: 'Vocal', c: 9, db: 2, pan: 0, l: 152, r: 148, slots: 2, clip: true },
+      { name: 'Guitar', tracks: 'Guitar', c: 3, db: -9, pan: 30, l: 66, r: 70, slots: 0 }
+    ];
+    const strips = stripDefs.map((s) => {
+      const slots = [];
+      for (let i = 0; i < 4; i++) slots.push({ fill: i < s.slots ? '#E6E8EB' : 'transparent', edge: i < s.slots ? '#E6E8EB' : '#5C646E' });
+      const peakLevel = Math.max(s.l, s.r) + 6;
+      return {
+        name: s.name, tracks: s.tracks, color: C[s.c], slots,
+        bg: s.selected ? '#22262B' : '#16181B',
+        mark: s.selected ? 'box-shadow: inset 0 0 0 2px #4FC3F7;' : '',
+        panDeg: Math.round(s.pan * 1.35),
+        panText: s.pan === 0 ? 'center' : (s.pan < 0 ? 'left ' + (-s.pan) : 'right ' + s.pan),
+        left: s.l, right: s.r, peak: 14 + 166 - peakLevel,
+        clip: s.clip ? '#EF5350' : '#2A2F36',
+        cap: Math.round(dbToY(s.db)) - 6,
+        dbText: (s.db > 0 ? '+' : '') + s.db + ' dB'
+      };
+    });
+    return {
+      playing, stopped: !playing, playLabel: playing ? 'Stop' : 'Play',
+      togglePlay: () => this.setState({ stopped: playing }),
+      tracks, clips, ruler, laneLines, bars, rows, strips, ticks
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "format": "minidaw-results",
+  "formatVersion": 1,
+  "build": {
+    "applicationId": "app.minidaw.check.views"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-A175F",
+    "sdkInt": 36
+  },
+  "results": [
+    {
+      "id": "V-02",
+      "kind": "measurement",
+      "title": "Cold start of the empty app with Views: median of 1 starts",
+      "verdict": "recorded",
+      "value": 166,
+      "unit": "ms",
+      "note": "all starts: 166; not compiled, profile waits for compilation (code 2)"
+    }
+  ]
+}

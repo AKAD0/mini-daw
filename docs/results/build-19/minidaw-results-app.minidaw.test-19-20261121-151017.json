@@ -1,0 +1,698 @@
+{
+  "format": "minidaw-results",
+  "formatVersion": 1,
+  "createdAt": "2026-11-21T15:10:17.938286Z",
+  "build": {
+    "applicationId": "app.minidaw.test",
+    "versionName": "0.1.19",
+    "versionCode": 19,
+    "change": "039765c6f2b1",
+    "buildType": "measure",
+    "installingPackage": "com.google.android.packageinstaller",
+    "initiatingPackage": "com.google.android.packageinstaller"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-A175F",
+    "device": "a17",
+    "androidRelease": "16",
+    "sdkInt": 36
+  },
+  "results": [
+    {
+      "id": "TK-002",
+      "kind": "verdict",
+      "title": "The test build was installed from a download",
+      "passRule": "The owner installed this build from the page of releases and opened it",
+      "verdict": "pass"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: performanceHint",
+      "verdict": "recorded",
+      "value": "on"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: seconds",
+      "verdict": "recorded",
+      "value": 600,
+      "unit": "s"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: openMicros",
+      "verdict": "recorded",
+      "value": 35680,
+      "unit": "µs"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: open",
+      "verdict": "recorded",
+      "value": "OK"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: firstCallbackMicros",
+      "verdict": "recorded",
+      "value": 51618,
+      "unit": "µs"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: sampleRate",
+      "verdict": "recorded",
+      "value": 48000,
+      "unit": "Hz"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: framesPerBurst",
+      "verdict": "recorded",
+      "value": 256,
+      "unit": "frames"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: bufferCapacityInFrames",
+      "verdict": "recorded",
+      "value": 2048,
+      "unit": "frames"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: performanceMode",
+      "verdict": "recorded",
+      "value": "LowLatency"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: sharingMode",
+      "verdict": "recorded",
+      "value": "Shared"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: audioApi",
+      "verdict": "recorded",
+      "value": "AAudio"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: mmap",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: bufferSizeInFrames",
+      "verdict": "recorded",
+      "value": 512,
+      "unit": "frames"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: underruns",
+      "verdict": "recorded",
+      "value": 0,
+      "unit": "count"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min with performance hints: latencyMicros",
+      "verdict": "recorded",
+      "value": 23396,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: blocks",
+      "verdict": "recorded",
+      "value": 20000
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: voiceMicros",
+      "verdict": "recorded",
+      "value": 1.703,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: streamerMicros",
+      "verdict": "recorded",
+      "value": 0.218,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: eq3Micros",
+      "verdict": "recorded",
+      "value": 3.901,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: delayMicros",
+      "verdict": "recorded",
+      "value": 1.629,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: reverbMicros",
+      "verdict": "recorded",
+      "value": 8.153,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: blockMicros",
+      "verdict": "recorded",
+      "value": 2666.667,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: median compile on the JVM of the phone",
+      "verdict": "recorded",
+      "value": 366.461,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: bytes",
+      "verdict": "recorded",
+      "value": 85236
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: sameBytesAsEngineCore",
+      "verdict": "recorded",
+      "value": "yes"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: result",
+      "verdict": "recorded",
+      "value": "none"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: medianLoadMicros",
+      "verdict": "recorded",
+      "value": 29.154,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: medianNativeWriteMicros",
+      "verdict": "recorded",
+      "value": 29.615,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: blocks",
+      "verdict": "recorded",
+      "value": 20000
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: voiceMicros",
+      "verdict": "recorded",
+      "value": 1.812,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: streamerMicros",
+      "verdict": "recorded",
+      "value": 0.196,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: eq3Micros",
+      "verdict": "recorded",
+      "value": 3.95,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: delayMicros",
+      "verdict": "recorded",
+      "value": 1.644,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: reverbMicros",
+      "verdict": "recorded",
+      "value": 8.208,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: blockMicros",
+      "verdict": "recorded",
+      "value": 2666.667,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: median compile on the JVM of the phone",
+      "verdict": "recorded",
+      "value": 312.846,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: bytes",
+      "verdict": "recorded",
+      "value": 85236
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: sameBytesAsEngineCore",
+      "verdict": "recorded",
+      "value": "yes"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: result",
+      "verdict": "recorded",
+      "value": "none"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: medianLoadMicros",
+      "verdict": "recorded",
+      "value": 29.154,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: medianNativeWriteMicros",
+      "verdict": "recorded",
+      "value": 29.539,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: blocks",
+      "verdict": "recorded",
+      "value": 20000
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: voiceMicros",
+      "verdict": "recorded",
+      "value": 1.891,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: streamerMicros",
+      "verdict": "recorded",
+      "value": 0.219,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: eq3Micros",
+      "verdict": "recorded",
+      "value": 3.888,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: delayMicros",
+      "verdict": "recorded",
+      "value": 1.647,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: reverbMicros",
+      "verdict": "recorded",
+      "value": 8.146,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Kernels, for 128 frames: blockMicros",
+      "verdict": "recorded",
+      "value": 2666.667,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: median compile on the JVM of the phone",
+      "verdict": "recorded",
+      "value": 311.385,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: bytes",
+      "verdict": "recorded",
+      "value": 85236
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: sameBytesAsEngineCore",
+      "verdict": "recorded",
+      "value": "yes"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: result",
+      "verdict": "recorded",
+      "value": "none"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: medianLoadMicros",
+      "verdict": "recorded",
+      "value": 29,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Snapshot of version 1.0: medianNativeWriteMicros",
+      "verdict": "recorded",
+      "value": 29.539,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: project",
+      "verdict": "recorded",
+      "value": "MVP"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: voices",
+      "verdict": "recorded",
+      "value": 16
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: streamers",
+      "verdict": "recorded",
+      "value": 4
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: effects",
+      "verdict": "recorded",
+      "value": 8
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: open",
+      "verdict": "recorded",
+      "value": "OK"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: performanceHint",
+      "verdict": "recorded",
+      "value": "on"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: sampleRate",
+      "verdict": "recorded",
+      "value": 48000,
+      "unit": "Hz"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: framesPerBurst",
+      "verdict": "recorded",
+      "value": 256,
+      "unit": "frames"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: bufferSizeInFrames",
+      "verdict": "recorded",
+      "value": 512,
+      "unit": "frames"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: performanceMode",
+      "verdict": "recorded",
+      "value": "LowLatency"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: mmap",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: underruns",
+      "verdict": "recorded",
+      "value": 0,
+      "unit": "count"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: callbacks",
+      "verdict": "recorded",
+      "value": 11196,
+      "unit": "count"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: callbackCpus",
+      "verdict": "recorded",
+      "value": "0: 1009, 1: 2101, 2: 1969, 3: 1969, 4: 2041, 5: 2050, 6: 24, 7: 33"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: meanLoadPercent",
+      "verdict": "recorded",
+      "value": 33.711,
+      "unit": "%"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: load99Percent",
+      "verdict": "recorded",
+      "value": 39.877,
+      "unit": "%"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the MVP: maxLoadPercent",
+      "verdict": "recorded",
+      "value": 51.675,
+      "unit": "%"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: project",
+      "verdict": "recorded",
+      "value": "version 1.0"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: voices",
+      "verdict": "recorded",
+      "value": 32
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: streamers",
+      "verdict": "recorded",
+      "value": 8
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: effects",
+      "verdict": "recorded",
+      "value": 16
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: open",
+      "verdict": "recorded",
+      "value": "OK"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: performanceHint",
+      "verdict": "recorded",
+      "value": "on"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: sampleRate",
+      "verdict": "recorded",
+      "value": 48000,
+      "unit": "Hz"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: framesPerBurst",
+      "verdict": "recorded",
+      "value": 256,
+      "unit": "frames"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: bufferSizeInFrames",
+      "verdict": "recorded",
+      "value": 512,
+      "unit": "frames"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: performanceMode",
+      "verdict": "recorded",
+      "value": "LowLatency"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: mmap",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: underruns",
+      "verdict": "recorded",
+      "value": 0,
+      "unit": "count"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: callbacks",
+      "verdict": "recorded",
+      "value": 11195,
+      "unit": "count"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: callbackCpus",
+      "verdict": "recorded",
+      "value": "0: 1516, 1: 1985, 2: 1907, 3: 1760, 4: 1963, 5: 2009, 6: 23, 7: 32"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: meanLoadPercent",
+      "verdict": "recorded",
+      "value": 65.209,
+      "unit": "%"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: load99Percent",
+      "verdict": "recorded",
+      "value": 77.394,
+      "unit": "%"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: maxLoadPercent",
+      "verdict": "recorded",
+      "value": 90.075,
+      "unit": "%"
+    }
+  ]
+}

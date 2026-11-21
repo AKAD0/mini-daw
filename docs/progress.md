@@ -312,7 +312,7 @@ Notes:
 
 ```text
 TK-003  Check V-01: facts of the phone
-State: delivered for the gate (the measurement is in the test build; the phone is needed)
+State: done (results in docs/results/build-18/; review in docs/results/GATE-00.md)
 Results (build-18): the facts and the noise of the microphone are recorded (docs/results/build-18/
   summary.md); the typed values of One UI and OboeTester are missing.
 Change: branch tk-003, merged into main
@@ -341,7 +341,10 @@ Notes:
 
 ```text
 TK-004  Check V-02: floor of the startup
-State: delivered for the gate (three apps are in the run "Build"; the phone is needed)
+State: done (results in docs/results/V-02/; review in docs/results/GATE-00.md)
+Results (check apps 0.1.19): one cold start each, Views 166 ms and Compose 172 ms; no start of the
+  prototype; a build from a download starts without its compiled profile. The owner stopped the
+  further starts and left the choice to the implementer (docs/results/V-02/summary.md).
 Change: branch tk-004, merged into main
 Criteria:
   "The values of technology_stack.md Section 6.1 are recorded. The file also says whether a build
@@ -367,7 +370,9 @@ Notes:
 
 ```text
 TK-005  Check V-03: audio path
-State: delivered for the gate (the part "V-03" of the test build is in the run "Build"; the phone is needed)
+State: done (results in docs/results/build-18/ and build-19/; review in docs/results/GATE-00.md)
+Results (build-19): with the performance hint the rule passes too (0 Underruns in 600 s at 2 Bursts,
+  48 kHz, latency estimate 23.4 ms; docs/results/build-19/summary.md).
 Results (build-18): without the performance hint the rule passes (0 Underruns in 600 s at 2 Bursts,
   48 kHz); the run with the hint is missing (docs/results/build-18/summary.md).
 Change: branch tk-005, merged into main
@@ -395,7 +400,7 @@ Notes:
 
 ```text
 TK-006  Check V-07: latency of a Take
-State: delivered for the gate (the section "V-07" of the test build is in the run "Build"; the phone is needed)
+State: done (results in docs/results/build-18/; review in docs/results/GATE-00.md)
 Results (build-18): fail. The difference is 19.5 ms with the speaker and 19.2 ms with wired
   headphones, a stable bias of the timestamps (docs/results/build-18/summary.md, finding 1).
 Change: branch tk-006, merged into main
@@ -422,7 +427,10 @@ Notes:
 
 ```text
 TK-007  Check V-04: load of the engine
-State: delivered for the gate (the section "V-04" of the test build is in the run "Build"; the phone is needed)
+State: done (results in docs/results/build-18/ and build-19/; review in docs/results/GATE-00.md)
+Results (build-19, with the hint): MVP mean 33.7 %, 99th percentile 39.9 % (pass); version 1.0 mean
+  65.2 % (fails 50 %), 99th percentile 77.4 % (passes 80 %); Snapshot compile 311 to 366 µs, load
+  29 µs (pass); 99.5 % of the callbacks on the small cores (docs/results/build-19/summary.md).
 Results (build-18): version 1.0 without the performance hint: mean load 67.0 %, 99th percentile
   75.8 %, 0 Underruns; the mean fails. Build-19 measures with the hint and records the CPU core of each
   callback (docs/results/build-18/summary.md, finding 2). The MVP, the kernels and the Snapshot are missing.
@@ -454,7 +462,9 @@ Notes:
 
 ```text
 TK-010  Check V-05: humming on the phone
-State: delivered for the gate (the section "V-05" of the test build is in the run "Build"; the owner hums)
+State: done (results in docs/results/build-18/; review in docs/results/GATE-00.md)
+Results (owner, 2026-11-21): after one melody the owner chose pYIN: "pYIN works the best, we can skip
+  the choosing between in and the other one." Melodies 2 to 10 are not needed; TK-014b records the choice.
 Results (build-18): 1 melody of 10 (docs/results/build-18/summary.md).
 Change: branch tk-010, merged into main
 Criteria:
@@ -479,3 +489,24 @@ Notes:
   2. Both native modules bring libc++_shared.so; the app packs one copy.
 ```
 
+```text
+TK-014  Review of the provisional values and of the Conditional decisions
+State: split into TK-014a (done) and TK-014b (next)
+Change: branch tk-014a, merged into main
+Criteria:
+  "Each check has its file of results": pass. docs/results/ holds build-18/, build-19/, V-02/, V-06/
+    and TK-009-vocadito; docs/results/GATE-00.md lists them.
+  "Each Conditional decision that rests on one of these checks has its new status": D-028, D-035,
+    D-038, D-041, D-046, D-047 and D-088 are accepted; D-040 and D-044 get new rows in TK-014b.
+  "The limits and the sizes are reviewed": GATE-00.md Section 3. The limits of version 1.0 follow
+    Q-21 (default: they stay until GATE-12).
+Documents: project_decisions.md 7.8, opus_implementation_guide.md 2.4
+Decisions: D-028, D-035, D-038, D-041, D-046, D-047, D-088 accepted; new D-116; questions Q-21, Q-22
+Owner: none. Q-21 and Q-22 have defaults.
+Notes:
+  1. The owner chose pYIN (V-05) and left V-02 to the implementer. Both are recorded with the words of
+     the owner.
+  2. docs/design/workspace-mockup/ holds the source of the mockup that the owner approved (D-116).
+  3. Faults outside the task, in GATE-00.md Section 5: the label of the prototype of V-02, the exit
+     code of the setup with the option "check", the place of the line of state of "Measurements".
+```
