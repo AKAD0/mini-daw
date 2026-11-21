@@ -14,7 +14,7 @@ import app.minidaw.R
 
 /**
  * The screen "Measurements" of a test build (ui_ux_specification.md Section 15.4). It holds the row of
- * TK-002, the checks V-01 (TK-003) and V-03 (TK-005), and the button that shares the results as a file
+ * TK-002, the checks V-01 (TK-003), V-03 (TK-005) and V-07 (TK-006), and the button that shares the results as a file
  * (NFR-MNT-06).
  */
 class MeasurementsActivity : Activity() {
@@ -60,6 +60,11 @@ class MeasurementsActivity : Activity() {
         layout.button(getString(R.string.v03_streams)) { measureAudio(STREAMS) }
         layout.button(getString(R.string.v03_run_hint)) { measureAudio(RUN_WITH_HINT) }
         layout.button(getString(R.string.v03_run_plain)) { measureAudio(RUN_WITHOUT_HINT) }
+
+        layout.text(getString(R.string.v07_title), SECTION_SP)
+        layout.text(getString(R.string.v07_how))
+        layout.button(getString(R.string.v07_speaker)) { measureAudio(LOOPBACK_SPEAKER) }
+        layout.button(getString(R.string.v07_headphones)) { measureAudio(LOOPBACK_HEADPHONES) }
         statusView = layout.text("")
 
         layout.button(getString(R.string.share_results)) { share() }
@@ -85,8 +90,8 @@ class MeasurementsActivity : Activity() {
         if (granted && requestCode == REQUEST_MICROPHONE) {
             measureNoise()
         }
-        if (granted && requestCode == REQUEST_STREAMS) {
-            measureAudio(STREAMS)
+        if (granted && requestCode >= REQUEST_AUDIO) {
+            measureAudio(requestCode - REQUEST_AUDIO)
         }
     }
 
@@ -114,8 +119,8 @@ class MeasurementsActivity : Activity() {
 
     private fun measureAudio(kind: Int) {
         val microphone = checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-        if (kind == STREAMS && !microphone) {
-            requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_STREAMS)
+        if (kind != RUN_WITH_HINT && kind != RUN_WITHOUT_HINT && !microphone) {
+            requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_AUDIO + kind)
             return
         }
         if (running) {
@@ -125,7 +130,12 @@ class MeasurementsActivity : Activity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         statusView.text = getString(R.string.v03_running)
         Thread {
-            val rows = if (kind == STREAMS) AudioPath.streams() else AudioPath.run(kind == RUN_WITH_HINT)
+            val rows = when (kind) {
+                STREAMS -> AudioPath.streams()
+                LOOPBACK_SPEAKER -> TakeLatency.run(this, "the speaker")
+                LOOPBACK_HEADPHONES -> TakeLatency.run(this, "wired headphones")
+                else -> AudioPath.run(kind == RUN_WITH_HINT)
+            }
             runOnUiThread {
                 audio = audio + rows
                 running = false
@@ -156,10 +166,12 @@ class MeasurementsActivity : Activity() {
     private companion object {
         const val KEY_VERDICT = "verdict"
         const val REQUEST_MICROPHONE = 1
-        const val REQUEST_STREAMS = 2
+        const val REQUEST_AUDIO = 10
         const val STREAMS = 0
         const val RUN_WITH_HINT = 1
         const val RUN_WITHOUT_HINT = 2
+        const val LOOPBACK_SPEAKER = 3
+        const val LOOPBACK_HEADPHONES = 4
         const val PADDING_DP = 24
         const val TITLE_SP = 24f
         const val SECTION_SP = 20f

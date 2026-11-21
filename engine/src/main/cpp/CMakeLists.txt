@@ -12,6 +12,7 @@ find_package(oboe REQUIRED CONFIG)
 
 add_library(minidaw-engine SHARED
   glue/audio_path_probe.cpp
+  glue/latency_probe.cpp
   jni/audio_path_probe_jni.cpp)
 target_link_libraries(minidaw-engine PRIVATE engine-core oboe::oboe log)
 target_compile_options(minidaw-engine PRIVATE -Wall -Wextra -Werror)

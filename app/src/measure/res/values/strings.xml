@@ -17,5 +17,9 @@
     <string name="v03_run_hint">Run the output for 10 min with performance hints. Leave the phone alone.</string>
     <string name="v03_run_plain">Run the output for 10 min without performance hints. Leave the phone alone.</string>
     <string name="v03_running">Running. The screen stays on. Wait until this line disappears.</string>
+    <string name="v07_title">V-07: latency of a Take</string>
+    <string name="v07_how">Set the media volume to about 70 % in a quiet room. Each run plays a click 8 times (12 s). For the headphones, hold one ear piece against the microphone at the bottom of the phone.</string>
+    <string name="v07_speaker">Loopback with the speaker</string>
+    <string name="v07_headphones">Loopback with wired headphones</string>
     <string name="v01_entries">Values from OboeTester and from the settings. Leave a field empty when you do not know the value.</string>
 </resources>

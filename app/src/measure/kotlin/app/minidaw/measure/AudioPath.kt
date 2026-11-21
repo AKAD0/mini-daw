@@ -25,8 +25,8 @@ internal object AudioPath {
     /** Opens and starts both streams once: rate, Burst, path and the times to open. Needs the microphone. */
     fun streams(): List<ResultRow> {
         val rows = mutableListOf<ResultRow>()
-        rows += rowsOf("Output stream", AudioPathProbe.probeOutput(false, 0))
-        rows += rowsOf("Input stream", AudioPathProbe.probeInput())
+        rows += rowsOf(ID, "Output stream", AudioPathProbe.probeOutput(false, 0)) { UNITS[it] ?: "" }
+        rows += rowsOf(ID, "Input stream", AudioPathProbe.probeInput()) { UNITS[it] ?: "" }
         return rows
     }
 
@@ -34,14 +34,15 @@ internal object AudioPath {
     fun run(performanceHint: Boolean): List<ResultRow> {
         val hint = if (performanceHint) "with" else "without"
         val json = AudioPathProbe.probeOutput(performanceHint, RUN_SECONDS)
-        return rowsOf("Output for 10 min $hint performance hints", json)
+        return rowsOf(ID, "Output for 10 min $hint performance hints", json) { UNITS[it] ?: "" }
     }
 
-    private fun rowsOf(stream: String, json: String): List<ResultRow> {
+    /** One row per value of the JSON object of a probe. */
+    internal fun rowsOf(id: String, stream: String, json: String, unitOf: (String) -> String): List<ResultRow> {
         val values = JSONObject(json)
         val rows = mutableListOf<ResultRow>()
         for (key in values.keys()) {
-            rows += ResultRow(ID, "measurement", "$stream: $key", values.get(key), UNITS[key] ?: "")
+            rows += ResultRow(id, "measurement", "$stream: $key", values.get(key), unitOf(key))
         }
         return rows
     }

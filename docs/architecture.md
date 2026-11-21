@@ -1,7 +1,7 @@
 # architecture.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 3 of 6 (architecture) · **Version:** 2.5 · **Date:** 2026-11-21
+**Stage:** 3 of 6 (architecture) · **Version:** 2.6 · **Date:** 2026-11-21
 **Change in 1.1:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 1.1, Section 10.5, Section 15, Section 16.5.
 **Change in 1.2:** results of Stage 4. The index of the Library also holds the length of the song of each Project. Changed parts: Section 8.2 (table `project`), Section 16.4 (closing note).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: the module `:ui:decomposer`, Section 10.7, Section 16.6. Changed parts: Sections 1.1, 2.1, 2.2, 2.3, 6.1, 6.2, 6.4, 7, 11.4, 12.1, 12.3, 13.2, 14 and 15.
@@ -10,6 +10,7 @@
 **Change in 2.3:** TK-009. The shared WAV library is the CMake target `wavio` in the folder `native/wavio`. Changed part: rule 7 of Section 2.1.
 **Change in 2.4:** TK-004. Section 2.1 names the apps for the checks of PH-00.
 **Change in 2.5:** TK-005. Section 12.2 names the first functions of the bridge, for the check V-03.
+**Change in 2.6:** TK-006. Section 12.2 adds the function for the check V-07.
 **Companion documents:** `requirements.md`, `technology_stack.md` and `project_decisions.md` in their newest versions. `feature_specifications.md` and `ui_ux_specification.md` hold the details of Stage 4. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-`, `Q-` and `V-` point to them.
 
 ---
@@ -1347,7 +1348,7 @@ Rules for all interfaces:
 6. The audio thread never calls Kotlin (NFR-RES-03).
 7. Paths of files cross as text. The engine opens the files on its own threads.
 8. The native library loads once, at the first use of `AudioEngine` or of `AudioTools`.
-9. The first functions of the bridge serve the check V-03 (TK-005): `AudioPathProbe` in `:engine` opens the streams of Oboe and returns its facts as one JSON text. It is no part of `AudioEngine`; only test builds call it. Its native code lies in `engine/src/main/cpp/glue` and `jni`, apart from `engine-core`.
+9. The first functions of the bridge serve the checks V-03 and V-07 (TK-005, TK-006): `AudioPathProbe` in `:engine` opens the streams of Oboe and returns its facts as one JSON text. It is no part of `AudioEngine`; only test builds call it. Its native code lies in `engine/src/main/cpp/glue` and `jni`, apart from `engine-core`.
 
 ### 12.3 Formats between the parts
 

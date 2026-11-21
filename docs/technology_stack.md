@@ -1,7 +1,7 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.9 · **Date:** 2026-11-21
+**Stage:** 2 of 6 (technical research) · **Version:** 2.10 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
@@ -16,6 +16,7 @@
 **Change in 2.7:** TK-013. Section 1 gives the licence of JUnit 5 (D-115). Section 9.6 names how step 5 compares the stems.
 **Change in 2.8:** TK-004. Section 6.1 names how the apps of V-02 measure. Section 3.3 names the repositories of the build.
 **Change in 2.9:** TK-005. Section 4 names the native build of Oboe.
+**Change in 2.10:** TK-006. Section 5.6 names how V-07 measures.
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -275,6 +276,15 @@ Meters: the audio thread stores the peak of each block per channel. The engine a
 | Manual offset | The user moves a slider. | Always available. | Needs the user. |
 
 Choice: timestamps by default, calibration as a check for the speaker path, manual offset always available. V-07 compares the first two on the phone.
+
+How V-07 measures (TK-006):
+
+1. The output stream plays the Sample "Click high" 8 times, once per second. The output callback also reads the input stream, which has no callback of its own. So each recorded frame keeps its exact position in the input stream.
+2. A thread of the probe collects the timestamps of both streams every 20 ms.
+3. Both methods give a number of milliseconds after the same input frame: the newest input frame at the moment when the callback wrote the click. By the timestamps, the input frame that was captured when the click left the speaker (`feature_specifications.md` Section 4.2.2). By the loopback, the place of the click in the recording, found by the peak of the cross-correlation.
+4. A click counts when the peak is at least 5 times the RMS of the correlation over the search range of 0.5 s. The result gives both numbers for each click, both medians and the largest difference.
+5. The code of both methods lies in `engine-core` (`take_place.h`) and has tests on the host. A simulation of the streams on the host gave a difference of 0.001 ms with exact timestamps and found an error of 15 ms that it had put into the timestamps of the input.
+6. "Click high" comes from `tools/sounds/render.py` by the recipe of `feature_specifications.md` Section 7.2. The test build holds it until TK-027 brings the factory set.
 
 A Take reaches storage in this way: the audio callback writes into a ring buffer. A writer thread moves the data into a WAV file and flushes it every second. After a crash, the app repairs the header from the size of the file (NFR-REL-02).
 

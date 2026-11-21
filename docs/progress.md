@@ -363,3 +363,28 @@ Notes:
   2. The probe writes silence, so the runs of 10 min make no sound.
 ```
 
+```text
+TK-006  Check V-07: latency of a Take
+State: delivered for the gate (the section "V-07" of the test build is in the run "Build"; the phone is needed)
+Change: branch tk-006, merged into main
+Criteria:
+  "The offset from the timestamps and the offset from the loopback are recorded, for the speaker
+  and for wired headphones": not measured yet. The section "V-07" of the screen "Measurements"
+  has a button for each route. Each run plays "Click high" 8 times and records, for each click,
+  the offset by the timestamps and by the loopback (technology_stack.md Section 5.6), and the
+  medians and the largest difference.
+  Done on the host: engine-core/take_place (mapping of Section 4.2.2, search of the click) with 6
+  tests; a simulation of both streams: difference 0.001 ms with exact timestamps; an error of
+  15 ms in the timestamps of the input shows as 15.0 ms.
+Documents: technology_stack.md 2.10 (Section 5.6), architecture.md 2.6 (Section 12.2)
+Decisions: none. D-040 stays Conditional until the results of V-07.
+Owner (after TK-002): in a quiet room, set the media volume to about 70 %. In the test build,
+  section "V-07", tap "Loopback with the speaker" and allow the microphone; wait 12 s. Then plug in
+  wired headphones, hold one ear piece against the microphone at the bottom of the phone, and tap
+  "Loopback with wired headphones". Share the results and put the file into docs/results/. The pass
+  rule of technology_stack.md Section 14: the difference is at most 10 ms.
+Notes:
+  1. tools/sounds/render.py renders "Click high" by its recipe; a test compares the stored file
+     with a new render (one 16-bit step, as AC-FS-01). TK-027 adds the other eight sounds.
+```
+

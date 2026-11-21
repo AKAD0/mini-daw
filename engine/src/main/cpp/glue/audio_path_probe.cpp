@@ -10,6 +10,8 @@
 #include <string>
 #include <thread>
 
+#include "json_text.h"
+
 namespace minidaw::engine::glue {
 namespace {
 
@@ -43,27 +45,6 @@ class Probe : public oboe::AudioStreamDataCallback {
 
  private:
   std::atomic<bool> called_{false};
-};
-
-class Json {
- public:
-  Json& text(const char* name, const std::string& value) {
-    separate();
-    out_ += std::string("\"") + name + "\":\"" + value + "\"";
-    return *this;
-  }
-
-  Json& number(const char* name, int64_t value) {
-    separate();
-    out_ += std::string("\"") + name + "\":" + std::to_string(value);
-    return *this;
-  }
-
-  [[nodiscard]] std::string str() const { return out_ + "}"; }
-
- private:
-  void separate() { out_ += out_.size() > 1 ? "," : ""; }
-  std::string out_ = "{";
 };
 
 // Opens and starts the stream, waits for the first callback, and adds the facts of the stream.
