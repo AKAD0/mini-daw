@@ -1,10 +1,11 @@
 # feature_specifications.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 4 of 6 (feature specifications) · **Version:** 2.0 · **Date:** 2026-11-20
+**Stage:** 4 of 6 (feature specifications) · **Version:** 2.1 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 5. Each criterion now belongs to one task of `development_roadmap.md`. Changed criteria: AC-TR-06, AC-TR-09, AC-MX-08, AC-MX-09, AC-FX-04, AC-FX-12, AC-AIX-03. New criterion: AC-TR-14. Changed parts: Section 9 (rules, MT-08), Section 10 (places of the checks).
 **Change in 1.2:** final check of Stage 6. Each criterion was compared with its requirements, and each task of `development_roadmap.md` with its criteria. New criteria: AC-APP-19 to AC-APP-21, AC-TR-15, AC-PL-17 to AC-PL-21, AC-PT-10, AC-PT-11, AC-LIB-10 to AC-LIB-12, AC-MX-21, AC-FX-17, AC-REC-15 to AC-REC-18, AC-H2M-16, AC-H2M-17. Changed criteria: AC-WS-10, AC-APP-01, AC-APP-05, AC-APP-16, AC-TR-08, AC-TR-12, AC-PL-09, AC-CR-10, AC-SM-01, AC-LIB-07, AC-MX-13, AC-MX-20, AC-FX-10, AC-FX-12, AC-REC-12, AC-H2M-08, AC-H2M-10, AC-H2M-12, AC-AIX-04 to AC-AIX-06, AC-AIX-13, AC-AIX-15, AC-AIX-16, AC-AIX-18, AC-FS-06. Changed manual tests: MT-01, MT-14. Changed parts: the conventions (rule for the mark "P1:", D-102), Sections 1.1, 2.2.1, 2.2.2, 2.2.6, 4.2.6 and 5.3, Section 10 (place of NFR-MNT-07), Section 11 (source F6).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: Section 12 with the criteria AC-DEC-01 to AC-DEC-33, Section 6.11, the manual test MT-21, the sources F7 to F9. Changed parts: the conventions 3, 9 and 12, Section 4.2.7 (low register), Section 5.2.8 (rule 5), Section 6.5 (version 2), Section 6.6 (schema 2), Section 9 (MT-13, MT-14), Section 10 (FR-AIX-18, FR-DEC-24).
+**Change in 2.1:** TK-002 fixed the format of the file of results of a test build. New: Section 6.12. Changed: rule 4 of Section 9.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `ui_ux_specification.md`, `development_roadmap.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-` and `V-` point to them.
 
 ---
@@ -1953,6 +1954,28 @@ Audio files:
 
 Limits on the phone: the file of the result is at most 1 MB. A stem is at most 60 MB. A Sample of a Hit group is at most 1 MB. All files together are at most 200 MB. The only text of a result that the phone shows is the name of a Hit group. It shows this name as plain text.
 
+### 6.12 File of results of a test build
+
+The screen "Measurements" of a test build writes one JSON file per share (Section 9, rule 4). Its name is `minidaw-results-<application ID>-<build number>-<time in UTC as yyyyMMdd-HHmmss>.json`.
+
+| Field | Type | Meaning |
+|---|---|---|
+| `format` | text | Always `minidaw-results` |
+| `formatVersion` | number | Version of this format, now 1 |
+| `createdAt` | text | Time of the share in ISO 8601, in UTC |
+| `build.applicationId`, `build.versionName`, `build.versionCode`, `build.buildType` | text and number | The build that wrote the file |
+| `build.change` | text | The first 12 characters of the ID of the change, or `local` |
+| `build.installingPackage`, `build.initiatingPackage` | text or null | The apps that installed the build, as Android reports them |
+| `device.manufacturer`, `device.model`, `device.device`, `device.androidRelease`, `device.sdkInt` | text and number | The phone, as Android reports it |
+| `results` | list | One entry per measurement or verdict |
+| `results.id` | text | The manual test, the check or the task, for example `MT-01`, `V-01` or `TK-002` |
+| `results.kind` | text | `measurement` (the build measures) or `verdict` (the owner judges) |
+| `results.title`, `results.passRule` | text | What was measured or judged, and its pass rule |
+| `results.verdict` | text | `pass`, `fail` or `not run` |
+| `results.value`, `results.unit`, `results.note` | number and text | Optional. The measured value, its unit, and a note |
+
+The file holds no audio and no data of a Project (NFR-SEC-03).
+
 ---
 
 ## 7. Factory set (D-074, D-090, AD-32)
@@ -2228,7 +2251,7 @@ Rules:
 1. A test build contains a screen "Measurements" (`ui_ux_specification.md` Section 15.4). It runs the measuring parts of the tests by itself.
 2. The screen shows each result with its pass rule and the word "pass" or "fail".
 3. For a test that the owner judges by ear or by eye, the screen holds a row. The owner marks the verdict there.
-4. One button shares all results as a file. The owner hands this file to the implementer.
+4. One button shares all results as a file (Section 6.12). The owner hands this file to the implementer.
 5. `development_roadmap.md` Section 8.1 names the gates at which each test runs.
 
 | ID | Test | Steps | Pass rule | Covers |

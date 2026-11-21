@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Parts that only the test build holds (development_roadmap.md Section 2.2) -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+
+        <activity
+            android:name=".measure.MeasurementsActivity"
+            android:exported="false" />
+
+        <provider
+            android:name=".measure.ResultsProvider"
+            android:authorities="${applicationId}.results"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+
+    </application>
+
+</manifest>

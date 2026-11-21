@@ -6,6 +6,13 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
+// The file of the key for signing lies in the repository under a password (D-094). The CI service passes
+// the password in MINIDAW_SIGNING_PASSWORD. Without both, the release build and the test build stay unsigned.
+val signingStore = rootProject.file("signing/minidaw.p12")
+val signingPassword = providers.environmentVariable("MINIDAW_SIGNING_PASSWORD").orNull?.takeIf { it.isNotBlank() }
+val buildNumber = providers.environmentVariable("MINIDAW_VERSION_CODE").orNull?.toIntOrNull() ?: 1
+val changeId = providers.environmentVariable("GITHUB_SHA").orNull?.take(12) ?: "local"
+
 android {
     namespace = "app.minidaw"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -13,8 +20,40 @@ android {
         applicationId = "app.minidaw"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = buildNumber
+        versionName = "0.1.$buildNumber"
+        buildConfigField("String", "CHANGE_ID", "\"$changeId\"")
+        buildConfigField("boolean", "TEST_BUILD", "false")
+    }
+    buildFeatures {
+        buildConfig = true
+    }
+    signingConfigs {
+        if (signingStore.exists() && signingPassword != null) {
+            create("minidaw") {
+                storeFile = signingStore
+                storePassword = signingPassword
+                keyAlias = "minidaw"
+                keyPassword = signingPassword
+                storeType = "pkcs12"
+            }
+        }
+    }
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.findByName("minidaw")
+        }
+        // The test build (development_roadmap.md Section 2.2): optimized like the release build, with the
+        // screen "Measurements", its own application ID and its own name (D-098).
+        create("measure") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".test"
+            matchingFallbacks += listOf("release")
+            buildConfigField("boolean", "TEST_BUILD", "true")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

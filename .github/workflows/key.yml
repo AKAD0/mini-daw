@@ -1,0 +1,60 @@
+# Run "Key for signing" (development_roadmap.md Section 2.2, D-094). The owner starts it once (task O-7).
+# It creates signing/minidaw.p12, protected by the secret SIGNING_PASSWORD, and sends the file as the
+# branch "signing-key". The implementer merges this branch into main after a green run "Check".
+name: Key for signing
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  key:
+    name: Key for signing
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-java@v6.1.0
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Create the key
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          if [ -z "$SIGNING_PASSWORD" ]; then
+            echo "::error::The secret SIGNING_PASSWORD is missing. Set it in Settings, Secrets and variables, Actions (task O-7)."
+            exit 1
+          fi
+          if [ "${#SIGNING_PASSWORD}" -lt 20 ]; then
+            echo "::error::The password has fewer than 20 characters. The repository is public, so choose a long random password (task O-7)."
+            exit 1
+          fi
+          if [ -f signing/minidaw.p12 ]; then
+            echo "::error::signing/minidaw.p12 exists already. The key is created only once (D-094)."
+            exit 1
+          fi
+          if git ls-remote --exit-code --heads origin signing-key > /dev/null; then
+            echo "::error::The branch signing-key exists already. The implementer merges it first."
+            exit 1
+          fi
+          mkdir -p signing
+          keytool -genkeypair -noprompt -storetype PKCS12 -keystore signing/minidaw.p12 -alias minidaw \
+            -keyalg RSA -keysize 4096 -validity 36500 -dname "CN=mini daw" \
+            -storepass:env SIGNING_PASSWORD -keypass:env SIGNING_PASSWORD
+          keytool -list -v -storetype PKCS12 -keystore signing/minidaw.p12 -storepass:env SIGNING_PASSWORD \
+            | grep -E "Alias name|SHA256:|Valid from"
+
+      - name: Send the file as the branch signing-key
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c signing-key
+          git add signing/minidaw.p12
+          git commit -m "Key for signing (D-094), created by the run Key for signing"
+          git push origin signing-key
+          echo "The key lies in the branch signing-key. The implementer merges it after a green run Check." >> "$GITHUB_STEP_SUMMARY"

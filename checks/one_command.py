@@ -191,7 +191,10 @@ def part_kotlin_static():
 
 
 def part_app_package():
-    return gradle(":app:assembleDebug")
+    if not gradle(":app:assembleDebug", ":app:assembleRelease", ":app:assembleMeasure"):
+        return False
+    release = sorted(glob.glob(os.path.join(ROOT, "app", "build", "outputs", "apk", "release", "*.apk")))
+    return run([PY, "checks/check_package_size.py", *release])[0] == 0
 
 
 def app_packages():
@@ -222,7 +225,7 @@ PARTS = [
     ("cpp-static", "static analysis of C++ (clang-format, clang-tidy)", part_cpp_static),
     ("kotlin-tests", "tests of the Kotlin code", lambda s: part_kotlin_tests()),
     ("kotlin-static", "static analysis of Kotlin (ktlint, detekt)", lambda s: part_kotlin_static()),
-    ("app-package", "build of the app package", lambda s: part_app_package()),
+    ("app-package", "app packages: debug, release, test build; size (AC-APP-20)", lambda s: part_app_package()),
     ("secrets", "scan for secrets (AC-APP-18)", part_secrets),
 ]
 

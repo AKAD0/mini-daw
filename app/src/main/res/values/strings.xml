@@ -2,4 +2,7 @@
 <resources>
     <!-- Name of the app (D-075) -->
     <string name="app_name">mini daw</string>
+    <!-- Version and ID of the change of this build (development_roadmap.md Section 2.2, rule 6) -->
+    <string name="build_line">Version %1$s, build %2$d, change %3$s</string>
+    <string name="open_measurements">Measurements</string>
 </resources>

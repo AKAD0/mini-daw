@@ -1,0 +1,79 @@
+# Run "Build" (development_roadmap.md Section 2.3): the test build and the release build of every change
+# of the main branch. Both go to the page of releases as the release "build-<number>".
+# Without the key for signing (task O-7), the run builds unsigned files, checks them and publishes nothing.
+name: Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-main
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-java@v6.1.0
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: State of the key for signing
+        id: key
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          if [ -f signing/minidaw.p12 ] && [ -n "$SIGNING_PASSWORD" ]; then
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::No key for signing yet. The owner sets the secret SIGNING_PASSWORD and starts the run 'Key for signing' (task O-7). This run builds unsigned files and publishes nothing."
+          fi
+
+      - name: Release build and test build
+        env:
+          MINIDAW_SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          MINIDAW_VERSION_CODE: ${{ github.run_number }}
+        run: sh gradlew --console=plain :app:assembleRelease :app:assembleMeasure
+
+      - name: Size of the release build (AC-APP-20)
+        run: python checks/check_package_size.py app/build/outputs/apk/release/*.apk
+
+      - name: Scan of both packages for secrets (AC-APP-18)
+        run: |
+          args=""
+          for f in app/build/outputs/apk/release/*.apk app/build/outputs/apk/measure/*.apk; do args="$args --package $f"; done
+          python checks/scan_secrets.py $args
+
+      - name: Publish on the page of releases
+        if: steps.key.outputs.signed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          n="${{ github.run_number }}"
+          cp app/build/outputs/apk/release/app-release.apk "mini-daw-0.1.$n.apk"
+          cp app/build/outputs/apk/measure/app-measure.apk "mini-daw-test-0.1.$n.apk"
+          {
+            echo "Build $n of the change $GITHUB_SHA."
+            echo
+            echo "- mini-daw-test-0.1.$n.apk: the test build \"mini daw test\" (app.minidaw.test), with the screen Measurements."
+            echo "- mini-daw-0.1.$n.apk: the release build \"mini daw\" (app.minidaw)."
+          } > notes.md
+          gh release create "build-$n" --target "$GITHUB_SHA" --title "Build $n" --notes-file notes.md --latest \
+            "mini-daw-test-0.1.$n.apk" "mini-daw-0.1.$n.apk"
+          echo "Published: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/build-$n" >> "$GITHUB_STEP_SUMMARY"

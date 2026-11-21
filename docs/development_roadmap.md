@@ -1,10 +1,11 @@
 # development_roadmap.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 5 of 6 (roadmap) · **Version:** 2.1 · **Date:** 2026-11-21
+**Stage:** 5 of 6 (roadmap) · **Version:** 2.2 · **Date:** 2026-11-21
 **Change in 1.1:** final check of Stage 6. The 22 new criteria of `feature_specifications.md` 1.2 have their tasks. The pointers to `opus_implementation_guide.md` name its sections. The run "Build" checks the size of the release build. Changed parts: Sections 2.1, 2.3, 2.6, 6.1, 6.3, 6.5 to 6.10, 6.13 to 6.15, 8.2, 9.1, 9.2 and 10.
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). The implementer works on the computer of the owner (D-103). New parts: Section 3.5, the phases PH-16 to PH-18 (Sections 6.17 to 6.19) with the tasks TK-100 to TK-115, the gates GATE-16 to GATE-18, Section 7.4, the milestone M6. Changed parts: Sections 1.1, 1.2, 2.1, 2.3, 2.5, 2.7, 3.1, 3.4, 4.1, 4.2, 4.3, 6.1 (objectives, TK-014), 7.2, 8.1, 8.2, 9.1 and 10.
 **Change in 2.1:** TK-001. Section 2.1 names the list of licences and `CLAUDE.md`. Section 2.3 names the one command and its behaviour when a tool is missing.
+**Change in 2.2:** TK-002. Section 2.2 names the build type of the test build, the file of the key, the secret and the branch of the key. Sections 2.3 and 2.4 name the releases. Section 6.1 names the app for the checks.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `feature_specifications.md`, `ui_ux_specification.md`, `risk_assessment.md`, `opus_implementation_guide.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `D-`, `V-`, `AC-`, `MT-` and `RISK-` point to them.
 
 ---
@@ -103,14 +104,16 @@ Rules:
 3. A manual run of the CI service creates this key once. The file of the key lies in the repository. A password protects it.
 4. The password is an encrypted secret of the CI service. Only the owner sets it (task O-7).
 5. No other key and no readable secret may enter the repository (NFR-SEC-01).
-6. Each build shows its version and the ID of its change in the diagnostics view.
+6. Each build shows its version and the ID of its change in the diagnostics view. Until this view exists, the first screen of the app shows them.
+7. The test build is the build type `measure` of `:app`. Only its source set holds the screen "Measurements".
+8. The file of the key is `signing/minidaw.p12`. Its password is the secret `SIGNING_PASSWORD` of the CI service. The run "Key for signing" refuses a password with fewer than 20 characters and refuses a second key. It sends the file as the branch `signing-key`. The implementer merges this branch after a green run "Check".
 
 ### 2.3 Runs of the CI service
 
 | Run | Started | Content |
 |---|---|---|
 | Check | By every change | The one command (NFR-MNT-05). The list below names its parts. |
-| Build | By every change of the main branch | Test build and release build. Both go to the page of releases. The run fails when the file of the release build is larger than 50 MB (AC-APP-20). |
+| Build | By every change of the main branch | Test build and release build. Both go to the page of releases as the release `build-<number>`. The run fails when the file of the release build is larger than 50 MB (AC-APP-20). Without the key for signing, it builds and checks unsigned files and publishes nothing. |
 | Emulator | By every change of the main branch (prov.) | Tests that need Android: import, stores, screens. Macrobenchmark, which also produces the profiles. |
 | Key for signing | By the owner, once | Section 2.2 |
 | Setup of the account | By the owner | The setup script, with the API key as an encrypted secret |
@@ -147,7 +150,7 @@ Rules:
 2. The run "Check" passes.
 3. The change enters the main branch.
 4. The run "Build" places both builds on the page of releases.
-5. The owner opens this page in the browser of the phone and downloads the build.
+5. The owner opens this page in the browser of the phone and downloads the build. The address `releases/latest` of the repository always shows the newest build.
 6. The owner installs it. Android asks once whether the browser may install apps (task O-8).
 
 ### 2.5 From the phone back to the implementer
@@ -392,6 +395,8 @@ How three checks can run this early (D-095):
 3. V-06 needs the Toolkit and the setup script. Both are built here in a first version. PH-10 finishes them.
 
 The recordings of the owner stay on the phone. The file of results holds numbers and verdicts. The owner decides whether to share the audio as well (NFR-SEC-03).
+
+The app for the checks is the test build of `:app` (TK-002). Each check adds its part to the screen "Measurements". The check V-02 needs two empty apps of its own (TK-004).
 
 ### 6.2 PH-01: model of a Project
 

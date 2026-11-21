@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Name of the test build (D-098) -->
+    <string name="app_name">mini daw test</string>
+    <string name="measurements_title">Measurements</string>
+    <string name="install_question">TK-002: you installed this test build from the page of releases.</string>
+    <string name="mark_pass">Pass</string>
+    <string name="mark_fail">Fail</string>
+    <string name="verdict_line">Your verdict: %1$s</string>
+    <string name="share_results">Share results</string>
+    <string name="shown_results">The file of results holds this text:</string>
+</resources>
