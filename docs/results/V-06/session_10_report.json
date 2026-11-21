@@ -1,0 +1,47 @@
+{
+ "version": 1,
+ "toolkit": "0.1.0",
+ "status": "done",
+ "candidates": [
+  {
+   "file": "candidate_1.wav",
+   "label": "shout, whole opening phrase",
+   "note": "Vocal stem from 0 to 1.75 s, the first vocal burst before the gap. Most likely reading of the short shout near the start.",
+   "stem": "vocals",
+   "length_s": 1.75,
+   "peak_db": -1.0
+  },
+  {
+   "file": "candidate_2.wav",
+   "label": "shout, second onset",
+   "note": "Very short single vocal hit (about 0.1 s) at the onset near 0.77 s. Only a fragment of the burst.",
+   "stem": "vocals",
+   "length_s": 0.1,
+   "peak_db": -1.0
+  },
+  {
+   "file": "candidate_3.wav",
+   "label": "shout, first onset",
+   "note": "Very short single vocal hit (about 0.09 s) at the first onset near 0.02 s. Only a fragment of the burst.",
+   "stem": "vocals",
+   "length_s": 0.09,
+   "peak_db": -1.0
+  }
+ ],
+ "steps": [
+  "convert: prepared input.wav",
+  "separate: split into four stems; vocals hold most energy",
+  "describe: checked vocals stem in 0-5 s, 5-10 s, 10-20 s; found the first burst at 0-1.75 s, then a gap until 3.97 s",
+  "narrow: cut vocals 0-1.75 s (candidate 1) and single onsets near 0.77 s and 0.02 s (candidates 2, 3)",
+  "describe: all results longer than 0.05 s and louder than -50 dB",
+  "finish: wrote candidate_1 to candidate_3",
+  "report: checked draft"
+ ],
+ "models": [
+  {
+   "name": "htdemucs",
+   "file": "htdemucs.onnx",
+   "sha256": "d05c269d0178d2a7"
+  }
+ ]
+}

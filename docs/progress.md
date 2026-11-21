@@ -262,11 +262,16 @@ Notes:
 
 ```text
 TK-013  Check V-06: Sandbox
-State: delivered for the gate (the scripts and both runs are ready; the check needs the owner)
-Change: branch tk-013, merged into main
+State: done (run "Sandbox test" 44925883588 of the owner; results in docs/results/V-06/)
+Change: branch tk-013, merged into main; repairs in tk-013-sandbox-wait and tk-013-results
 Criteria:
-  "The values of technology_stack.md Section 9.6 are recorded for 10 Sessions": not measured yet.
-  "The owner judged three results": not run yet.
+  "The values of technology_stack.md Section 9.6 are recorded for 10 Sessions": pass. 10 of 10 idle,
+    56.8 s to 98.0 s (polled), at most 4 cents each, 13 cents together; the quiet Session finished.
+  "The owner judged three results": pass. The owner accepted them, with a remark on "short"
+    (docs/results/V-06/summary.md, finding 1).
+  Rules of V-06 (technology_stack.md Section 14): four pass. "The stems match the original model"
+    fails as measured: the stems of the Sandbox equal those of the host, but reach only 3.16 dB to
+    13.35 dB against the package demucs. The cause is open (summary.md, finding 2); TK-014 decides.
   The programs that the owner starts are tested against the fake of the API (setup/tests, run
   "Check" of this change): 11 Sessions with a budget of 30 cents each, half with the middle tier;
   the quiet last Session; step 6 compares the stems of the Sandbox with the same model on a host
@@ -296,6 +301,13 @@ Notes:
      idle event with a final stop reason after its message, lets the status settle before it deletes,
      interrupts a Session at the time limit, retries the list of output files, and notes a refused
      cleanup instead of stopping. The fake of the API now behaves so too.
+  5. Faults found in the results of the second run: the stop reason was empty (the Session has none;
+     the idle event carries it), and the times came from the polls, so the time to the first action of
+     the quiet Session counted from the end of its quiet minutes. The script now reads both from the
+     events (processed_at, from the moment the message went out) and also records "seconds_waited".
+     The fake of the API now stamps its events and its Session has no stop reason. No verdict changes.
+  6. The artifact of the run kept no stems of step 6, so the low SDR against the original model cannot
+     be studied. The run "Sandbox test" now also keeps build/V-06/stems/.
 ```
 
 ```text

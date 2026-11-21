@@ -5,13 +5,20 @@ memory and records every request. The real SDK talks to it through ANTHROPIC_BAS
 reaches the real service.
 """
 
+import datetime
 import json
 import re
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
 STAMP = "2026-11-21T00:00:00Z"
+
+
+def at(seconds):
+    """A processed_at in ISO 8601, as the service writes it, for a time in seconds since 1970."""
+    return datetime.datetime.fromtimestamp(seconds, datetime.UTC).isoformat().replace("+00:00", "Z")
 
 
 class FakeApi:
@@ -25,6 +32,9 @@ class FakeApi:
         # Like the real service, a Session still reports "idle" for a moment after a message, and its
         # status turns "idle" one read after the idle event (Managed Agents, client patterns 5 and 6).
         self.reads_until_running = reads_until_running
+        # The agent calls its first tool and ends its turn this long after the Session starts, on the clock of
+        # the fake. The test script must read these times from the events, not from its own polling.
+        self.tool_after_s, self.idle_after_s = 5.0, 42.0
         self.refused = []
         self.counter = 0
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), self.handler())
@@ -81,8 +91,8 @@ class FakeApi:
             return 200, self.contents[parts[1]]
         if parts == ["sessions"] and method == "POST":
             session = {"id": self.next_id("sesn"), "type": "session", "status": "idle", "created_at": STAMP,
-                       "stop_reason": None, "usage": {"input_tokens": 0, "output_tokens": 0,
-                                                      "list_cost": {"amount": "0", "currency": "USD"}},
+                       "usage": {"input_tokens": 0, "output_tokens": 0,
+                                 "list_cost": {"amount": "0", "currency": "USD"}},
                        "request": body, "reads": 0, "phase": "new"}
             self.sessions[session["id"]] = session
             self.events[session["id"]] = []
@@ -102,11 +112,13 @@ class FakeApi:
             session = self.sessions[parts[1]]
             if method == "POST":
                 sent = body.get("events", [])
-                self.events[session["id"]] += sent
+                # A message waits with processed_at null until the agent takes it (client patterns 2).
+                self.events[session["id"]] += [dict(e, id=self.next_id("sevt"), processed_at=None) for e in sent]
                 if any(e.get("type") == "user.interrupt" for e in sent) and session["phase"] != "done":
                     self.events[session["id"]].append({"type": "session.status_idle", "id": self.next_id("sevt"),
-                                                       "processed_at": STAMP, "stop_reason": {"type": "end_turn"}})
-                    session.update(status="idle", stop_reason={"type": "end_turn"}, phase="done")
+                                                       "processed_at": at(time.time()),
+                                                       "stop_reason": {"type": "end_turn"}})
+                    session.update(status="idle", phase="done")
                 elif any(e.get("type") == "user.message" for e in sent):
                     session.update(phase="queued", reads=0)
                 return 200, {"data": sent}
@@ -128,18 +140,24 @@ class FakeApi:
         events = self.events[session["id"]]
         session["reads"] += 1
         if session["phase"] == "queued" and session["reads"] >= self.reads_until_running:
-            session.update(status="running", phase="running", reads=0)
-            events.append({"type": "session.status_running", "id": self.next_id("sevt"), "processed_at": STAMP})
+            session.update(status="running", phase="running", reads=0, started=time.time())
+            for e in events:
+                if e["type"] == "user.message" and e["processed_at"] is None:
+                    e["processed_at"] = at(session["started"])
+            events.append({"type": "session.status_running", "id": self.next_id("sevt"),
+                           "processed_at": at(session["started"])})
         elif session["phase"] == "running" and session["reads"] >= self.reads_until_idle:
             session.update(phase="lagging", reads=0)
             session["usage"] = {"input_tokens": 12000, "output_tokens": 800,
                                 "list_cost": {"amount": "4", "currency": "USD"}}
-            events.append({"type": "agent.tool_use", "id": self.next_id("sevt"), "name": "bash", "processed_at": STAMP})
+            events.append({"type": "agent.tool_use", "id": self.next_id("sevt"), "name": "bash",
+                           "processed_at": at(session["started"] + self.tool_after_s)})
             self.write_outputs(session)
-            events.append({"type": "session.status_idle", "id": self.next_id("sevt"), "processed_at": STAMP,
+            events.append({"type": "session.status_idle", "id": self.next_id("sevt"),
+                           "processed_at": at(session["started"] + self.idle_after_s),
                            "stop_reason": {"type": "end_turn"}})
         elif session["phase"] == "lagging":
-            session.update(status="idle", stop_reason={"type": "end_turn"}, phase="done")
+            session.update(status="idle", phase="done")
         return self.public(session)
 
     def write_outputs(self, session):
@@ -156,7 +174,7 @@ class FakeApi:
 
     @staticmethod
     def public(session):
-        return {k: v for k, v in session.items() if k not in ("request", "reads", "phase")}
+        return {k: v for k, v in session.items() if k not in ("request", "reads", "phase", "started")}
 
     def handler(self):
         api = self

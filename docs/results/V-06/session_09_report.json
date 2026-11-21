@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "toolkit": "0.1.0",
+ "status": "done",
+ "candidates": [
+  {
+   "file": "candidate_1.wav",
+   "label": "Bass line",
+   "note": "Bass stem of the 0-40 s range: the bass line, separated from vocals, drums and other instruments. Pitch about 65 Hz, most energy below 150 Hz.",
+   "stem": "bass",
+   "length_s": 40.0,
+   "peak_db": -1.0
+  }
+ ],
+ "steps": [
+  "convert: prepared input.wav for the separation model (40.0 s, 44.1 kHz stereo)",
+  "separate: split into vocals, drums, bass, other (htdemucs)",
+  "chose the bass stem because the description names a bass line",
+  "narrow: kept 0-40 s of the bass stem, no band or component filter",
+  "describe: 40.0 s long, peak -10.27 dB, usable",
+  "finish: trimmed, faded and leveled to candidate_1.wav"
+ ],
+ "models": [
+  {
+   "name": "htdemucs",
+   "file": "htdemucs.onnx",
+   "sha256": "d05c269d0178d2a7"
+  }
+ ]
+}

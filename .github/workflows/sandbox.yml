@@ -63,6 +63,9 @@ jobs:
         if: always()
         with:
           name: sandbox-test
+          # The stems of step 6 (the Sandbox, the host and the original model) stay with the run, so that a
+          # low SDR can be studied without a new paid run (TK-013, the first run kept none).
           path: |
             build/V-06/results.json
             build/V-06/session_*/
+            build/V-06/stems/

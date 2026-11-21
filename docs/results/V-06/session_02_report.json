@@ -1,0 +1,29 @@
+{
+ "version": 1,
+ "toolkit": "0.1.0",
+ "status": "done",
+ "candidates": [
+  {
+   "file": "candidate_1.wav",
+   "label": "kick drum",
+   "note": "All kick hits in 0-40 s: drums stem, low-passed to 30-200 Hz (88% of energy under 150 Hz).",
+   "stem": "drums",
+   "length_s": 39.87,
+   "peak_db": -1.0
+  }
+ ],
+ "steps": [
+  "convert: prepared input (40 s, 44.1 kHz stereo)",
+  "separate: split into 4 stems, took drums",
+  "narrow: drums, 0-40 s, band 30-200 Hz",
+  "describe: 40 s long, peak 1.56 dB, usable",
+  "finish: wrote candidate_1.wav"
+ ],
+ "models": [
+  {
+   "name": "htdemucs",
+   "file": "htdemucs.onnx",
+   "sha256": "d05c269d0178d2a7"
+  }
+ ]
+}

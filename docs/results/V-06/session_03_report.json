@@ -1,0 +1,28 @@
+{
+ "version": 1,
+ "toolkit": "0.1.0",
+ "status": "done",
+ "candidates": [
+  {
+   "file": "candidate_1.wav",
+   "label": "Vocals",
+   "note": "The vocals stem from 0 to 40 s",
+   "stem": "vocals",
+   "length_s": 29.99,
+   "peak_db": -1.0
+  }
+ ],
+ "steps": [
+  "convert",
+  "separate",
+  "narrow the vocals stem to 0 to 40 s",
+  "finish"
+ ],
+ "models": [
+  {
+   "name": "htdemucs",
+   "file": "htdemucs.onnx",
+   "sha256": "d05c269d0178d2a7"
+  }
+ ]
+}

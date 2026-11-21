@@ -1,0 +1,241 @@
+{
+ "check": "V-06",
+ "results": [
+  {
+   "session": 1,
+   "tier": "claude-haiku-5-5",
+   "mode": "quick",
+   "request": "drums",
+   "status": "idle",
+   "stop_reason": null,
+   "seconds_to_idle": 62.1,
+   "seconds_to_first_action": 5.3,
+   "input_tokens": 8,
+   "output_tokens": 947,
+   "list_cost_cents": 0,
+   "disconnected": false,
+   "files": [
+    "report.json",
+    "candidate_1.wav"
+   ],
+   "cleanup": "deleted",
+   "song": "song_1.wav",
+   "start_s": 0.0
+  },
+  {
+   "session": 2,
+   "tier": "claude-sonnet-5-5",
+   "mode": "free",
+   "request": "the kick drum",
+   "status": "idle",
+   "stop_reason": null,
+   "seconds_to_idle": 87.7,
+   "seconds_to_first_action": 5.3,
+   "input_tokens": 12,
+   "output_tokens": 1038,
+   "list_cost_cents": 3,
+   "disconnected": false,
+   "files": [
+    "report.json",
+    "candidate_1.wav"
+   ],
+   "cleanup": "deleted",
+   "song": "song_2.wav",
+   "start_s": 0.0
+  },
+  {
+   "session": 3,
+   "tier": "claude-haiku-5-5",
+   "mode": "quick",
+   "request": "vocals",
+   "status": "idle",
+   "stop_reason": null,
+   "seconds_to_idle": 56.8,
+   "seconds_to_first_action": 5.2,
+   "input_tokens": 6,
+   "output_tokens": 490,
+   "list_cost_cents": 0,
+   "disconnected": false,
+   "files": [
+    "candidate_1.wav",
+    "report.json"
+   ],
+   "cleanup": "deleted",
+   "song": "song_3.wav",
+   "start_s": 0.0
+  },
+  {
+   "session": 4,
+   "tier": "claude-sonnet-5-5",
+   "mode": "free",
+   "request": "the bass line",
+   "status": "idle",
+   "stop_reason": null,
+   "seconds_to_idle": 87.9,
+   "seconds_to_first_action": 5.3,
+   "input_tokens": 12,
+   "output_tokens": 1796,
+   "list_cost_cents": 3,
+   "disconnected": false,
+   "files": [
+    "report.json"
+   ],
+   "cleanup": "deleted",
+   "song": "song_1.wav",
+   "start_s": 40.0
+  },
+  {
+   "session": 5,
+   "tier": "claude-haiku-5-5",
+   "mode": "free",
+   "request": "the short vocal shout near the start",
+   "status": "idle",
+   "stop_reason": null,
+   "seconds_to_idle": 98.0,
+   "seconds_to_first_action": 5.3,
+   "input_tokens": 16,
+   "output_tokens": 2917,
+   "list_cost_cents": 1,
+   "disconnected": false,
+   "files": [
+    "candidate_1.wav",
+    "report.json",
+    "candidate_2.wav"
+   ],
+   "cleanup": "deleted",
+   "song": "song_2.wav",
+   "start_s": 40.0
+  },
+  {
+   "session": 6,
+   "tier": "claude-sonnet-5-5",
+   "mode": "quick",
+   "request": "drums",
+   "status": "idle",
+   "stop_reason": null,
+   "seconds_to_idle": 72.1,
+   "seconds_to_first_action": 5.3,
+   "input_tokens": 6,
+   "output_tokens": 309,
+   "list_cost_cents": 1,
+   "disconnected": false,
+   "files": [
+    "report.json",
+    "candidate_1.wav"
+   ],
+   "cleanup": "deleted",
+   "song": "song_3.wav",
+   "start_s": 40.0
+  },
+  {
+   "session": 7,
+   "tier": "claude-haiku-5-5",
+   "mode": "free",
+   "request": "the kick drum",
+   "status": "idle",
+   "stop_reason": null,
+   "seconds_to_idle": 87.6,
+   "seconds_to_first_action": 5.3,
+   "input_tokens": 14,
+   "output_tokens": 2721,
+   "list_cost_cents": 0,
+   "disconnected": false,
+   "files": [
+    "candidate_1.wav",
+    "report.json"
+   ],
+   "cleanup": "deleted",
+   "song": "song_1.wav",
+   "start_s": 80.0
+  },
+  {
+   "session": 8,
+   "tier": "claude-sonnet-5-5",
+   "mode": "quick",
+   "request": "vocals",
+   "status": "idle",
+   "stop_reason": null,
+   "seconds_to_idle": 61.9,
+   "seconds_to_first_action": 5.2,
+   "input_tokens": 6,
+   "output_tokens": 259,
+   "list_cost_cents": 1,
+   "disconnected": false,
+   "files": [
+    "candidate_1.wav",
+    "report.json"
+   ],
+   "cleanup": "deleted",
+   "song": "song_2.wav",
+   "start_s": 80.0
+  },
+  {
+   "session": 9,
+   "tier": "claude-haiku-5-5",
+   "mode": "free",
+   "request": "the bass line",
+   "status": "idle",
+   "stop_reason": null,
+   "seconds_to_idle": 67.1,
+   "seconds_to_first_action": 5.3,
+   "input_tokens": 12,
+   "output_tokens": 1496,
+   "list_cost_cents": 0,
+   "disconnected": false,
+   "files": [
+    "report.json",
+    "candidate_1.wav"
+   ],
+   "cleanup": "deleted",
+   "song": "song_3.wav",
+   "start_s": 80.0
+  },
+  {
+   "session": 10,
+   "tier": "claude-sonnet-5-5",
+   "mode": "free",
+   "request": "the short vocal shout near the start",
+   "status": "idle",
+   "stop_reason": null,
+   "seconds_to_idle": 300.4,
+   "seconds_to_first_action": 0.2,
+   "input_tokens": 14,
+   "output_tokens": 2094,
+   "list_cost_cents": 4,
+   "disconnected": true,
+   "files": [
+    "candidate_2.wav",
+    "report.json",
+    "candidate_3.wav",
+    "candidate_1.wav"
+   ],
+   "cleanup": "deleted",
+   "song": "song_1.wav",
+   "start_s": 120.0
+  }
+ ],
+ "stems": {
+  "status": "idle",
+  "against_the_same_model_on_a_host": {
+   "vocals": 999.0,
+   "drums": 999.0,
+   "bass": 999.0,
+   "other": 999.0
+  },
+  "against_the_original_model": {
+   "vocals": 5.02,
+   "drums": 13.35,
+   "bass": 3.16,
+   "other": 12.62
+  }
+ },
+ "verdicts": {
+  "finished_within_420_s": "10 of 10 (pass rule: 9 of 10)",
+  "highest_cost_cents": 4,
+  "cost_rule": "pass",
+  "disconnected_session": "pass",
+  "stems_against_the_original_model": "fail",
+  "owner_listens_to_three_results": "not run yet (the owner)",
+  "stems_against_the_same_model_on_a_host": "pass"
+ }
+}

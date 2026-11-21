@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "toolkit": "0.1.0",
+ "status": "done",
+ "candidates": [
+  {
+   "file": "candidate_1.wav",
+   "label": "Bassdrum (kick), 0-40 s",
+   "note": "Kick drum hits from the separated drums stem, band-limited to 30-200 Hz, over 0-40 s. Energy is 85% below 150 Hz; centroid about 73 Hz; 124 onsets detected.",
+   "stem": "drums",
+   "length_s": 39.83,
+   "peak_db": -1.0
+  }
+ ],
+ "steps": [
+  "convert: prepared input.wav for separation (40.0 s, 44.1 kHz stereo)",
+  "separate: htdemucs split into four stems; drums chosen for kick",
+  "narrow: drums stem, 0-40 s, band 30-200 Hz",
+  "describe: 39.8 s long, peak -16.9 dB, usable",
+  "narrow check: percussive component, same band, similar result; not used",
+  "finish: trimmed, faded, peak set to -1 dB; wrote candidate_1.wav"
+ ],
+ "models": [
+  {
+   "name": "htdemucs",
+   "file": "htdemucs.onnx",
+   "sha256": "d05c269d0178d2a7"
+  }
+ ]
+}

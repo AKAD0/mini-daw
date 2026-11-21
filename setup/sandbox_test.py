@@ -11,7 +11,9 @@ Steps of this version:
   2. It cuts ranges of 40 s from the songs (WAV with 16-bit PCM) and runs one Session per range.
      Half of the Sessions use the small model tier of the agent, half the middle tier.
   3. It records for each Session: the time until idle, the time until the first action of the
-     agent (to the next poll), the tokens and the list cost.
+     agent, the stop reason, the tokens and the list cost. The times run from the sending of the
+     message to the processed_at of the events, so the interval of polling and the quiet minutes
+     do not count. Without those stamps the clock of this script stands in.
   4. The last Session runs while the script does not poll it for --quiet-minutes.
   5. It downloads the report and the candidates of each Session for the owner, who listens to
      three of them, and it deletes each Session and each uploaded cut afterwards.
@@ -23,6 +25,7 @@ The results go to OUT/results.json, with the pass rules of Section 14.
 """
 
 import argparse
+import datetime
 import io
 import json
 import os
@@ -137,17 +140,52 @@ def settle(client, session_id, pause):
     return session
 
 
-def wait(client, session_id, poll_s, deadline):
-    """Waits until the agent has finished its turn on the message, or until the deadline."""
+def wait(client, session_id, poll_s, started, deadline):
+    """Waits until the agent has finished its turn on the message, or until the deadline. Returns the
+    Session, the time of the first tool call on the clock of this script (from STARTED, to the poll that
+    saw it) and the last list of events."""
     first_action = None
-    started = time.monotonic()
     while True:
         events = client.beta.sessions.events.list(session_id=session_id).data
         if first_action is None and any(getattr(e, "type", "") == "agent.tool_use" for e in events):
             first_action = time.monotonic() - started
         if turn_finished(events) or time.monotonic() > deadline:
-            return settle(client, session_id, min(SETTLE_S, poll_s)), first_action
+            return settle(client, session_id, min(SETTLE_S, poll_s)), first_action, events
         time.sleep(poll_s)
+
+
+def stamp(value):
+    """A processed_at as seconds since 1970. The SDK gives a datetime; a plain reply gives ISO 8601 text."""
+    if value is None:
+        return None
+    if isinstance(value, str):
+        value = datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    return value.timestamp()
+
+
+def turn_times(events, sent_at):
+    """The stop reason of the last turn and its times in seconds from SENT_AT (the clock of this computer when
+    the message went out) to the processed_at of the first tool call and of the final idle event. A Session
+    has no stop reason of its own; its idle event carries it (Managed Agents, events)."""
+    seen = first = end = stop = None
+    for e in events:
+        kind = getattr(e, "type", "")
+        if kind == "user.message":
+            seen, first, end, stop = True, None, None, None
+        elif seen is None:
+            continue
+        elif kind == "agent.tool_use" and first is None:
+            first = stamp(getattr(e, "processed_at", None))
+        elif kind == "session.status_idle":
+            end = stamp(getattr(e, "processed_at", None))
+            stop = getattr(getattr(e, "stop_reason", None), "type", None)
+        elif kind == "session.status_terminated":
+            end, stop = stamp(getattr(e, "processed_at", None)), "terminated"
+
+    def span(t):
+        return None if t is None else round(t - sent_at, 1)
+
+    return {"stop_reason": stop, "seconds_to_idle": span(end), "seconds_to_first_action": span(first)}
 
 
 def fetch_files(client, session_id, wanted, folder, pause):
@@ -198,24 +236,28 @@ def run_session(client, ids, index, cut_bytes, mode, value, length_s, out_dir, p
                    {"type": "file", "file_id": ids["model"], "mount_path": MOUNTS["model"]}],
         budget={"type": "limit", "max_list_cost": {"amount": BUDGET_CENTS, "currency": "USD"}},
     )
-    started = time.monotonic()
+    sent_at, started = time.time(), time.monotonic()
     client.beta.sessions.events.send(session_id=session.id, events=[
         {"type": "user.message", "content": [{"type": "text", "text": first_message(mode, value, length_s)}]}])
     if quiet_s:
         time.sleep(quiet_s)
-    final, first_action = wait(client, session.id, poll_s, started + TIME_LIMIT_S)
-    seconds = time.monotonic() - started
+    final, first_action, events = wait(client, session.id, poll_s, started, started + TIME_LIMIT_S)
+    waited = time.monotonic() - started
+    times = turn_times(events, sent_at)
     folder = os.path.join(out_dir, f"session_{index + 1:02d}")
     os.makedirs(folder, exist_ok=True)
     wanted = ("report.json", "candidate_1.wav", "candidate_2.wav", "candidate_3.wav")
     names = fetch_files(client, session.id, wanted, folder, min(FILE_WAIT_S, poll_s))
     usage = getattr(final, "usage", None)
     cost = getattr(getattr(usage, "list_cost", None), "amount", None)
-    stop = getattr(getattr(final, "stop_reason", None), "type", None)
     cleanup = close(client, session.id, final.status, uploaded.id, min(SETTLE_S, poll_s))
+    idle_s, first_s = times["seconds_to_idle"], times["seconds_to_first_action"]
+    if first_s is None and first_action is not None:
+        first_s = round(first_action, 1)
     return {"session": index + 1, "tier": MIDDLE_TIER if middle else sa.SMALL_TIER, "mode": mode, "request": value,
-            "status": final.status, "stop_reason": stop, "seconds_to_idle": round(seconds, 1),
-            "seconds_to_first_action": None if first_action is None else round(first_action, 1),
+            "status": final.status, "stop_reason": times["stop_reason"],
+            "seconds_to_idle": round(waited, 1) if idle_s is None else idle_s, "seconds_to_first_action": first_s,
+            "clock": "script" if idle_s is None else "events", "seconds_waited": round(waited, 1),
             "input_tokens": getattr(usage, "input_tokens", None),
             "output_tokens": getattr(usage, "output_tokens", None),
             "list_cost_cents": None if cost is None else int(cost), "disconnected": bool(quiet_s), "files": names,
@@ -235,7 +277,8 @@ def stems_session(client, ids, cut_bytes, folder, poll_s):
     )
     client.beta.sessions.events.send(session_id=session.id, events=[
         {"type": "user.message", "content": [{"type": "text", "text": "Run the two commands now."}]}])
-    final, _ = wait(client, session.id, poll_s, time.monotonic() + TIME_LIMIT_S)
+    started = time.monotonic()
+    final, _, _ = wait(client, session.id, poll_s, started, started + TIME_LIMIT_S)
     target = os.path.join(folder, "sandbox")
     os.makedirs(target, exist_ok=True)
     fetch_files(client, session.id, tuple(n + ".wav" for n in STEM_NAMES), target, min(FILE_WAIT_S, poll_s))

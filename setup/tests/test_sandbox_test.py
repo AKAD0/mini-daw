@@ -1,5 +1,6 @@
 """The test script of the Sandbox (V-06) against the fake of the API. No test reaches the real service."""
 
+import datetime
 import io
 import json
 import struct
@@ -48,6 +49,12 @@ def test_the_script_runs_each_session_and_cleans_up(fake, local_files, tmp_path)
     assert fake.sessions == {}
     assert fake.refused == []
     assert [r["cleanup"] for r in result["results"]] == ["deleted"] * 3
+    # The times come from the events of the service: the agent of the fake works 42 s on its clock, and the
+    # quiet minutes and the polling of the script do not count.
+    for r in result["results"]:
+        assert r["stop_reason"] == "end_turn" and r["clock"] == "events"
+        assert 42.0 <= r["seconds_to_idle"] < 60.0 and 5.0 <= r["seconds_to_first_action"] < 23.0
+        assert r["seconds_waited"] < r["seconds_to_idle"]
     assert all(f["filename"] != "input.wav" for f in fake.files.values())
     assert not any(TEST_KEY in line for line in lines)
 
@@ -67,6 +74,25 @@ def test_a_turn_ends_only_with_a_final_idle_after_the_message():
     assert st.turn_finished([message, event("session.status_terminated")])
     assert not st.turn_finished([event("session.status_idle", "end_turn"), message])
     assert not st.turn_finished([message, event("session.status_idle", "end_turn"), running])
+
+
+def test_the_times_of_a_turn_come_from_the_processed_at_of_its_events():
+    def stamped(kind, at, stop=None):
+        e = event(kind, stop)
+        e.processed_at = at
+        return e
+
+    sent = datetime.datetime(2026, 11, 21, 16, 41, 0, tzinfo=datetime.UTC).timestamp()
+    events = [stamped("user.message", "2026-11-21T16:41:02Z"), stamped("session.status_running", None),
+              stamped("agent.tool_use", "2026-11-21T16:41:06.5Z"), stamped("agent.tool_use", "2026-11-21T16:41:30Z"),
+              stamped("session.status_idle", datetime.datetime(2026, 11, 21, 16, 42, 1, tzinfo=datetime.UTC),
+                      "end_turn")]
+    assert st.turn_times(events, sent) == {"stop_reason": "end_turn", "seconds_to_idle": 61.0,
+                                           "seconds_to_first_action": 6.5}
+    # A turn without stamps leaves the times to the clock of the script.
+    assert st.turn_times([event("user.message"), event("session.status_idle", "end_turn")], sent) == {
+        "stop_reason": "end_turn", "seconds_to_idle": None, "seconds_to_first_action": None}
+    assert st.turn_times([], sent)["stop_reason"] is None
 
 
 def run_at_the_time_limit(fake, local_files, tmp_path, monkeypatch):

@@ -1,0 +1,21 @@
+{
+ "version": 1,
+ "toolkit": "0.1.0",
+ "status": "nothing_found",
+ "candidates": [],
+ "steps": [
+  "convert: prepared the input (40 s, 44.1 kHz stereo)",
+  "separate: bass stem is almost silent (peak -41.7 dB, mean -65.9 dB)",
+  "describe: bass stem has no onsets and no pitch, so it is leakage",
+  "narrow: bass stem, band 30-300 Hz: peak -52 dB, below the -50 dB limit",
+  "narrow: other stem, 30-300 Hz: a mix of low parts, 337 onsets, not a bass line"
+ ],
+ "models": [
+  {
+   "name": "htdemucs",
+   "file": "htdemucs.onnx",
+   "sha256": "d05c269d0178d2a7"
+  }
+ ],
+ "message": "The separation found no usable bass line: the bass stem is nearly silent, so there is probably no distinct bass instrument in this piece."
+}
