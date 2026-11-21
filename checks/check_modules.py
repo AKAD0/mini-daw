@@ -47,7 +47,9 @@ NETWORK_IMPORT = re.compile(
     re.M,
 )
 ANDROID_HEADER = re.compile(
-    r'^\s*#\s*include\s*[<"]((?:android|aaudio|oboe|EGL|GLES\d*|SLES|vulkan)/[^>"]+|jni\.h|sys/system_properties\.h)[>"]',
+    r'^\s*#\s*include\s*[<"]('
+    r'(?:android|aaudio|oboe|EGL|GLES\d*|SLES|vulkan)/[^>"]+|jni\.h|sys/system_properties\.h'
+    r')[>"]',
     re.M,
 )
 ENGINE_CORE = "engine/src/main/cpp/engine-core"
@@ -97,7 +99,8 @@ def catalog_libraries(text):
 
 def catalog_plugins(text):
     data = tomllib.loads(text) if text else {}
-    return {accessor(a): (s if isinstance(s, str) else s["id"]).split(":")[0] for a, s in data.get("plugins", {}).items()}
+    plugins = data.get("plugins", {})
+    return {accessor(a): (s if isinstance(s, str) else s["id"]).split(":")[0] for a, s in plugins.items()}
 
 
 def library_refs(text):
@@ -181,7 +184,8 @@ def check(root):
 
     for path in source_files(root, ENGINE_CORE, (".h", ".hpp", ".cpp", ".cc", ".c")):
         for header in ANDROID_HEADER.findall(read(path)):
-            problems.append(f"rule 6: engine-core includes the Android header {header} in {os.path.relpath(path, root)}")
+            where = os.path.relpath(path, root)
+            problems.append(f"rule 6: engine-core includes the Android header {header} in {where}")
     return problems
 
 

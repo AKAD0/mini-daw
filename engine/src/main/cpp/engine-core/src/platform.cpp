@@ -3,9 +3,9 @@
 namespace minidaw::engine {
 
 bool audioAtomicsAreLockFree() noexcept {
-  const std::atomic<std::uint64_t> frames{0};
-  const std::atomic<float> level{0.0F};
-  return frames.is_lock_free() && level.is_lock_free();
+  // The constants of the type need no call into libatomic. A call of is_lock_free() on an object
+  // would need it in a build without optimization.
+  return std::atomic<std::uint64_t>::is_always_lock_free && std::atomic<float>::is_always_lock_free;
 }
 
 }  // namespace minidaw::engine

@@ -9,6 +9,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 import check_modules  # noqa: E402
 
+OKHTTP = "dependencies { implementation(libs.okhttp) }\n"
+INTERNET = '<uses-permission android:name="android.permission.INTERNET" />'
 CATALOG = """
 [versions]
 okhttp = "4.12.0"
@@ -43,8 +45,8 @@ def make_valid_tree(root):
     write(root, "gradle/libs.versions.toml", CATALOG)
     for module, deps in check_modules.RULES.items():
         write(root, check_modules.module_dir(module) + "/build.gradle.kts", build_file(module, deps))
-    write(root, "extraction/build.gradle.kts", build_file(":extraction", {":core"}) + "dependencies { implementation(libs.okhttp) }\n")
-    write(root, "extraction/src/main/AndroidManifest.xml", '<uses-permission android:name="android.permission.INTERNET" />')
+    write(root, "extraction/build.gradle.kts", build_file(":extraction", {":core"}) + OKHTTP)
+    write(root, "extraction/src/main/AndroidManifest.xml", INTERNET)
     write(root, "extraction/src/main/kotlin/Client.kt", "import okhttp3.OkHttpClient\n")
     write(root, "engine/src/main/cpp/engine-core/src/a.cpp", "#include <atomic>\n")
     write(root, "engine/src/main/cpp/glue.cpp", "#include <android/log.h>\n")
@@ -78,14 +80,15 @@ class Rules(unittest.TestCase):
         self.assertTrue(any(":core" in p and "Android" in p for p in self.problems()))
 
     def test_only_extraction_may_declare_a_network_library(self):
-        write(self.root, "data/build.gradle.kts", build_file(":data", {":core"}) + "dependencies { implementation(libs.okhttp) }\n")
+        write(self.root, "data/build.gradle.kts", build_file(":data", {":core"}) + OKHTTP)
         self.assertTrue(any(":data" in p and "network" in p for p in self.problems()))
-        write(self.root, "data/build.gradle.kts", 'dependencies { implementation("com.squareup.okhttp3:okhttp:4.12.0") }\n')
+        raw = 'dependencies { implementation("com.squareup.okhttp3:okhttp:4.12.0") }\n'
+        write(self.root, "data/build.gradle.kts", raw)
         self.assertTrue(any(":data" in p and "network" in p for p in self.problems()))
 
     def test_only_extraction_may_import_network_classes_or_ask_for_the_network(self):
         write(self.root, "ui/library/src/main/kotlin/A.kt", "package x\n\nimport java.net.HttpURLConnection\n")
-        write(self.root, "data/src/main/AndroidManifest.xml", '<uses-permission android:name="android.permission.INTERNET"/>')
+        write(self.root, "data/src/main/AndroidManifest.xml", INTERNET)
         found = self.problems()
         self.assertTrue(any(":ui:library" in p and "network" in p for p in found))
         self.assertTrue(any(":data" in p and "INTERNET" in p for p in found))

@@ -92,7 +92,8 @@ class Licences(unittest.TestCase):
         self.assertTrue(any("com.example:lib" in p for p in check_licences.check(self.root)))
 
     def test_a_licence_outside_d024_is_a_problem(self):
-        bad = LIST.replace('name = "ruff"\nkind = "python"\nlicence = "MIT"', 'name = "ruff"\nkind = "python"\nlicence = "GPL-3.0"')
+        ruff = 'name = "ruff"\nkind = "python"\nlicence = '
+        bad = LIST.replace(ruff + '"MIT"', ruff + '"GPL-3.0"')
         write(self.root, "checks/licences.toml", bad)
         self.assertTrue(any("ruff" in p and "GPL-3.0" in p for p in check_licences.check(self.root)))
 

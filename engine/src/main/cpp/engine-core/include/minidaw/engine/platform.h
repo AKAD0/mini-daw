@@ -20,7 +20,7 @@ static_assert(std::atomic<double>::is_always_lock_free);
 static_assert(std::numeric_limits<float>::is_iec559);
 static_assert(sizeof(float) == 4);
 
-// Returns true when the atomic values of the audio thread are lock-free at run time too.
+// Returns true when the atomic values of the audio thread never need a lock.
 bool audioAtomicsAreLockFree() noexcept;
 
 }  // namespace minidaw::engine

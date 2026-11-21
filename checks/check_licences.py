@@ -93,7 +93,8 @@ def check(root):
             problems.append(f"entry {key[0]} ({key[1]}) stands twice in the list")
         listed[key] = e
         if e.get("kind") not in KINDS or e.get("use") not in USES or not e.get("name"):
-            problems.append(f"entry {key[0] or '?'}: needs a name, a kind of {sorted(KINDS)} and a use of {sorted(USES)}")
+            name = key[0] or "?"
+            problems.append(f"entry {name}: needs a name, a kind of {sorted(KINDS)} and a use of {sorted(USES)}")
         if not licence_ok(e):
             problems.append(f"entry {key[0]}: the licence {e.get('licence')!r} is not allowed by D-024")
     found = declared(root)
