@@ -24,7 +24,7 @@ def test_the_script_runs_each_session_and_cleans_up(fake, local_files, tmp_path)
     songs = [song(tmp_path / "a.wav"), song(tmp_path / "b.wav")]
     lines = []
     out_dir = tmp_path / "V-06"
-    code = st.main(["--audio", *songs, "--sessions", "3", "--range-s", "1", "--quiet-minutes", "0",
+    code = st.main(["--audio", *songs, "--sessions", "3", "--range-s", "1", "--quiet-minutes", "0.001",
                     "--poll-s", "0", "--out", str(out_dir)], out=lines.append)
     assert code == 0, lines
     creates = [r["body"] for r in fake.requests if r["method"] == "POST" and r["path"] == "/v1/sessions"]
