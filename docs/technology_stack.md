@@ -1,13 +1,14 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.1 · **Date:** 2026-11-21
+**Stage:** 2 of 6 (technical research) · **Version:** 2.2 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
 **Change in 1.4:** results of Stage 6. A library may add permissions to the manifest of the app (D-101). Changed part: Section 15 (item 9).
 **Change in 2.0:** the owner asked for the decomposition of a recording into a Project (D-104). The tools of the owner's note are examined (D-111). New parts: Sections 9.7 and 9.8, the check V-08 in Section 14, the sources R19 to R30. Changed parts: Section 1 (three rows), Section 9.4 (facts 4 and 6, fall-back models), Section 10 (one row), Section 13, Section 14 (answers), Section 15 (items 10 to 12).
 **Change in 2.1:** TK-001 fixed the versions of the build and the place of the list of licences. Changed parts: Section 3.2 (compile SDK), Section 3.3 (item 5), Section 12 (closing notes).
+**Change in 2.2:** TK-008 confirmed the input of SwiftF0 and the source of ONNX Runtime. Changed parts: Section 8.2 (notes below the table), Section 15 (item 4).
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -380,6 +381,12 @@ Parts of the conversion:
 | Tuning offset and quantization | Own code | FR-H2M-07, FR-H2M-09. |
 | Basic Pitch | Rejected | Weak for one voice in both sources [R5], [R7]. |
 
+Facts from TK-008 (read on 2026-11-21):
+
+1. SwiftF0 0.3.0 (MIT) is a model file of 135 KB. It reads audio at 16 kHz with the range of pitch as two more inputs. It does not read a spectrogram.
+2. The page of ONNX Runtime at GitHub answered 404. The official packages of Microsoft are still published at NuGet (`Microsoft.ML.OnnxRuntime`) and at Maven Central (`com.microsoft.onnxruntime:onnxruntime-android`). The host build takes version 1.31.1 from NuGet, with a fixed checksum. Its licence file says MIT.
+3. ONNX Runtime is a library without the sanitizers. The C++ tests of SwiftF0 therefore suppress the reports of leaks inside this library only (`checks/lsan_suppressions.txt`).
+
 The code lives in a C++ module that builds on the phone and on a host. The detection of the Root note of a Sample (FR-SM-02) uses the same pitch code.
 
 Rule for the comparison (V-05):
@@ -681,7 +688,7 @@ V-08 belongs to version 1.1. It runs after extraction works (D-112). If V-08 fai
 1. The exact licence text of each library and model file. This document names licences from knowledge where it says "confirm".
 2. The version of Oboe and its support for performance hints.
 3. The size of ONNX Runtime for `arm64-v8a` inside the app.
-4. Whether the ONNX file of SwiftF0 expects audio or a spectrogram as input.
+4. Whether the ONNX file of SwiftF0 expects audio or a spectrogram as input. Answered in TK-008: audio at 16 kHz (Section 8.2).
 5. The licence of the vocadito test set for use in tests.
 6. The terms of the HTDemucs weights.
 7. Whether the read tool of the agent shows pictures to the model.

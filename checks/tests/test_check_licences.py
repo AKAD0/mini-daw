@@ -108,6 +108,13 @@ class Licences(unittest.TestCase):
         write(self.root, "CMakeLists.txt", "project(x)\n")
         self.assertTrue(any("googletest" in p and "declares" in p for p in check_licences.check(self.root)))
 
+    def test_a_model_file_needs_an_entry_by_its_path(self):
+        write(self.root, "analysis/src/main/assets/m.onnx", "model")
+        self.assertTrue(any("analysis/src/main/assets/m.onnx" in p for p in check_licences.check(self.root)))
+        entry = '[[entry]]\nname = "analysis/src/main/assets/m.onnx"\nkind = "model"\nlicence = "MIT"\nuse = "app"\n'
+        write(self.root, "checks/licences.toml", LIST + entry)
+        self.assertEqual(check_licences.check(self.root), [])
+
     def test_actions_and_python_packages_are_declared_too(self):
         write(self.root, ".github/workflows/check.yml", WORKFLOW + "  - uses: actions/setup-java@v6.1.0\n")
         write(self.root, "checks/requirements-ci.txt", "ruff==0.17.2\npytest==9.2.0\n")

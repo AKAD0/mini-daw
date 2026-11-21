@@ -3,7 +3,7 @@
 # has one entry. A "tool" is a program of the CI service or of the host; nothing declares its version.
 # Fields:
 #   name     coordinate, ID of a plugin, name in FetchContent_Declare, Python package or action
-#   kind     library | plugin | native | python | action | tool
+#   kind     library | plugin | native | python | action | tool | model (a model file, by its path)
 #   licence  SPDX identifier; it must be one of D-024
 #   use      app (inside the app package) | build | test | toolkit (inside the Sandbox)
 #   source   where the licence was read
@@ -72,6 +72,21 @@ kind = "native"
 licence = "BSD-3-Clause"
 use = "test"
 source = "github.com/google/googletest, read on 2026-11-21"
+
+[[entry]]
+name = "onnxruntime"
+kind = "native"
+licence = "MIT"
+use = "app"
+source = "NuGet package Microsoft.ML.OnnxRuntime 1.31.1, file LICENSE, read on 2026-11-21. Runs SwiftF0 (D-044)."
+
+# --- Model files (NFR-LEG-02)
+[[entry]]
+name = "analysis/src/main/assets/swiftf0/swiftf0-0.3.0.onnx"
+kind = "model"
+licence = "MIT"
+use = "app"
+source = "github.com/lars76/swift-f0, tag v0.3.0, file swift_f0/model.onnx, SHA-256 6385e8c2...0a22; LICENSE read on 2026-11-21"
 
 # --- Python tools
 [[entry]]

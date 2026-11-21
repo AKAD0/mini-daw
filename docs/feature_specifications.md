@@ -1,12 +1,13 @@
 # feature_specifications.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 4 of 6 (feature specifications) · **Version:** 2.2 · **Date:** 2026-11-21
+**Stage:** 4 of 6 (feature specifications) · **Version:** 2.3 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 5. Each criterion now belongs to one task of `development_roadmap.md`. Changed criteria: AC-TR-06, AC-TR-09, AC-MX-08, AC-MX-09, AC-FX-04, AC-FX-12, AC-AIX-03. New criterion: AC-TR-14. Changed parts: Section 9 (rules, MT-08), Section 10 (places of the checks).
 **Change in 1.2:** final check of Stage 6. Each criterion was compared with its requirements, and each task of `development_roadmap.md` with its criteria. New criteria: AC-APP-19 to AC-APP-21, AC-TR-15, AC-PL-17 to AC-PL-21, AC-PT-10, AC-PT-11, AC-LIB-10 to AC-LIB-12, AC-MX-21, AC-FX-17, AC-REC-15 to AC-REC-18, AC-H2M-16, AC-H2M-17. Changed criteria: AC-WS-10, AC-APP-01, AC-APP-05, AC-APP-16, AC-TR-08, AC-TR-12, AC-PL-09, AC-CR-10, AC-SM-01, AC-LIB-07, AC-MX-13, AC-MX-20, AC-FX-10, AC-FX-12, AC-REC-12, AC-H2M-08, AC-H2M-10, AC-H2M-12, AC-AIX-04 to AC-AIX-06, AC-AIX-13, AC-AIX-15, AC-AIX-16, AC-AIX-18, AC-FS-06. Changed manual tests: MT-01, MT-14. Changed parts: the conventions (rule for the mark "P1:", D-102), Sections 1.1, 2.2.1, 2.2.2, 2.2.6, 4.2.6 and 5.3, Section 10 (place of NFR-MNT-07), Section 11 (source F6).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: Section 12 with the criteria AC-DEC-01 to AC-DEC-33, Section 6.11, the manual test MT-21, the sources F7 to F9. Changed parts: the conventions 3, 9 and 12, Section 4.2.7 (low register), Section 5.2.8 (rule 5), Section 6.5 (version 2), Section 6.6 (schema 2), Section 9 (MT-13, MT-14), Section 10 (FR-AIX-18, FR-DEC-24).
 **Change in 2.1:** TK-002 fixed the format of the file of results of a test build. New: Section 6.12. Changed: rule 4 of Section 9.
 **Change in 2.2:** TK-008 named the details of the own pYIN and of the code for Notes, and two limits that its tests found. Changed parts: Sections 4.2.4, 4.2.5 and 4.6.
+**Change in 2.3:** TK-008 built the candidate SwiftF0. Its start value of the lowest confidence is now 0.5, because SwiftF0 0.2.0 calibrated its confidence to this value (evidence in Section 4.2.4). Changed part: Section 4.2.4.
 **Companion documents:** `requirements.md`, `technology_stack.md`, `architecture.md`, `ui_ux_specification.md`, `development_roadmap.md` and `project_decisions.md` in their newest versions. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-` and `V-` point to them.
 
 ---
@@ -1063,7 +1064,7 @@ Both candidates deliver the same three values per frame.
 | Range of pitch | 47 to 2,094 Hz | 60 to 2,094 Hz |
 | Window | Set by the model | 1,024 samples at 16 kHz |
 | Step | 16 ms | 16 ms |
-| Start value of the lowest confidence that counts as pitch | 0.9 | 0.5 |
+| Start value of the lowest confidence that counts as pitch | 0.5 (was 0.9; see the note below the table) | 0.5 |
 
 Rules:
 
@@ -1071,6 +1072,18 @@ Rules:
 2. The check V-05 picks one candidate and sets the final value of the lowest confidence.
 3. The result of this step is stored in the cache (Section 6.5). A second run with other settings reads it from there.
 4. Both candidates compute the loudness the same way: the level of the 32 ms of audio centered on the frame. Frame i lies at the time i × 16 ms.
+
+Note on the start value of SwiftF0. The changelog of SwiftF0 0.2.0 (2026-09-19) says: a frame is voiced when its confidence is at least 0.5, and the threshold is no longer a setting of the detector. The value 0.9 came from an earlier version. TK-008 uses the model of version 0.3.0. The check V-05 sets the final value (rule 2).
+
+Details of SwiftF0 in the app (TK-008):
+
+| Part | Value |
+|---|---|
+| Model file | Version 0.3.0, 135 KB, in `analysis/src/main/assets/swiftf0/` |
+| Input and output | Audio at 16 kHz and the range 46.875 to 2,093.75 Hz. One pitch and one confidence per 256 samples. |
+| Long audio | Windows of 1,875 frames (30 s), each with 11 frames before and 10 frames after it, as in the reference code of the model |
+| Silence | A frame whose 256 samples peak below 10⁻³ gets the confidence 0 and no pitch, as in the reference code |
+| Threads | One. Two runs then give the same frames (AC-H2M-10). |
 
 Details of the own pYIN (TK-008):
 

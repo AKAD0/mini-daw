@@ -1,0 +1,4 @@
+# Suppressions of LeakSanitizer for the C++ tests (checks/one_command.py, part cpp-tests).
+# ONNX Runtime is a prebuilt library without the sanitizers (analysis/src/test/cpp/CMakeLists.txt).
+# Only allocations inside this library are suppressed. Leaks of the own code still fail the tests.
+leak:libonnxruntime.so

@@ -5,7 +5,8 @@ Run:  python3 checks/check_licences.py
 The list of licences is the file checks/licences.toml. The check compares it with what the files
 of the build declare: libraries and plugins in gradle/libs.versions.toml, native libraries in
 FetchContent_Declare of a CMake file, Python packages in a file requirements*.txt, actions in the
-workflows of the CI service, and Gradle through its wrapper.
+workflows of the CI service, Gradle through its wrapper, and every model file (*.onnx) of the
+repository by its path (NFR-LEG-02).
 Rules:
   1. Each declared item has an entry.
   2. Each entry has a licence of D-024. LGPL counts only with the mark linking = "dynamic".
@@ -23,7 +24,7 @@ import tomllib
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 D024 = {"Apache-2.0", "MIT", "BSD-2-Clause", "BSD-3-Clause", "Zlib", "ISC", "Public-Domain"}
-KINDS = {"library", "plugin", "native", "python", "action", "tool"}
+KINDS = {"library", "plugin", "native", "python", "action", "tool", "model"}
 USES = {"app", "build", "test", "toolkit"}
 SKIP_DIRS = {"build", ".gradle", ".cxx", ".git", ".venv", "node_modules"}
 
@@ -66,6 +67,9 @@ def declared(root):
             m = re.match(r"\s*([A-Za-z0-9][A-Za-z0-9_.-]*)", line.split("#")[0])
             if m:
                 found[(m.group(1).lower(), "python")] = os.path.relpath(path, root)
+    for path in walk(root, lambda n: n.endswith(".onnx")):
+        rel = os.path.relpath(path, root).replace(os.sep, "/")
+        found[(rel, "model")] = rel
     for path in glob.glob(os.path.join(root, ".github", "workflows", "*.y*ml")):
         for name in re.findall(r"^\s*-?\s*uses:\s*[\"']?([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)", read(path), flags=re.M):
             found[(name, "action")] = os.path.relpath(path, root)

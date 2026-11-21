@@ -145,6 +145,8 @@ def part_cpp_tests(strict):
         cmake, "-S", ".", "-B", HOST_BUILD, "-DCMAKE_BUILD_TYPE=Debug", f"-DCMAKE_CXX_COMPILER={cxx}",
         "-DMINIDAW_SANITIZERS=address,undefined", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
     ]
+    if strict:
+        configure.append("-DMINIDAW_REQUIRE_SWIFTF0=ON")
     if run(configure)[0] != 0 or run([cmake, "--build", HOST_BUILD, "--parallel"])[0] != 0:
         return False
     return run(["ctest", "--test-dir", HOST_BUILD, "--output-on-failure", "--no-tests=error"], env=env)[0] == 0
