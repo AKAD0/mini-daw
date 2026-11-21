@@ -20,6 +20,26 @@ constexpr std::size_t kLeftFrames = 11;
 constexpr std::size_t kLookaheadFrames = 10;
 constexpr float kSilencePeak = 1e-3F;
 
+// The values of an output as float. The model gives the pitch as float64 and the confidence as
+// float32 (TK-008 found this in the run "Check"), so the code reads the type of each output.
+std::vector<float> valuesOf(const Ort::Value& value) {
+  const auto info = value.GetTensorTypeAndShapeInfo();
+  const std::size_t count = info.GetElementCount();
+  if (info.GetElementType() == ONNX_TENSOR_ELEMENT_DATA_TYPE_DOUBLE) {
+    const auto* data = value.GetTensorData<double>();
+    std::vector<float> out(count);
+    for (std::size_t i = 0; i < count; ++i) {
+      out[i] = static_cast<float>(data[i]);
+    }
+    return out;
+  }
+  if (info.GetElementType() == ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT) {
+    const auto* data = value.GetTensorData<float>();
+    return {data, data + count};
+  }
+  throw std::runtime_error("SwiftF0: an output has neither the type float32 nor float64");
+}
+
 }  // namespace
 
 struct SwiftF0::Model {
@@ -43,11 +63,7 @@ struct SwiftF0::Model {
     std::vector<Ort::Value> outputs =
         session.Run(Ort::RunOptions{nullptr}, inputNames.data(), inputs.data(), inputs.size(),
                     outputNames.data(), outputNames.size());
-    const std::size_t count = outputs[1].GetTensorTypeAndShapeInfo().GetElementCount();
-    const auto* pitch = outputs[0].GetTensorData<float>();
-    const auto* confidence = outputs[1].GetTensorData<float>();
-    return {std::vector<float>(pitch, pitch + count),
-            std::vector<float>(confidence, confidence + count)};
+    return {valuesOf(outputs[0]), valuesOf(outputs[1])};
   }
 };
 
