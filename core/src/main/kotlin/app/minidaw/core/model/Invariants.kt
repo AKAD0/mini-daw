@@ -110,8 +110,7 @@ object Invariants {
             }
             for (clip in track.clips) {
                 val ok = when (clip) {
-                    is AudioClip -> clip.offset >= 0 && clip.length >= Limits.MIN_AUDIO_FRAMES &&
-                        clip.offset.toLong() + clip.length <= (frames[clip.sample] ?: 0)
+                    is AudioClip -> audioClipFits(clip, frames[clip.sample] ?: 0)
                     is PatternClip -> clip.length > 0 && clip.offset in 0 until (patternLengths[clip.pattern] ?: 0)
                 }
                 expect(ok && clip.start >= 0 && clip.gainDb in Limits.MIN_CLIP_DB..Limits.MAX_CLIP_DB) {
@@ -120,6 +119,10 @@ object Invariants {
             }
         }
     }
+
+    /** The region of an Audio clip lies inside its Sample (FR-PL-06) and is at least 10 ms long. */
+    private fun audioClipFits(clip: AudioClip, sampleFrames: Int): Boolean =
+        clip.offset >= 0 && clip.length >= Limits.MIN_AUDIO_FRAMES && clip.offset.toLong() + clip.length <= sampleFrames
 
     private fun MutableList<String>.values(state: Project) {
         expect(state.tempoMilliBpm in TimeBase.MIN_TEMPO_MILLI_BPM..TimeBase.MAX_TEMPO_MILLI_BPM) {
@@ -157,5 +160,5 @@ object NoteRules {
 
     /** Notes sorted by start and then by pitch, without two at one start and pitch. */
     fun sortedAndUnique(notes: List<Note>): Boolean =
-        notes.zipWithNext().all { (a, b) -> a.start < b.start || a.start == b.start && a.pitch < b.pitch }
+        notes.zipWithNext().all { (a, b) -> a.start < b.start || (a.start == b.start && a.pitch < b.pitch) }
 }
