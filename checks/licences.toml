@@ -81,6 +81,13 @@ use = "app"
 source = "Maven Central, the official package of Microsoft, file LICENSE of the AAR, read on 2026-11-21. Only the test build holds it (TK-010, V-05)."
 
 [[entry]]
+name = "org.jetbrains.kotlinx:kotlinx-coroutines-core"
+kind = "library"
+licence = "Apache-2.0"
+use = "app"
+source = "github.com/Kotlin/kotlinx.coroutines, file LICENSE.txt. The state of ProjectSession as a StateFlow (TK-017)."
+
+[[entry]]
 name = "org.jetbrains.kotlin:kotlin-test"
 kind = "library"
 licence = "Apache-2.0"

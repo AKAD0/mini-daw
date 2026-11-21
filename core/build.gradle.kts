@@ -18,6 +18,7 @@ kotlin {
 
 dependencies {
     api(project(":engine-api"))
+    api(libs.kotlinx.coroutines.core)
     testImplementation(libs.kotlin.test)
     testImplementation(platform(libs.junit.bom))
     testRuntimeOnly(libs.junit.platform.launcher)

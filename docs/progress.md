@@ -550,7 +550,7 @@ Notes:
 TK-016  State, Edits and Reducer of Tracks, Clips, Patterns, Parts, Notes and Sampler instruments
 State: done (split into TK-016a, TK-016b and TK-016c, size L)
 Change: branches tk-016 (TK-016a, run "Check" 44940457594), tk-016b (run "Check" 44941262637) and
-  tk-016c, merged into main
+  tk-016c (run "Check" 44942485736), merged into main
 Plan of the split:
   TK-016a  the state of architecture.md Section 4.1 in :core (Model.kt), the time base, the limits in
            one file (Limits.kt, feature_specifications.md Section 1.5), the new Project of Section 1.7,
@@ -578,7 +578,7 @@ Criteria so far (run "Check" of the branch tk-016, part "kotlin-tests", module :
     aMovedClipKeepsItsOrderAndMayChangeItsTrack, aTrimOfTheStartMovesOffsetAndLengthByTheSameTime,
     aDuplicateStandsRightAfterItsClip, aDeletedClipLeavesItsTrack, makeUniqueGivesOneClipItsOwnPattern,
     aClipEndsInsideTheLengthLimitOfTheProject)
-  TK-016c (run "Check" of the branch tk-016c, NoteAndInstrumentEditsTest):
+  TK-016c (run "Check" 44942485736, NoteAndInstrumentEditsTest):
   AC-PT-02: pass (aNoteOutsideItsRangesOrBehindTheEndIsRefused)
   AC-CR-01: pass (aStepButtonAddsAndRemovesANoteAtTheRootNote)
   AC-PL-02, the rows of Parts, Notes, Sampler instruments, tempo and time signature: pass
@@ -605,4 +605,27 @@ Notes:
   5. The P1 Edits that cost little are in: solo and move of a Track, the time signature, pan, solo and
      fine tuning of a Sampler instrument. Split, gain and the Edits of several Clips or Notes wait for
      version 1.0.
+```
+
+```text
+TK-017  Undo, redo and ProjectSession
+State: done
+Change: branch tk-017, merged into main
+Criteria (run "Check" of the branch tk-017, part "kotlin-tests", module :core, ProjectSessionTest):
+  AC-PL-06: pass (undoRestoresTheExactEarlierStateAndRedoTheLaterOne: after each of 15 Edits of every
+    kind, undo gives the exact state before and redo the state after; then all the way back and forth)
+  AC-PRJ-07: pass (atLeastFiftyStepsAreKeptAndANewEditDropsRedo: 60 Edits, 50 steps of undo, a new
+    Edit after an undo empties the list for redo)
+  Also the undo parts of TK-016: AC-PL-11 (oneUndoRestoresADeletedTrackWithItsClips) and AC-PT-05
+    (oneUndoRestoresAllPatternClipsOfADeletedPattern): pass. A gesture is one step of undo, a refused
+    Edit changes nothing, another Project starts with empty lists, the Transport reaches the engine.
+Documents: none
+Decisions: none
+Owner: none
+Notes:
+  1. ProjectSession publishes the state and the history as StateFlow of kotlinx-coroutines-core
+     1.10.2 (Apache-2.0, new in gradle/libs.versions.toml and checks/licences.toml). The stack names
+     Kotlin coroutines (technology_stack.md Section 1).
+  2. The compile of a Snapshot on the Control thread and the save 500 ms after the last Edit join
+     ProjectSession with the compiler (TK-020) and the store (:data).
 ```
