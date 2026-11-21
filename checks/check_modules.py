@@ -56,6 +56,7 @@ ANDROID_HEADER = re.compile(
 PORTABLE = {
     "engine-core": "engine/src/main/cpp/engine-core",
     "analysis-core": "analysis/src/main/cpp/analysis-core",
+    "wavio": "native/wavio",
 }
 
 

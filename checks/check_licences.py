@@ -6,10 +6,13 @@ The list of licences is the file checks/licences.toml. The check compares it wit
 of the build declare: libraries and plugins in gradle/libs.versions.toml, native libraries in
 FetchContent_Declare of a CMake file, Python packages in a file requirements*.txt, actions in the
 workflows of the CI service, Gradle through its wrapper, and every model file (*.onnx) of the
-repository by its path (NFR-LEG-02).
+repository by its path (NFR-LEG-02), and every public set of a file datasets.toml (kind "data").
 Rules:
   1. Each declared item has an entry.
-  2. Each entry has a licence of D-024. LGPL counts only with the mark linking = "dynamic".
+  2. Each entry has a licence of D-024. An expression "A AND B" needs both. 0BSD and CC0-1.0 count
+     as BSD and as public domain. LGPL counts only with the mark linking = "dynamic". A public set
+     (kind "data", use "test") may also carry CC-BY-4.0: it is used for tests only, is downloaded
+     at run time and never ships (TK-009).
   3. Each entry of a kind other than "tool" is declared somewhere. The list holds no stale entry.
 The check covers what the files declare. Libraries that these pull in are checked with the page
 of licences of the app (TK-065).
@@ -23,8 +26,9 @@ import sys
 import tomllib
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-D024 = {"Apache-2.0", "MIT", "BSD-2-Clause", "BSD-3-Clause", "Zlib", "ISC", "Public-Domain"}
-KINDS = {"library", "plugin", "native", "python", "action", "tool", "model"}
+D024 = {"Apache-2.0", "MIT", "BSD-2-Clause", "BSD-3-Clause", "0BSD", "Zlib", "ISC", "Public-Domain", "CC0-1.0"}
+TEST_DATA = {"CC-BY-4.0"}
+KINDS = {"library", "plugin", "native", "python", "action", "tool", "model", "data"}
 USES = {"app", "build", "test", "toolkit"}
 SKIP_DIRS = {"build", ".gradle", ".cxx", ".git", ".venv", "node_modules"}
 
@@ -70,6 +74,9 @@ def declared(root):
     for path in walk(root, lambda n: n.endswith(".onnx")):
         rel = os.path.relpath(path, root).replace(os.sep, "/")
         found[(rel, "model")] = rel
+    for path in walk(root, lambda n: n == "datasets.toml"):
+        for spec in tomllib.loads(read(path)).get("dataset", []):
+            found[(spec["name"], "data")] = os.path.relpath(path, root)
     for path in glob.glob(os.path.join(root, ".github", "workflows", "*.y*ml")):
         for name in re.findall(r"^\s*-?\s*uses:\s*[\"']?([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)", read(path), flags=re.M):
             found[(name, "action")] = os.path.relpath(path, root)
@@ -77,11 +84,15 @@ def declared(root):
 
 
 def licence_ok(entry):
-    licence = entry.get("licence", "")
-    base = licence.split(" WITH ")[0].strip()
-    if base.startswith("LGPL-"):
-        return entry.get("linking") == "dynamic"
-    return base in D024
+    allowed = D024 | (TEST_DATA if entry.get("kind") == "data" and entry.get("use") == "test" else set())
+    parts = [p.split(" WITH ")[0].strip() for p in entry.get("licence", "").split(" AND ")]
+    for base in parts:
+        if base.startswith("LGPL-"):
+            if entry.get("linking") != "dynamic":
+                return False
+        elif base not in allowed:
+            return False
+    return bool(parts)
 
 
 def check(root):

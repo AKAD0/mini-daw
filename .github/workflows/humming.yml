@@ -1,0 +1,62 @@
+# Run "Humming evaluation" (TK-009, NFR-QLT-01): both pitch candidates on the public set vocadito.
+# It runs for every change of the code of :analysis or of the WAV library, and by hand.
+# The report is an artifact of the run and a part of its summary. The implementer stores it in
+# docs/results/.
+name: Humming evaluation
+
+on:
+  push:
+    paths:
+      - "analysis/**"
+      - "native/wavio/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/humming.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: humming-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    name: Humming evaluation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Python packages of the evaluation
+        run: python -m pip install -r analysis/tools/requirements.txt
+
+      - name: Cache of the public set
+        uses: actions/cache@v6.1.0
+        with:
+          path: build/vocadito/vocadito.zip
+          key: vocadito-e0d6b99d3f9c594afe5ae5c4d7bdacebe569e53b809e90b89d1c771c4f9990e3
+
+      - name: The tool minidaw-hum, optimized, with both candidates
+        run: |
+          cmake -S . -B build/eval -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ \
+            -DMINIDAW_TESTS=OFF -DMINIDAW_REQUIRE_SWIFTF0=ON
+          cmake --build build/eval --target minidaw-hum --parallel
+
+      - name: Evaluation on vocadito
+        run: |
+          python analysis/tools/evaluate_vocadito.py --hum build/eval/analysis/tools/hum/minidaw-hum \
+            --model analysis/src/main/assets/swiftf0/swiftf0-0.3.0.onnx --cache build/vocadito \
+            --report build/vocadito/TK-009-vocadito.md --json build/vocadito/TK-009-vocadito.json
+          cat build/vocadito/TK-009-vocadito.md >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: humming-evaluation
+          path: |
+            build/vocadito/TK-009-vocadito.md
+            build/vocadito/TK-009-vocadito.json

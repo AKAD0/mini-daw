@@ -115,6 +115,23 @@ class Licences(unittest.TestCase):
         write(self.root, "checks/licences.toml", LIST + entry)
         self.assertEqual(check_licences.check(self.root), [])
 
+    def test_an_expression_with_and_needs_every_part(self):
+        ok = '[[entry]]\nname = "x"\nkind = "tool"\nlicence = "BSD-3-Clause AND 0BSD AND CC0-1.0"\nuse = "build"\n'
+        write(self.root, "checks/licences.toml", LIST + ok)
+        self.assertEqual(check_licences.check(self.root), [])
+        bad = ok.replace("CC0-1.0", "GPL-2.0")
+        write(self.root, "checks/licences.toml", LIST + bad)
+        self.assertTrue(any("GPL-2.0" in p for p in check_licences.check(self.root)))
+
+    def test_a_public_set_may_carry_cc_by_for_tests_only(self):
+        write(self.root, "tools/datasets.toml", '[[dataset]]\nname = "set"\nurl = "u"\nsha256 = "s"\n')
+        self.assertTrue(any("set" in p for p in check_licences.check(self.root)))
+        entry = '[[entry]]\nname = "set"\nkind = "data"\nlicence = "CC-BY-4.0"\nuse = "test"\n'
+        write(self.root, "checks/licences.toml", LIST + entry)
+        self.assertEqual(check_licences.check(self.root), [])
+        write(self.root, "checks/licences.toml", LIST + entry.replace('use = "test"', 'use = "app"'))
+        self.assertTrue(any("CC-BY-4.0" in p for p in check_licences.check(self.root)))
+
     def test_actions_and_python_packages_are_declared_too(self):
         write(self.root, ".github/workflows/check.yml", WORKFLOW + "  - uses: actions/setup-java@v6.1.0\n")
         write(self.root, "checks/requirements-ci.txt", "ruff==0.17.2\npytest==9.2.0\n")

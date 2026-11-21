@@ -1,0 +1,10 @@
+# Public sets for the evaluation on a host (TK-009, NFR-QLT-01). The evaluation downloads each set
+# into its cache folder. No set is stored in the repository or ships with the app.
+# checks/check_licences.py reads this file: each set needs an entry of the kind "data".
+
+[[dataset]]
+name = "vocadito"
+url = "https://zenodo.org/records/5578807/files/vocadito.zip?download=1"
+sha256 = "e0d6b99d3f9c594afe5ae5c4d7bdacebe569e53b809e90b89d1c771c4f9990e3"
+licence = "CC-BY-4.0"
+citation = "R. M. Bittner, K. Pasalo, J. J. Bosch, G. Meseguer-Brocal, D. Rubinstein: vocadito, a dataset of solo vocals with f0, note, and lyric annotations. Zenodo record 5578807, 2021."

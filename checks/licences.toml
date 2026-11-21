@@ -4,6 +4,7 @@
 # Fields:
 #   name     coordinate, ID of a plugin, name in FetchContent_Declare, Python package or action
 #   kind     library | plugin | native | python | action | tool | model (a model file, by its path)
+#            | data (a public set of analysis/tools/datasets.toml, for tests only)
 #   licence  SPDX identifier; it must be one of D-024
 #   use      app (inside the app package) | build | test | toolkit (inside the Sandbox)
 #   source   where the licence was read
@@ -96,6 +97,35 @@ licence = "MIT"
 use = "build"
 source = "github.com/astral-sh/ruff, read on 2026-11-21"
 
+[[entry]]
+name = "numpy"
+kind = "python"
+licence = "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0"
+use = "test"
+source = "PyPI numpy 2.5.4, field License-Expression, read on 2026-11-21. Evaluation on vocadito (TK-009)."
+
+[[entry]]
+name = "scipy"
+kind = "python"
+licence = "BSD-3-Clause"
+use = "test"
+source = "PyPI scipy 1.18.1, classifier BSD License, read on 2026-11-21. Evaluation on vocadito (TK-009)."
+
+[[entry]]
+name = "mir_eval"
+kind = "python"
+licence = "MIT"
+use = "test"
+source = "github.com/mir-evaluation/mir_eval, read on 2026-11-21. The metric of NFR-QLT-01 (TK-009)."
+
+# --- Public sets for tests (analysis/tools/datasets.toml)
+[[entry]]
+name = "vocadito"
+kind = "data"
+licence = "CC-BY-4.0"
+use = "test"
+source = "Zenodo record 5578807, field license, read on 2026-11-21. Downloaded at run time, never stored or shipped."
+
 # --- Actions of the CI service
 [[entry]]
 name = "actions/checkout"
@@ -110,6 +140,20 @@ kind = "action"
 licence = "MIT"
 use = "build"
 source = "github.com/actions/setup-java, read on 2026-11-21"
+
+[[entry]]
+name = "actions/cache"
+kind = "action"
+licence = "MIT"
+use = "build"
+source = "github.com/actions/cache, read on 2026-11-21"
+
+[[entry]]
+name = "actions/upload-artifact"
+kind = "action"
+licence = "MIT"
+use = "build"
+source = "github.com/actions/upload-artifact, read on 2026-11-21"
 
 [[entry]]
 name = "actions/setup-python"

@@ -180,7 +180,7 @@ def part_cpp_static(strict):
             return False
         print("no compile database: only clang-format ran")
         return ok
-    sources = [f for f in files if f.endswith((".cpp", ".cc")) and "/src/test/" not in f]
+    sources = [f for f in files if f.endswith((".cpp", ".cc")) and "/src/test/" not in f and "/tests/" not in f]
     return run([tidy, "-p", HOST_BUILD, "--quiet", *sources])[0] == 0 and ok
 
 

@@ -1,0 +1,4 @@
+# Python packages of the evaluation on vocadito (analysis/tools/evaluate_vocadito.py). Entries in checks/licences.toml.
+numpy==2.5.4
+scipy==1.18.1
+mir_eval==0.8.2
