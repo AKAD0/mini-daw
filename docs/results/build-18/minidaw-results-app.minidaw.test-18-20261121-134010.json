@@ -1,0 +1,132 @@
+{
+  "format": "minidaw-results",
+  "formatVersion": 1,
+  "createdAt": "2026-11-21T13:40:10.311646Z",
+  "build": {
+    "applicationId": "app.minidaw.test",
+    "versionName": "0.1.18",
+    "versionCode": 18,
+    "change": "5d12c7d83c86",
+    "buildType": "measure",
+    "installingPackage": "com.google.android.packageinstaller",
+    "initiatingPackage": "com.google.android.packageinstaller"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-A175F",
+    "device": "a17",
+    "androidRelease": "16",
+    "sdkInt": 36
+  },
+  "results": [
+    {
+      "id": "TK-002",
+      "kind": "verdict",
+      "title": "The test build was installed from a download",
+      "passRule": "The owner installed this build from the page of releases and opened it",
+      "verdict": "pass"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Size of the test build",
+      "verdict": "recorded",
+      "value": 51179800,
+      "unit": "bytes"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Size of libonnxruntime.so in the test build",
+      "verdict": "recorded",
+      "value": 34208680,
+      "unit": "bytes"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1: length",
+      "verdict": "recorded",
+      "value": 16.1,
+      "unit": "s"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, pYIN: Notes",
+      "verdict": "recorded",
+      "value": 37,
+      "unit": "count"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, pYIN: time of the conversion",
+      "verdict": "recorded",
+      "value": 428.3124,
+      "unit": "ms"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, pYIN: time to load the candidate",
+      "verdict": "recorded",
+      "value": 3.0E-4,
+      "unit": "ms"
+    },
+    {
+      "id": "V-05",
+      "kind": "entry",
+      "title": "Melody 1, pYIN: wrong or extra Notes",
+      "verdict": "recorded",
+      "value": 2,
+      "unit": "count"
+    },
+    {
+      "id": "V-05",
+      "kind": "entry",
+      "title": "Melody 1, pYIN: missing Notes",
+      "verdict": "recorded",
+      "unit": "count"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, SwiftF0: Notes",
+      "verdict": "recorded",
+      "value": 37,
+      "unit": "count"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, SwiftF0: time of the conversion",
+      "verdict": "recorded",
+      "value": 601.5477,
+      "unit": "ms"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, SwiftF0: time to load the candidate",
+      "verdict": "recorded",
+      "value": 91.5372,
+      "unit": "ms"
+    },
+    {
+      "id": "V-05",
+      "kind": "entry",
+      "title": "Melody 1, SwiftF0: wrong or extra Notes",
+      "verdict": "recorded",
+      "value": 4,
+      "unit": "count"
+    },
+    {
+      "id": "V-05",
+      "kind": "entry",
+      "title": "Melody 1, SwiftF0: missing Notes",
+      "verdict": "recorded",
+      "unit": "count"
+    }
+  ]
+}

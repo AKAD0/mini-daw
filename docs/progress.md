@@ -56,8 +56,9 @@ Notes:
 
 ```text
 TK-002  CI service, key for signing, delivery of builds
-State: delivered for the gate (corrected in TK-003 from "blocked": the implementer has nothing
-       left to do; only O-7, the install and the file of results remain, guide 2.3 Section 4.4)
+State: done (the owner installed build-18 from the page of releases and marked Pass)
+Results (build-18): the owner installed the test build from the page of releases and marked Pass
+  (docs/results/build-18/).
 Change: branch tk-002, merged into main
 Criteria:
   AC-APP-20: pass (part "app-package" of the one command: app-release-unsigned.apk has 17,952 bytes
@@ -86,6 +87,8 @@ Notes:
      from edge to edge, so the title bar covered the top of the main screen and of Measurements. The
      screens of the test build and of both check apps of V-02 now have no title bar and keep clear of
      the system bars, the display cutout and the keyboard. The row of TK-002 now asks its question.
+  6. Fault found in the results of build-18: the screen Measurements kept its rows only in memory, and
+     Android recreated it twice. Build-19 keeps the rows in a file and has "Clear the results".
 ```
 
 ```text
@@ -292,6 +295,8 @@ Notes:
 ```text
 TK-003  Check V-01: facts of the phone
 State: delivered for the gate (the measurement is in the test build; the phone is needed)
+Results (build-18): the facts and the noise of the microphone are recorded (docs/results/build-18/
+  summary.md); the typed values of One UI and OboeTester are missing.
 Change: branch tk-003, merged into main
 Criteria:
   "The nine values of requirements.md Section 3.2 are recorded": not measured yet. The test build
@@ -345,6 +350,8 @@ Notes:
 ```text
 TK-005  Check V-03: audio path
 State: delivered for the gate (the part "V-03" of the test build is in the run "Build"; the phone is needed)
+Results (build-18): without the performance hint the rule passes (0 Underruns in 600 s at 2 Bursts,
+  48 kHz); the run with the hint is missing (docs/results/build-18/summary.md).
 Change: branch tk-005, merged into main
 Criteria:
   "Rate, Burst, kind of path, Underruns over 10 min, and both times to open are recorded":
@@ -371,6 +378,8 @@ Notes:
 ```text
 TK-006  Check V-07: latency of a Take
 State: delivered for the gate (the section "V-07" of the test build is in the run "Build"; the phone is needed)
+Results (build-18): fail. The difference is 19.5 ms with the speaker and 19.2 ms with wired
+  headphones, a stable bias of the timestamps (docs/results/build-18/summary.md, finding 1).
 Change: branch tk-006, merged into main
 Criteria:
   "The offset from the timestamps and the offset from the loopback are recorded, for the speaker
@@ -396,6 +405,9 @@ Notes:
 ```text
 TK-007  Check V-04: load of the engine
 State: delivered for the gate (the section "V-04" of the test build is in the run "Build"; the phone is needed)
+Results (build-18): version 1.0 without the performance hint: mean load 67.0 %, 99th percentile
+  75.8 %, 0 Underruns; the mean fails. Build-19 measures with the hint and records the CPU core of each
+  callback (docs/results/build-18/summary.md, finding 2). The MVP, the kernels and the Snapshot are missing.
 Change: branch tk-007, merged into main
 Criteria:
   "The load of the Voices and of the effects is recorded on the phone, for the counts of both
@@ -425,6 +437,7 @@ Notes:
 ```text
 TK-010  Check V-05: humming on the phone
 State: delivered for the gate (the section "V-05" of the test build is in the run "Build"; the owner hums)
+Results (build-18): 1 melody of 10 (docs/results/build-18/summary.md).
 Change: branch tk-010, merged into main
 Criteria:
   "The owner hummed 10 melodies. The count of corrections and the time are recorded for each

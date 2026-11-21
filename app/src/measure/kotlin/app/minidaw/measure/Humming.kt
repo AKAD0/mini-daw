@@ -46,6 +46,13 @@ internal class Humming(private val activity: Activity, private val onRows: (List
     private lateinit var status: TextView
     private lateinit var picture: NotesView
 
+    /** Goes on after the melodies that the screen kept in its file (SavedRows). */
+    fun resume(kept: List<ResultRow>) {
+        val numbers = kept.mapNotNull { row -> MELODY.find(row.title)?.groupValues?.get(1)?.toIntOrNull() }
+        melody = (numbers.maxOrNull() ?: 0) + 1
+        sizesKept = kept.isNotEmpty()
+    }
+
     fun addTo(layout: LinearLayout) {
         layout.text(activity.getString(R.string.v05_how))
         layout.button(activity.getString(R.string.v05_record)) { record() }
@@ -229,6 +236,7 @@ internal class Humming(private val activity: Activity, private val onRows: (List
 
     companion object {
         private const val ID = "V-05"
+        private val MELODY = Regex("^Melody (\\d+)")
         private const val REQUEST_PERMISSION = 3
         private const val RATE = 48_000
         private const val MAX_SECONDS = 120

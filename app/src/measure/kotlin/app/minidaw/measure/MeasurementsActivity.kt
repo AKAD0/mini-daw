@@ -28,19 +28,21 @@ class MeasurementsActivity : Activity() {
     private var hummed: List<ResultRow> = emptyList()
     private var running = false
     private val entries = Entries()
+    private lateinit var saved: SavedRows
     private lateinit var verdictView: TextView
     private lateinit var statusView: TextView
     private lateinit var resultsView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        verdict = savedInstanceState?.getString(KEY_VERDICT)?.let { Verdict.valueOf(it) } ?: Verdict.NOT_RUN
+        restore()
         val padding = (PADDING_DP * resources.displayMetrics.density).toInt()
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
         layout.setPadding(padding, padding, padding, padding)
         layout.text(getString(R.string.measurements_title), TITLE_SP)
 
+        layout.text(getString(R.string.results_kept))
         layout.text(getString(R.string.install_question))
         val row = LinearLayout(this)
         row.orientation = LinearLayout.HORIZONTAL
@@ -71,10 +73,12 @@ class MeasurementsActivity : Activity() {
         layout.button(getString(R.string.v04_load_full)) { measureAudio(LOAD_VERSION_10) }
 
         layout.text(getString(R.string.v05_title), SECTION_SP)
-        Humming(this) { rows ->
+        val humming = Humming(this) { rows ->
             hummed = hummed + rows
             refresh()
-        }.addTo(layout)
+        }
+        humming.resume(hummed)
+        humming.addTo(layout)
 
         layout.text(getString(R.string.v07_title), SECTION_SP)
         layout.text(getString(R.string.v07_how))
@@ -83,6 +87,7 @@ class MeasurementsActivity : Activity() {
         statusView = layout.text("")
 
         layout.button(getString(R.string.share_results)) { share() }
+        layout.button(getString(R.string.clear_results)) { saved.confirmClear(this) }
         layout.text(getString(R.string.shown_results))
         resultsView = layout.text("")
         resultsView.typeface = Typeface.MONOSPACE
@@ -96,7 +101,6 @@ class MeasurementsActivity : Activity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(KEY_VERDICT, verdict.name)
         entries.save(outState)
     }
 
@@ -168,15 +172,29 @@ class MeasurementsActivity : Activity() {
         else -> AudioPath.run(kind == RUN_WITH_HINT)
     }
 
-    private fun rows(): List<ResultRow> = facts + listOfNotNull(noise) + audio + hummed + entries.rows()
+    private val rows: List<ResultRow>
+        get() = facts + listOfNotNull(noise) + audio + hummed + entries.rows()
+
+    /** Takes the verdict and the rows that the screen kept in its file (SavedRows). */
+    private fun restore() {
+        saved = SavedRows(this)
+        val kept = saved.load()
+        verdict = Verdict.entries.firstOrNull { it.name == kept.verdict } ?: Verdict.NOT_RUN
+        facts = kept.groups[FACTS].orEmpty()
+        noise = kept.groups[NOISE]?.firstOrNull()
+        audio = kept.groups[AUDIO].orEmpty()
+        hummed = kept.groups[HUMMED].orEmpty()
+    }
 
     private fun refresh() {
+        val groups = mapOf(FACTS to facts, NOISE to listOfNotNull(noise), AUDIO to audio, HUMMED to hummed)
+        saved.save(verdict.name, groups)
         verdictView.text = getString(R.string.verdict_line, verdict.word)
-        resultsView.text = Results.text(Results.collect(this, verdict, rows()))
+        resultsView.text = Results.text(Results.collect(this, verdict, rows))
     }
 
     private fun share() {
-        val file = Results.write(this, Results.collect(this, verdict, rows()))
+        val file = Results.write(this, Results.collect(this, verdict, rows))
         val send = Intent(Intent.ACTION_SEND)
         send.type = "application/json"
         send.putExtra(Intent.EXTRA_STREAM, ResultsProvider.uriFor(this, file.name))
@@ -186,7 +204,10 @@ class MeasurementsActivity : Activity() {
     }
 
     private companion object {
-        const val KEY_VERDICT = "verdict"
+        const val FACTS = "facts"
+        const val NOISE = "noise"
+        const val AUDIO = "audio"
+        const val HUMMED = "hummed"
         const val REQUEST_MICROPHONE = 1
         const val REQUEST_AUDIO = 10
         const val STREAMS = 0

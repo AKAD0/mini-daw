@@ -8,6 +8,10 @@
     <string name="mark_fail">Fail</string>
     <string name="verdict_line">Your verdict: %1$s</string>
     <string name="share_results">Share results</string>
+    <string name="results_kept">This screen keeps its results when you close it. Share them, then tap "Clear the results" at the bottom to start again.</string>
+    <string name="clear_results">Clear the results</string>
+    <string name="clear_question">Delete all results on this screen? Share them first if you want to keep them.</string>
+    <string name="clear_yes">Delete</string>
     <string name="shown_results">The file of results holds this text:</string>
     <string name="v01_title">V-01: facts of the phone</string>
     <string name="v01_facts">Read the facts that Android reports</string>

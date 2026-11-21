@@ -1,0 +1,30 @@
+{
+  "format": "minidaw-results",
+  "formatVersion": 1,
+  "createdAt": "2026-11-21T13:30:50.663732Z",
+  "build": {
+    "applicationId": "app.minidaw.test",
+    "versionName": "0.1.18",
+    "versionCode": 18,
+    "change": "5d12c7d83c86",
+    "buildType": "measure",
+    "installingPackage": "com.google.android.packageinstaller",
+    "initiatingPackage": "com.google.android.packageinstaller"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-A175F",
+    "device": "a17",
+    "androidRelease": "16",
+    "sdkInt": 36
+  },
+  "results": [
+    {
+      "id": "TK-002",
+      "kind": "verdict",
+      "title": "The test build was installed from a download",
+      "passRule": "The owner installed this build from the page of releases and opened it",
+      "verdict": "pass"
+    }
+  ]
+}

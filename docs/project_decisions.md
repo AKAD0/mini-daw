@@ -1,7 +1,7 @@
 # project_decisions.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 6 of 6 (handoff) · **Version:** 7.5 · **Date:** 2026-11-21
+**Stage:** 6 of 6 (handoff) · **Version:** 7.6 · **Date:** 2026-11-21
 **Change in 1.1:** feedback from the owner. The project runs no server. D-016 and D-017 are replaced. New: D-027 to D-032, A-14, A-15, AD-33, Q-13. Q-03 is answered.
 **Change in 2.0:** answers of the owner to Q-01, Q-02, Q-04, Q-12 and Q-13. Decisions of Stage 2: D-033 to D-052. Results of Stage 2 in Section 4.7. Tasks for the owner in Section 5.1.
 **Change in 2.1:** answers of the owner to Q-05 and Q-08. D-005 is replaced. New: D-053 to D-056 and Q-14. Tasks O-1 to O-3 changed.
@@ -20,6 +20,7 @@
 **Change in 7.3:** TK-012. The task O-1 names the places where the owner enters the new key. Changed: O-1, the continuation point.
 **Change in 7.4:** TK-013. Licences of tools that serve only tests: new Q-20 and D-115 (Proposed). Changed: the continuation point.
 **Change in 7.5:** TK-002. The owner did O-7. The key for signing lies in `signing/minidaw.p12` on main, and the run "Build" publishes signed builds. Changed: O-7, the continuation point.
+**Change in 7.6:** the first results of PH-00 from build-18 lie in `docs/results/build-18/`. TK-002 is done. V-07 misses its rule; V-04 is measured again with the performance hint. Changed: the continuation point.
 **Companion documents:** `requirements.md` holds the requirements (`FR-`, `NFR-`), the constraints (`CON-`) and the analysis of the brief (`T-`, `U-`, `G-`). `technology_stack.md` holds the choices of technology with their reasons and the checks `V-01` to `V-08`. `architecture.md` holds the structure of the system and the details of D-057 to D-072. `ui_ux_specification.md` holds the layout and the behaviour of the interface. `feature_specifications.md` holds the behaviour of the features, the formats, the acceptance criteria (`AC-`) and the manual tests of the owner (`MT-`). `development_roadmap.md` holds the phases (`PH-`), the tasks (`TK-`) and the gates (`GATE-`). `risk_assessment.md` holds the risks (`RISK-`). `opus_implementation_guide.md` is the entry for the implementer.
 
 ---
@@ -70,9 +71,9 @@ State of the work:
 | Item | State |
 |---|---|
 | Phase | PH-00 in progress |
-| Last finished task | TK-002: the key for signing of O-7 is merged, and the run "Build" published the signed build-16 on the page of releases. TK-002 to TK-007, TK-010 and TK-013 are delivered for the gate: they wait for the phone, O-1 and O-5. |
+| Last finished task | TK-002, done: the owner installed build-18 from the page of releases and marked Pass. The first results of PH-00 lie in `docs/results/build-18/`, evaluated in `summary.md` there: V-07 misses its rule, V-04 is measured again with the performance hint, and V-02, V-03, V-04 and V-05 are incomplete. TK-003 to TK-007, TK-010 and TK-013 are delivered for the gate. |
 | Next task | TK-014 |
-| Open gate | GATE-00 waits for the owner: O-8 (install of the test build), O-1 (API key), O-5 (10 melodies), and the runs and the manual checks of PH-00 on the phone. TK-014 is blocked until the files of results of V-01 to V-07 lie in `docs/results/`; no other task of PH-00 is open. |
+| Open gate | GATE-00 waits for the owner: the runs on build-19 that `docs/results/build-18/summary.md` lists (V-03 with the hint, V-04, V-05 melodies 2 to 10, V-02, the typed values of V-01), and O-1 for V-06. TK-014 is blocked until these results lie in `docs/results/`; no other task of PH-00 is open. |
 
 How to continue:
 
@@ -698,3 +699,4 @@ No question blocks the work. Seven questions are open: Q-09, Q-10, Q-16, Q-17, Q
 | 2026-11-21 | Development | Version 7.3. TK-012: the setup script and the test script of the Sandbox. O-1 names the secret `ANTHROPIC_API_KEY`. |
 | 2026-11-21 | Development | Version 7.4. TK-013: Q-20 and D-115 (Proposed) about the licences of tools for tests only. |
 | 2026-11-21 | Development | Version 7.5. TK-002: the owner did O-7; the key for signing is merged into main. |
+| 2026-11-21 | Development | Version 7.6. The first results of PH-00 (build-18). TK-002 is done. |

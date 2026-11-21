@@ -2,6 +2,7 @@
 
 #include <oboe/Oboe.h>
 #include <oboe/OboeExtensions.h>
+#include <sched.h>
 
 #include <algorithm>
 #include <chrono>
@@ -34,15 +35,18 @@ constexpr double kPercent = 100.0;
 constexpr double kHighShare = 0.99;
 constexpr int kKernelBlocks = 20000;
 constexpr double kMicrosPerSecond = 1e6;
+constexpr int kMaxCpus = 32;
 
-// Renders the test Project in each callback and notes its load. The output stays silent.
+// Renders the test Project in each callback and notes its load and its CPU core. The output stays
+// silent. The callback thread writes the notes; the caller reads them after the stream stopped.
 class LoadCallback : public oboe::AudioStreamDataCallback {
  public:
   LoadCallback(const TestCounts& counts, const std::vector<float>& sample)
       : bench_(counts, sample),
         left_(kScratchFrames),
         right_(kScratchFrames),
-        loads_(kMaxCallbacks) {}
+        loads_(kMaxCallbacks),
+        cpus_(kMaxCallbacks) {}
 
   oboe::DataCallbackResult onAudioReady(oboe::AudioStream* stream, void* audioData,
                                         int32_t numFrames) override {
@@ -56,7 +60,9 @@ class LoadCallback : public oboe::AudioStreamDataCallback {
     std::memset(audioData, 0, bytes);
     const std::chrono::duration<double> spent = Clock::now() - start;
     if (count_ < loads_.size()) {
-      loads_[count_++] = spent.count() * stream->getSampleRate() / numFrames;
+      loads_[count_] = spent.count() * stream->getSampleRate() / numFrames;
+      cpus_[count_] = sched_getcpu();
+      ++count_;
     }
     return oboe::DataCallbackResult::Continue;
   }
@@ -68,6 +74,27 @@ class LoadCallback : public oboe::AudioStreamDataCallback {
     return std::vector<double>(first, last);
   }
 
+  // The callbacks after the warm-up on each CPU core, as "core: callbacks", for example "6: 11000".
+  [[nodiscard]] std::string cpus() const {
+    std::vector<int64_t> counts(kMaxCpus, 0);
+    for (size_t i = std::min(kWarmUpCallbacks, count_); i < count_; ++i) {
+      if (cpus_[i] >= 0 && cpus_[i] < kMaxCpus) {
+        ++counts[static_cast<size_t>(cpus_[i])];
+      }
+    }
+    std::string text;
+    for (size_t cpu = 0; cpu < counts.size(); ++cpu) {
+      if (counts[cpu] == 0) {
+        continue;
+      }
+      if (!text.empty()) {
+        text += ", ";
+      }
+      text += std::to_string(cpu) + ": " + std::to_string(counts[cpu]);
+    }
+    return text;
+  }
+
   [[nodiscard]] const LoadBench& bench() const { return bench_; }
 
  private:
@@ -75,6 +102,7 @@ class LoadCallback : public oboe::AudioStreamDataCallback {
   std::vector<float> left_;
   std::vector<float> right_;
   std::vector<double> loads_;
+  std::vector<int> cpus_;
   size_t count_ = 0;
 };
 
@@ -112,6 +140,9 @@ std::string probeLoad(int32_t project, int32_t seconds, const std::vector<float>
     return json.str();
   }
   const auto size = stream->setBufferSizeInFrames(kBurstsInBuffer * stream->getFramesPerBurst());
+  // The engine asks for the hint too (V-03); without it the thread may stay on a slow core.
+  stream->setPerformanceHintEnabled(true);
+  json.text("performanceHint", "on");
   stream->requestStart();
   std::this_thread::sleep_for(std::chrono::seconds(seconds));
   stream->requestStop();
@@ -125,6 +156,7 @@ std::string probeLoad(int32_t project, int32_t seconds, const std::vector<float>
   stream->close();
   std::vector<double> loads = callback.loads();
   json.number("callbacks", static_cast<int64_t>(loads.size()));
+  json.text("callbackCpus", callback.cpus());
   if (loads.empty()) {
     return json.str();
   }

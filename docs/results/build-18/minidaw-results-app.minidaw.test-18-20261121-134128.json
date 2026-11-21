@@ -1,0 +1,758 @@
+{
+  "format": "minidaw-results",
+  "formatVersion": 1,
+  "createdAt": "2026-11-21T13:41:28.378198Z",
+  "build": {
+    "applicationId": "app.minidaw.test",
+    "versionName": "0.1.18",
+    "versionCode": 18,
+    "change": "5d12c7d83c86",
+    "buildType": "measure",
+    "installingPackage": "com.google.android.packageinstaller",
+    "initiatingPackage": "com.google.android.packageinstaller"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-A175F",
+    "device": "a17",
+    "androidRelease": "16",
+    "sdkInt": 36
+  },
+  "results": [
+    {
+      "id": "TK-002",
+      "kind": "verdict",
+      "title": "The test build was installed from a download",
+      "passRule": "The owner installed this build from the page of releases and opened it",
+      "verdict": "pass"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: inputOpen",
+      "verdict": "recorded",
+      "value": "OK"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: outputOpen",
+      "verdict": "recorded",
+      "value": "OK"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: outputSampleRate",
+      "verdict": "recorded",
+      "value": 48000
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: outputFramesPerBurst",
+      "verdict": "recorded",
+      "value": 256
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: outputDeviceId",
+      "verdict": "recorded",
+      "value": 3
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: outputMmap",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: outputXruns",
+      "verdict": "recorded",
+      "value": 0
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: inputSampleRate",
+      "verdict": "recorded",
+      "value": 48000
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: inputFramesPerBurst",
+      "verdict": "recorded",
+      "value": 960
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: inputDeviceId",
+      "verdict": "recorded",
+      "value": 13
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: inputMmap",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: inputXruns",
+      "verdict": "recorded",
+      "value": 0
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: timestamps",
+      "verdict": "recorded",
+      "value": "available"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click1.clarity",
+      "verdict": "recorded",
+      "value": 17.53
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click1.loopbackMs",
+      "verdict": "recorded",
+      "value": 62.833,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click1.timestampMs",
+      "verdict": "recorded",
+      "value": 43.705,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click2.clarity",
+      "verdict": "recorded",
+      "value": 17.005
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click2.loopbackMs",
+      "verdict": "recorded",
+      "value": 42.833,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click2.timestampMs",
+      "verdict": "recorded",
+      "value": 23.304,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click3.clarity",
+      "verdict": "recorded",
+      "value": 17.056
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click3.loopbackMs",
+      "verdict": "recorded",
+      "value": 62.833,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click3.timestampMs",
+      "verdict": "recorded",
+      "value": 43.993,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click4.clarity",
+      "verdict": "recorded",
+      "value": 17.031
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click4.loopbackMs",
+      "verdict": "recorded",
+      "value": 42.833,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click4.timestampMs",
+      "verdict": "recorded",
+      "value": 23.773,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click5.clarity",
+      "verdict": "recorded",
+      "value": 17.053
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click5.loopbackMs",
+      "verdict": "recorded",
+      "value": 62.833,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click5.timestampMs",
+      "verdict": "recorded",
+      "value": 43.762,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click6.clarity",
+      "verdict": "recorded",
+      "value": 16.772
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click6.loopbackMs",
+      "verdict": "recorded",
+      "value": 42.833,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click6.timestampMs",
+      "verdict": "recorded",
+      "value": 23.963,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click7.clarity",
+      "verdict": "recorded",
+      "value": 16.855
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click7.loopbackMs",
+      "verdict": "recorded",
+      "value": 62.833,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click7.timestampMs",
+      "verdict": "recorded",
+      "value": 43.757,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click8.clarity",
+      "verdict": "recorded",
+      "value": 16.819
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click8.loopbackMs",
+      "verdict": "recorded",
+      "value": 62.833,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: click8.timestampMs",
+      "verdict": "recorded",
+      "value": 43.441,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: clicksCompared",
+      "verdict": "recorded",
+      "value": 8
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: medianTimestampMs",
+      "verdict": "recorded",
+      "value": 43.705,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: medianLoopbackMs",
+      "verdict": "recorded",
+      "value": 62.833,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: largestDifferenceMs",
+      "verdict": "recorded",
+      "value": 19.529,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with the speaker: differenceWithin10ms",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: inputOpen",
+      "verdict": "recorded",
+      "value": "OK"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: outputOpen",
+      "verdict": "recorded",
+      "value": "OK"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: outputSampleRate",
+      "verdict": "recorded",
+      "value": 48000
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: outputFramesPerBurst",
+      "verdict": "recorded",
+      "value": 256
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: outputDeviceId",
+      "verdict": "recorded",
+      "value": 3
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: outputMmap",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: outputXruns",
+      "verdict": "recorded",
+      "value": 0
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: inputSampleRate",
+      "verdict": "recorded",
+      "value": 48000
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: inputFramesPerBurst",
+      "verdict": "recorded",
+      "value": 960
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: inputDeviceId",
+      "verdict": "recorded",
+      "value": 13
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: inputMmap",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: inputXruns",
+      "verdict": "recorded",
+      "value": 0
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: timestamps",
+      "verdict": "recorded",
+      "value": "available"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click1.clarity",
+      "verdict": "recorded",
+      "value": 17.362
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click1.loopbackMs",
+      "verdict": "recorded",
+      "value": 46.396,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click1.timestampMs",
+      "verdict": "recorded",
+      "value": 27.487,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click2.clarity",
+      "verdict": "recorded",
+      "value": 16.85
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click2.loopbackMs",
+      "verdict": "recorded",
+      "value": 46.396,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click2.timestampMs",
+      "verdict": "recorded",
+      "value": 27.547,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click3.clarity",
+      "verdict": "recorded",
+      "value": 16.863
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click3.loopbackMs",
+      "verdict": "recorded",
+      "value": 66.396,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click3.timestampMs",
+      "verdict": "recorded",
+      "value": 47.163,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click4.clarity",
+      "verdict": "recorded",
+      "value": 16.861
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click4.loopbackMs",
+      "verdict": "recorded",
+      "value": 46.396,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click4.timestampMs",
+      "verdict": "recorded",
+      "value": 27.459,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click5.clarity",
+      "verdict": "recorded",
+      "value": 16.863
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click5.loopbackMs",
+      "verdict": "recorded",
+      "value": 46.396,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click5.timestampMs",
+      "verdict": "recorded",
+      "value": 27.426,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click6.clarity",
+      "verdict": "recorded",
+      "value": 16.879
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click6.loopbackMs",
+      "verdict": "recorded",
+      "value": 46.375,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click6.timestampMs",
+      "verdict": "recorded",
+      "value": 27.526,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click7.clarity",
+      "verdict": "recorded",
+      "value": 16.872
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click7.loopbackMs",
+      "verdict": "recorded",
+      "value": 46.396,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click7.timestampMs",
+      "verdict": "recorded",
+      "value": 27.276,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click8.clarity",
+      "verdict": "recorded",
+      "value": 16.877
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click8.loopbackMs",
+      "verdict": "recorded",
+      "value": 46.396,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: click8.timestampMs",
+      "verdict": "recorded",
+      "value": 27.523,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: clicksCompared",
+      "verdict": "recorded",
+      "value": 8
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: medianTimestampMs",
+      "verdict": "recorded",
+      "value": 27.523,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: medianLoopbackMs",
+      "verdict": "recorded",
+      "value": 46.396,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: largestDifferenceMs",
+      "verdict": "recorded",
+      "value": 19.233,
+      "unit": "ms"
+    },
+    {
+      "id": "V-07",
+      "kind": "measurement",
+      "title": "Loopback with wired headphones: differenceWithin10ms",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Size of the test build",
+      "verdict": "recorded",
+      "value": 51179800,
+      "unit": "bytes"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Size of libonnxruntime.so in the test build",
+      "verdict": "recorded",
+      "value": 34208680,
+      "unit": "bytes"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1: length",
+      "verdict": "recorded",
+      "value": 16.1,
+      "unit": "s"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, pYIN: Notes",
+      "verdict": "recorded",
+      "value": 37,
+      "unit": "count"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, pYIN: time of the conversion",
+      "verdict": "recorded",
+      "value": 428.3124,
+      "unit": "ms"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, pYIN: time to load the candidate",
+      "verdict": "recorded",
+      "value": 3.0E-4,
+      "unit": "ms"
+    },
+    {
+      "id": "V-05",
+      "kind": "entry",
+      "title": "Melody 1, pYIN: wrong or extra Notes",
+      "verdict": "recorded",
+      "value": 2,
+      "unit": "count"
+    },
+    {
+      "id": "V-05",
+      "kind": "entry",
+      "title": "Melody 1, pYIN: missing Notes",
+      "verdict": "recorded",
+      "unit": "count"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, SwiftF0: Notes",
+      "verdict": "recorded",
+      "value": 37,
+      "unit": "count"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, SwiftF0: time of the conversion",
+      "verdict": "recorded",
+      "value": 601.5477,
+      "unit": "ms"
+    },
+    {
+      "id": "V-05",
+      "kind": "measurement",
+      "title": "Melody 1, SwiftF0: time to load the candidate",
+      "verdict": "recorded",
+      "value": 91.5372,
+      "unit": "ms"
+    },
+    {
+      "id": "V-05",
+      "kind": "entry",
+      "title": "Melody 1, SwiftF0: wrong or extra Notes",
+      "verdict": "recorded",
+      "value": 4,
+      "unit": "count"
+    },
+    {
+      "id": "V-05",
+      "kind": "entry",
+      "title": "Melody 1, SwiftF0: missing Notes",
+      "verdict": "recorded",
+      "unit": "count"
+    }
+  ]
+}

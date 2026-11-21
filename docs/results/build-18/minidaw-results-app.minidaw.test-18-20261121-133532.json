@@ -1,0 +1,257 @@
+{
+  "format": "minidaw-results",
+  "formatVersion": 1,
+  "createdAt": "2026-11-21T13:35:32.795680Z",
+  "build": {
+    "applicationId": "app.minidaw.test",
+    "versionName": "0.1.18",
+    "versionCode": 18,
+    "change": "5d12c7d83c86",
+    "buildType": "measure",
+    "installingPackage": "com.google.android.packageinstaller",
+    "initiatingPackage": "com.google.android.packageinstaller"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-A175F",
+    "device": "a17",
+    "androidRelease": "16",
+    "sdkInt": 36
+  },
+  "results": [
+    {
+      "id": "TK-002",
+      "kind": "verdict",
+      "title": "The test build was installed from a download",
+      "passRule": "The owner installed this build from the page of releases and opened it",
+      "verdict": "pass"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: performanceHint",
+      "verdict": "recorded",
+      "value": "off"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: seconds",
+      "verdict": "recorded",
+      "value": 600,
+      "unit": "s"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: openMicros",
+      "verdict": "recorded",
+      "value": 16534,
+      "unit": "µs"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: open",
+      "verdict": "recorded",
+      "value": "OK"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: firstCallbackMicros",
+      "verdict": "recorded",
+      "value": 44886,
+      "unit": "µs"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: sampleRate",
+      "verdict": "recorded",
+      "value": 48000,
+      "unit": "Hz"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: framesPerBurst",
+      "verdict": "recorded",
+      "value": 256,
+      "unit": "frames"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: bufferCapacityInFrames",
+      "verdict": "recorded",
+      "value": 2048,
+      "unit": "frames"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: performanceMode",
+      "verdict": "recorded",
+      "value": "LowLatency"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: sharingMode",
+      "verdict": "recorded",
+      "value": "Shared"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: audioApi",
+      "verdict": "recorded",
+      "value": "AAudio"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: mmap",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: bufferSizeInFrames",
+      "verdict": "recorded",
+      "value": 512,
+      "unit": "frames"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: underruns",
+      "verdict": "recorded",
+      "value": 0,
+      "unit": "count"
+    },
+    {
+      "id": "V-03",
+      "kind": "measurement",
+      "title": "Output for 10 min without performance hints: latencyMicros",
+      "verdict": "recorded",
+      "value": 22081,
+      "unit": "µs"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: project",
+      "verdict": "recorded",
+      "value": "version 1.0"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: voices",
+      "verdict": "recorded",
+      "value": 32
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: streamers",
+      "verdict": "recorded",
+      "value": 8
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: effects",
+      "verdict": "recorded",
+      "value": 16
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: open",
+      "verdict": "recorded",
+      "value": "OK"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: sampleRate",
+      "verdict": "recorded",
+      "value": 48000,
+      "unit": "Hz"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: framesPerBurst",
+      "verdict": "recorded",
+      "value": 256,
+      "unit": "frames"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: bufferSizeInFrames",
+      "verdict": "recorded",
+      "value": 512,
+      "unit": "frames"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: performanceMode",
+      "verdict": "recorded",
+      "value": "LowLatency"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: mmap",
+      "verdict": "recorded",
+      "value": "no"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: underruns",
+      "verdict": "recorded",
+      "value": 0,
+      "unit": "count"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: callbacks",
+      "verdict": "recorded",
+      "value": 11196,
+      "unit": "count"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: meanLoadPercent",
+      "verdict": "recorded",
+      "value": 67.027,
+      "unit": "%"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: load99Percent",
+      "verdict": "recorded",
+      "value": 75.842,
+      "unit": "%"
+    },
+    {
+      "id": "V-04",
+      "kind": "measurement",
+      "title": "Load of the test Project of the version 1.0: maxLoadPercent",
+      "verdict": "recorded",
+      "value": 89.701,
+      "unit": "%"
+    }
+  ]
+}

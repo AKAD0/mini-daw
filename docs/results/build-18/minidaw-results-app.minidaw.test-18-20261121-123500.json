@@ -1,0 +1,190 @@
+{
+  "format": "minidaw-results",
+  "formatVersion": 1,
+  "createdAt": "2026-11-21T12:35:00.928981Z",
+  "build": {
+    "applicationId": "app.minidaw.test",
+    "versionName": "0.1.18",
+    "versionCode": 18,
+    "change": "5d12c7d83c86",
+    "buildType": "measure",
+    "installingPackage": "com.google.android.packageinstaller",
+    "initiatingPackage": "com.google.android.packageinstaller"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-A175F",
+    "device": "a17",
+    "androidRelease": "16",
+    "sdkInt": 36
+  },
+  "results": [
+    {
+      "id": "TK-002",
+      "kind": "verdict",
+      "title": "The test build was installed from a download",
+      "passRule": "The owner installed this build from the page of releases and opened it",
+      "verdict": "pass"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Manufacturer and model",
+      "verdict": "recorded",
+      "note": "samsung SM-A175F (a17)"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Android version",
+      "verdict": "recorded",
+      "value": 36,
+      "unit": "API level",
+      "note": "Android 16"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "System feature android.hardware.audio.low_latency",
+      "verdict": "recorded",
+      "value": true
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "System feature android.hardware.audio.pro",
+      "verdict": "recorded",
+      "value": false
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Native sample rate of the output",
+      "verdict": "recorded",
+      "value": 48000,
+      "unit": "Hz"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Burst of the output",
+      "verdict": "recorded",
+      "value": 256,
+      "unit": "frames"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Width of the window in landscape",
+      "verdict": "recorded",
+      "value": 891,
+      "unit": "dp"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Height of the window in landscape",
+      "verdict": "recorded",
+      "value": 411,
+      "unit": "dp"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Insets of the display cutout",
+      "verdict": "recorded",
+      "note": "left 38, top 0, right 0, bottom 0 dp"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Insets of the system gestures",
+      "verdict": "recorded",
+      "note": "left 68, top 30, right 30, bottom 32 dp"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Density of the screen",
+      "verdict": "recorded",
+      "value": 2.625,
+      "unit": "px per dp"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Total RAM",
+      "verdict": "recorded",
+      "value": 7652,
+      "unit": "MB"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Memory class of an app (heap of the runtime)",
+      "verdict": "recorded",
+      "value": 256,
+      "unit": "MB"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Large memory class of an app",
+      "verdict": "recorded",
+      "value": 512,
+      "unit": "MB"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Free storage",
+      "verdict": "recorded",
+      "value": 176653,
+      "unit": "MB"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Input preset UNPROCESSED is supported",
+      "verdict": "recorded",
+      "value": false
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Input SM-A175F (type 15)",
+      "verdict": "recorded",
+      "note": "sample rates: 8000, 12000, 16000, 24000, 32000, 48000, 11025, 22050, 44100"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Input SM-A175F (type 18)",
+      "verdict": "recorded",
+      "note": "sample rates: 8000, 12000, 16000, 24000, 32000, 48000, 11025, 22050, 44100"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Input SM-A175F (type 15)",
+      "verdict": "recorded",
+      "note": "sample rates: 8000, 12000, 16000, 24000, 32000, 48000, 11025, 22050, 44100"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Input SM-A175F (type 25)",
+      "verdict": "recorded",
+      "note": "sample rates: 8000, 16000, 32000, 48000, 11025, 96000, 192000, 44100"
+    },
+    {
+      "id": "V-01",
+      "kind": "measurement",
+      "title": "Level of noise of the microphone",
+      "verdict": "recorded",
+      "value": -75.14789689120781,
+      "unit": "dBFS",
+      "note": "MIC"
+    }
+  ]
+}
