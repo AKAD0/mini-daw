@@ -24,15 +24,15 @@ double frameAtTime(const FramePair& pair, double nanos, double rate) {
 }
 
 const FramePair& nearestByFrame(std::span<const FramePair> pairs, int64_t frame) {
-  return *std::ranges::min_element(pairs, {}, [frame](const FramePair& pair) {
-    return std::abs(pair.frame - frame);
-  });
+  const auto distance = [frame](const FramePair& pair) { return std::abs(pair.frame - frame); };
+  return *std::ranges::min_element(pairs, {}, distance);
 }
 
 const FramePair& nearestByTime(std::span<const FramePair> pairs, double nanos) {
-  return *std::ranges::min_element(pairs, {}, [nanos](const FramePair& pair) {
+  const auto distance = [nanos](const FramePair& pair) {
     return std::abs(static_cast<double>(pair.nanos) - nanos);
-  });
+  };
+  return *std::ranges::min_element(pairs, {}, distance);
 }
 
 ClickPlace findClick(std::span<const float> recording, std::span<const float> click, int64_t from,

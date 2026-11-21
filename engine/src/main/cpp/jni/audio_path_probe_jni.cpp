@@ -2,8 +2,8 @@
 // app.minidaw.engine.AudioPathProbe.
 #include <jni.h>
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <string>
 #include <vector>
 
