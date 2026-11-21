@@ -171,3 +171,38 @@ Notes:
      SwiftF0. This is no measurement of the phone (NFR-PERF-09 needs TK-010).
 ```
 
+```text
+TK-011  Toolkit, first version
+State: split into TK-011a (done) and TK-011b (open: separate with the stem model, quick)
+Change: branch tk-011, TK-011a merged into main
+Steps of TK-011a:
+  1. The package toolkit/src/minidaw_toolkit and the build of toolkit.pyz (toolkit/build.py).
+  2. The command line of the system prompt (feature_specifications.md 5.2.4): one line of JSON
+     per program, exit code 0, errors inside the JSON, also without NumPy.
+  3. The programs convert, describe (with a PNG of the spectrum), narrow (span, component, band,
+     one event), finish and report.
+  4. Tests on test audio that the tests write (toolkit/tests).
+Criteria (run "Check" 44855116556, part "toolkit-tests", 12 tests):
+  AC-AIX-09 for convert, describe, narrow, finish and report: pass
+    (test_convert_gives_44_1_khz_two_channels_and_floating_point,
+     test_describe_measures_level_spectrum_pitch_and_onsets, test_describe_of_a_span_and_the_picture,
+     test_narrow_keeps_the_span_and_the_band, test_narrow_splits_tonal_sound_and_hits,
+     test_narrow_keeps_one_event,
+     test_finish_sets_the_peak_to_minus_1_dbfs_and_removes_the_silence,
+     test_report_checks_the_draft_and_measures_the_candidates,
+     test_report_names_every_problem_of_a_wrong_draft)
+  Rules 1 and 3 of Section 5.2.5: pass (test_every_program_answers_with_one_line_of_json,
+     test_the_same_input_gives_the_same_output)
+  AC-AIX-09 for separate and quick: open until TK-011b.
+Documents: feature_specifications.md 2.4 (Section 5.2.5), technology_stack.md 2.4 (Section 9.4)
+Decisions: none
+Owner: none
+Notes:
+  1. The stem model for TK-011b: htdemucs as one ONNX file of StemSplitio/htdemucs-onnx (MIT,
+     package demucs-onnx 0.3.4). Input "mix" (1, 2, 343980) at 44.1 kHz, output "stems"
+     (1, 4, 2, N) in the order drums, bass, other, vocals; pieces of 7.8 s with an overlap of a
+     quarter and a triangular window.
+  2. NumPy and pytest are missing on the computer of the owner; the tests of the Toolkit run only in
+     the CI service. The program itself answers with JSON there ("No module named 'numpy'").
+```
+
