@@ -1,7 +1,7 @@
 # technology_stack.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 2 of 6 (technical research) · **Version:** 2.10 · **Date:** 2026-11-21
+**Stage:** 2 of 6 (technical research) · **Version:** 2.11 · **Date:** 2026-11-21
 **Change in 1.1:** results of Stage 3. Changed parts: Section 6.2 item 8, Section 7 (saving), Section 9.2, and the checks V-03 and V-04 in Section 14.
 **Change in 1.2:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 9.3 (setup script), Section 12, Section 14 (intro and V-02), new sources R17 and R18.
 **Change in 1.3:** two sentences now follow later decisions (D-063, D-086). Changed part: Section 5.5 (order of processing, meters).
@@ -17,6 +17,7 @@
 **Change in 2.8:** TK-004. Section 6.1 names how the apps of V-02 measure. Section 3.3 names the repositories of the build.
 **Change in 2.9:** TK-005. Section 4 names the native build of Oboe.
 **Change in 2.10:** TK-006. Section 5.6 names how V-07 measures.
+**Change in 2.11:** TK-007. Section 5.4 names the blend of the taps and how V-04 measures. Section 12 names the first unit tests on the JVM.
 **Companion documents:** `requirements.md` and `project_decisions.md` in their newest versions. IDs such as `NFR-`, `CON-`, `D-` and `AD-` point to them. `architecture.md` holds the structure that Stage 3 built on this stack.
 
 ---
@@ -242,6 +243,16 @@ Stage 3 fixes the layout of the files and the sizes of the buffers.
 A shift upward plays the Sample faster. Content above half the output rate then turns into aliasing. The chosen answer is pre-filtered copies. At import, the app stores two more copies of each instrument Sample. The first copy is filtered and reduced to half the rate. The second copy is reduced to a quarter. A Voice picks the copy that fits its speed.
 
 Estimate of the cost: 8 taps × 2 channels × 48,000 samples × 48 Voices gives about 37 million multiply-add steps per second. One fast core handles far more. V-04 measures it on the phone.
+
+The Voice blends the taps linearly between the two nearest of the 64 positions (TK-007). With the nearest position alone, the error of the position reaches about −40 dB at 10 kHz; AC-SM-02 asks for 60 dB. The blend adds 8 multiply-add steps per frame, shared by both channels. The table holds the full band, so a Note at its Root note plays the Sample unchanged. A test on the host checks both: the error stays below −60 dB for a shift of one semitone.
+
+How V-04 measures (TK-007):
+
+1. `engine-core` holds the kernels: the Voice, `eq3`, `delay` and `reverb` (`kernels.h`), with tests on the host. PH-01 and PH-02 build the real engine on them.
+2. The render of a standard test Project (`load_bench.h`) feeds its Voices and Streamers into the Mixer channels, gives each channel one effect, and sums into the Master channel, in blocks of 128 frames.
+3. On the phone, the render runs in the callback of an output stream with the low-latency path and a buffer of two Bursts, for 60 s. The load of a callback is the time of the render divided by the time of its frames. The result gives the mean, the value that 99 of 100 callbacks stay below, the largest value and the Underruns. The stream plays silence.
+4. A second run measures each kernel alone, in microseconds for 128 frames (2,667 µs).
+5. The Snapshot: the writer in `:engine-api` compiles the standard test Project of version 1.0 on the phone (85,236 bytes). The loader in `engine-core` checks and builds it. Both writers give the same bytes; tests in both languages compare a fingerprint (FNV-1a). On a desktop computer the load takes about 21 µs.
 
 ### 5.5 Effects, Mixer and meters (AD-14, inputs for AD-13 and AD-15)
 
@@ -644,7 +655,7 @@ Notes are data of the Project. The app has no MIDI engine. An own writer produce
 
 | Layer | Tool | Purpose |
 |---|---|---|
-| Kotlin logic | JUnit with kotlin.test and the test library for coroutines | Tests on the host, without Android |
+| Kotlin logic | JUnit with kotlin.test and the test library for coroutines | Tests on the host, without Android. The first ones came with TK-007 in `:engine-api`: kotlin-test with JUnit 5.13.4 through its BOM, and the launcher of the platform. |
 | UI | Test library of Compose | Tests of screens |
 | Speed, on an emulator | Macrobenchmark in the CI service (D-073) | Produces the profiles. Shows trends of startup and frame times. |
 | Speed, on the phone | Measurements inside a test build | Startup and frame times (NFR-PERF-01, -07, NFR-MNT-06) |

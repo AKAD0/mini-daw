@@ -1,7 +1,7 @@
 # architecture.md
 
 **Project:** mini daw, a compact DAW for Android phones. All sound comes from samples.
-**Stage:** 3 of 6 (architecture) · **Version:** 2.6 · **Date:** 2026-11-21
+**Stage:** 3 of 6 (architecture) · **Version:** 2.7 · **Date:** 2026-11-21
 **Change in 1.1:** the owner has no computer with the Android build tools (D-073). Changed parts: Section 1.1, Section 10.5, Section 15, Section 16.5.
 **Change in 1.2:** results of Stage 4. The index of the Library also holds the length of the song of each Project. Changed parts: Section 8.2 (table `project`), Section 16.4 (closing note).
 **Change in 2.0:** version 1.1 adds the Decomposer (D-104). New parts: the module `:ui:decomposer`, Section 10.7, Section 16.6. Changed parts: Sections 1.1, 2.1, 2.2, 2.3, 6.1, 6.2, 6.4, 7, 11.4, 12.1, 12.3, 13.2, 14 and 15.
@@ -11,6 +11,7 @@
 **Change in 2.4:** TK-004. Section 2.1 names the apps for the checks of PH-00.
 **Change in 2.5:** TK-005. Section 12.2 names the first functions of the bridge, for the check V-03.
 **Change in 2.6:** TK-006. Section 12.2 adds the function for the check V-07.
+**Change in 2.7:** TK-007. Section 5.2 names the prototype of the bytes of a Snapshot.
 **Companion documents:** `requirements.md`, `technology_stack.md` and `project_decisions.md` in their newest versions. `feature_specifications.md` and `ui_ux_specification.md` hold the details of Stage 4. IDs such as `FR-`, `NFR-`, `CON-`, `D-`, `AD-`, `Q-` and `V-` point to them.
 
 ---
@@ -418,6 +419,8 @@ Reasons for whole Snapshots instead of small changes:
 3. A Snapshot is also a file. The tests on a host load the same bytes (Section 15).
 
 Fall-back: the check V-04 measures the time of a compile and of a load. If it exceeds 5 ms (prov.), the compiler keeps the compiled block of every unchanged Pattern and uses it again.
+
+Prototype of the bytes (TK-007): `engine-core/include/minidaw/engine/snapshot.h` fixes a first layout. It has a header of 32 bytes, a table of seven sections, and records of a fixed size for Samples, Sampler instruments, Notes, Patterns, Clips, Tracks and Mixer channels. All numbers are little-endian. The writer `SnapshotPrototype` in `:engine-api` and a writer in `engine-core` give the same bytes, and tests in both languages compare their fingerprint. The loader refuses bytes with a wrong magic number, version, size, section, reference or order, and keeps the old Snapshot. The compiler of PH-01 replaces the writer of the prototype, and the format gets its own version then.
 
 ### 5.3 Live commands and calls (D-062)
 

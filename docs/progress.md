@@ -388,3 +388,32 @@ Notes:
      with a new render (one 16-bit step, as AC-FS-01). TK-027 adds the other eight sounds.
 ```
 
+```text
+TK-007  Check V-04: load of the engine
+State: delivered for the gate (the section "V-04" of the test build is in the run "Build"; the phone is needed)
+Change: branch tk-007, merged into main
+Criteria:
+  "The load of the Voices and of the effects is recorded on the phone, for the counts of both
+  standard test Projects. The times of a compile and of a load are recorded for a prototype":
+  not measured on the phone yet. The section "V-04" of the screen "Measurements" has three runs:
+    1. Kernels and Snapshot: the cost of the Voice, a Streamer, eq3, delay and reverb for
+       128 frames; the compile of the Snapshot of version 1.0 in Kotlin and its load in C++.
+    2. and 3. The test Project of the MVP (16 Voices, 4 Streamers, 8 effects) and that of
+       version 1.0 (32 Voices, 8 Streamers, 16 effects) on the audio thread for 60 s: mean load,
+       load of 99 of 100 callbacks, largest load, Underruns.
+  Done on the host: the kernels (engine-core/kernels.h) with 8 tests; the render of the test
+  Projects with 3 tests; the Snapshot with 3 tests, among them each kind of refusal. A test on
+  the JVM checks that the writer of :engine-api gives the bytes of the writer of engine-core.
+  On a desktop computer: version 1.0 takes 4.5 % of the block time; the Snapshot has 85,236
+  bytes and loads in about 21 µs.
+Documents: technology_stack.md 2.11 (Sections 5.4, 12), architecture.md 2.7 (Section 5.2)
+Decisions: none. D-038 stays Conditional until the results of V-04.
+Owner (after TK-002): in the test build, section "V-04", tap the three buttons one after the
+  other and leave the phone alone during each run (about 2 min 10 s in all). Share the results and
+  put the file into docs/results/. The pass rules of technology_stack.md Section 14: mean load at
+  most 50 % (NFR-AUD-08); compile and load within 5 ms (prov.).
+Notes:
+  1. The Voice blends the taps between two of the 64 positions (technology_stack.md Section 5.4).
+  2. The first unit tests on the JVM: kotlin-test with JUnit 5 (EPL-2.0, test use only, D-115).
+```
+

@@ -74,6 +74,27 @@ use = "app"
 source = "github.com/google/oboe, read on 2026-11-21. Audio input and output (D-035)."
 
 [[entry]]
+name = "org.jetbrains.kotlin:kotlin-test"
+kind = "library"
+licence = "Apache-2.0"
+use = "test"
+source = "github.com/JetBrains/kotlin, file license/LICENSE.txt. Unit tests on the JVM (TK-007)."
+
+[[entry]]
+name = "org.junit:junit-bom"
+kind = "library"
+licence = "EPL-2.0"
+use = "test"
+source = "github.com/junit-team/junit5, file LICENSE.md. The versions of JUnit Jupiter and of the platform for the unit tests; never in the app (D-115)."
+
+[[entry]]
+name = "org.junit.platform:junit-platform-launcher"
+kind = "library"
+licence = "EPL-2.0"
+use = "test"
+source = "github.com/junit-team/junit5, file LICENSE.md. Starts the unit tests in Gradle; never in the app (D-115)."
+
+[[entry]]
 name = "org.jetbrains.kotlin.plugin.compose"
 kind = "plugin"
 licence = "Apache-2.0"

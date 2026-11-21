@@ -69,8 +69,8 @@ State of the work:
 | Item | State |
 |---|---|
 | Phase | PH-00 in progress |
-| Last finished task | TK-006, delivered for the gate. TK-002 to TK-005 and TK-013 are delivered for the gate too: they wait for O-7 and O-1. |
-| Next task | TK-007 |
+| Last finished task | TK-007, delivered for the gate. TK-002 to TK-006 and TK-013 are delivered for the gate too: they wait for O-7 and O-1. |
+| Next task | TK-010 |
 | Open gate | GATE-00 waits for the owner: O-7 (key for signing), O-1 (API key), the runs and the manual checks of PH-00 |
 
 How to continue:

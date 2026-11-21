@@ -17,6 +17,11 @@
     <string name="v03_run_hint">Run the output for 10 min with performance hints. Leave the phone alone.</string>
     <string name="v03_run_plain">Run the output for 10 min without performance hints. Leave the phone alone.</string>
     <string name="v03_running">Running. The screen stays on. Wait until this line disappears.</string>
+    <string name="v04_title">V-04: load of the engine</string>
+    <string name="v04_how">Each run plays silence. Leave the phone alone until the line below the buttons disappears.</string>
+    <string name="v04_kernels">Kernels and Snapshot (about 10 s)</string>
+    <string name="v04_load_mvp">Load of the test Project of the MVP (60 s)</string>
+    <string name="v04_load_full">Load of the test Project of version 1.0 (60 s)</string>
     <string name="v07_title">V-07: latency of a Take</string>
     <string name="v07_how">Set the media volume to about 70 % in a quiet room. Each run plays a click 8 times (12 s). For the headphones, hold one ear piece against the microphone at the bottom of the phone.</string>
     <string name="v07_speaker">Loopback with the speaker</string>
